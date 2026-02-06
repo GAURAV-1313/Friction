@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friction</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div>
+          <div class="title">Friction</div>
+          <div class="subtitle">Capture first. Reflect later.</div>
+        </div>
+        <div class="header-actions">
+          <button id="logout" class="btn ghost hidden">Logout</button>
+          <div id="conn" class="conn">Disconnected</div>
+        </div>
+      </header>
+
+      <section class="card">
+        <label class="label" for="moment">Paste moment</label>
+        <textarea id="moment" placeholder="Paste the exact thing you want to remember. No AI yet."></textarea>
+        <div class="hint">Press ⌥+M to capture highlight instantly.</div>
+        <button id="save" class="btn primary">Save moment</button>
+      </section>
+
+      <section id="tokenSection" class="card compact">
+        <label class="label" for="token">Auth token</label>
+        <input id="token" type="password" placeholder="Paste JWT once" />
+        <button id="saveToken" class="btn ghost">Save token</button>
+      </section>
+
+      <section class="card compact">
+        <div class="row">
+          <button id="generate" class="btn">Generate report</button>
+          <button id="view" class="btn ghost">View previous</button>
+        </div>
+      </section>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

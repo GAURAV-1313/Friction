@@ -1,0 +1,185 @@
+:root {
+  color-scheme: light dark;
+  --bg: #0b0b0b;
+  --card: #141414;
+  --text: #f2f2f2;
+  --muted: #9ba1a6;
+  --accent: #4f8cff;
+  --border: #242424;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --text: #0d0f12;
+    --muted: #5b6470;
+    --accent: #2f6bff;
+    --border: #e6e9ee;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 240px;
+}
+
+.app {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.conn {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.conn.connected {
+  border-color: #34d39966;
+  color: #34d399;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card.compact {
+  gap: 6px;
+}
+
+.label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+textarea {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 6px;
+  font-size: 11px;
+  resize: vertical;
+}
+
+input {
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.hint {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.btn {
+  border-radius: 0;
+  padding: 6px 8px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn.ghost {
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row .btn {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.authed #tokenSection {
+  display: none;
+}
+
+.authed .app {
+  padding: 8px;
+  gap: 6px;
+}
+
+.authed textarea {
+  min-height: 48px;
+}
+
+.status {
+  font-size: 10px;
+  color: var(--muted);
+  min-height: 12px;
+}
+
+.status[data-tone="success"] {
+  color: #4ade80;
+}
+
+.status[data-tone="error"] {
+  color: #f87171;
+}

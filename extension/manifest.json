@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Friction",
+  "version": "0.1.0",
+  "description": "Capture learning moments and generate delayed reports.",
+  "action": {
+    "default_title": "Friction",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost:4000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "capture-moment": {
+      "suggested_key": {
+        "default": "Alt+M",
+        "mac": "Alt+M"
+      },
+      "description": "Capture selected text as a moment"
+    }
+  }
+}

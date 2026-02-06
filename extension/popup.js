@@ -1,0 +1,170 @@
+const API_BASE = 'http://localhost:4000';
+const WEB_APP_URL = 'http://localhost:3000/reports';
+
+const momentInput = document.getElementById('moment');
+const tokenInput = document.getElementById('token');
+const saveTokenButton = document.getElementById('saveToken');
+const saveButton = document.getElementById('save');
+const generateButton = document.getElementById('generate');
+const viewButton = document.getElementById('view');
+const statusEl = document.getElementById('status');
+const connEl = document.getElementById('conn');
+const tokenSection = document.getElementById('tokenSection');
+const logoutButton = document.getElementById('logout');
+let statusTimer;
+
+function setStatus(message, tone = 'info') {
+  statusEl.textContent = message;
+  statusEl.dataset.tone = tone;
+  clearTimeout(statusTimer);
+  if (message) {
+    statusTimer = setTimeout(() => {
+      statusEl.textContent = '';
+      statusEl.dataset.tone = '';
+    }, 2000);
+  }
+}
+
+async function loadToken() {
+  const result = await chrome.storage.local.get(['authToken']);
+  if (result.authToken) {
+    tokenInput.value = result.authToken;
+  }
+  updateAuthUI(!!result.authToken);
+}
+
+async function saveToken() {
+  const token = tokenInput.value.trim();
+  if (!token) {
+    setStatus('Token required.', 'error');
+    return;
+  }
+  await chrome.storage.local.set({ authToken: token });
+  setStatus('Token saved.', 'success');
+  updateAuthUI(true);
+  await checkConnection();
+}
+
+async function getToken() {
+  const result = await chrome.storage.local.get(['authToken']);
+  return result.authToken || '';
+}
+
+async function saveMoment() {
+  const rawText = momentInput.value.trim();
+  if (!rawText) {
+    setStatus('Paste something first.', 'error');
+    return;
+  }
+
+  const token = await getToken();
+  if (!token) {
+    setStatus('Missing token. Paste it once below.', 'error');
+    return;
+  }
+
+  setStatus('Saving...');
+
+  const response = await fetch(`${API_BASE}/api/moments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      raw_text: rawText,
+      source_type: 'bulk_paste',
+      source_url: null,
+      created_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    setStatus('Save failed.', 'error');
+    await checkConnection();
+    return;
+  }
+
+  momentInput.value = '';
+  setStatus('Moment saved.', 'success');
+  await checkConnection();
+}
+
+async function generateReport() {
+  const token = await getToken();
+  if (!token) {
+    setStatus('Missing token. Paste it once below.', 'error');
+    return;
+  }
+
+  setStatus('Generating...');
+
+  await fetch(`${API_BASE}/api/snapshots/run`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ trigger_type: 'manual' })
+  });
+
+  chrome.tabs.create({ url: WEB_APP_URL });
+  setStatus('Opened report.', 'success');
+  await checkConnection();
+}
+
+function openReports() {
+  chrome.tabs.create({ url: WEB_APP_URL });
+}
+
+async function logout() {
+  await chrome.storage.local.remove(['authToken']);
+  tokenInput.value = '';
+  setStatus('Logged out.', 'success');
+  updateAuthUI(false);
+  await checkConnection();
+}
+
+function updateAuthUI(isAuthed) {
+  document.body.classList.toggle('authed', isAuthed);
+  if (tokenSection) {
+    tokenSection.classList.toggle('hidden', isAuthed);
+  }
+  if (logoutButton) {
+    logoutButton.classList.toggle('hidden', !isAuthed);
+  }
+}
+
+async function checkConnection() {
+  const token = await getToken();
+  if (!token) {
+    connEl.textContent = 'Disconnected';
+    connEl.classList.remove('connected');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/findings?state=unreviewed`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (response.status === 401) {
+      connEl.textContent = 'Token invalid';
+      connEl.classList.remove('connected');
+      return;
+    }
+    connEl.textContent = 'Connected';
+    connEl.classList.add('connected');
+  } catch (err) {
+    connEl.textContent = 'Disconnected';
+    connEl.classList.remove('connected');
+  }
+}
+
+saveTokenButton.addEventListener('click', saveToken);
+saveButton.addEventListener('click', saveMoment);
+generateButton.addEventListener('click', generateReport);
+viewButton.addEventListener('click', openReports);
+logoutButton.addEventListener('click', logout);
+
+loadToken();
+checkConnection();
