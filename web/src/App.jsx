@@ -19,7 +19,10 @@ export default function App() {
   const isLoggedIn = Boolean(token);
   const [tokenValid, setTokenValid] = useState(null);
   const groupedFindings = useMemo(() => groupBySnapshot(findings), [findings]);
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState(() => {
+    const storedTheme = localStorage.getItem('friction_theme');
+    return storedTheme || 'dark';
+  });
 
   useEffect(() => {
     const stored = localStorage.getItem('friction_token');
@@ -39,6 +42,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    localStorage.setItem('friction_theme', theme);
   }, [theme]);
 
   useEffect(() => {
