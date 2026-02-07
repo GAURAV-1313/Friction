@@ -17,7 +17,23 @@ function createApp() {
   initDbPool();
 
   const app = express();
-  app.use(cors());
+  const allowlist = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  app.use(
+    cors({
+      origin(origin, callback) {
+        if (!origin) return callback(null, true);
+        if (allowlist.includes(origin)) return callback(null, true);
+        if (origin.startsWith('chrome-extension://')) return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
+      },
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    })
+  );
   app.use(express.json({ limit: '1mb' }));
   app.use(morgan('dev'));
 

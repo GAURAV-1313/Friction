@@ -1,4 +1,4 @@
-const API_BASE = 'http://friction-production.up.railway.app';
+const API_BASE = 'https://friction-production.up.railway.app';
 const COOLDOWN_MS = 3000;
 let lastCaptureAt = 0;
 
