@@ -10,6 +10,7 @@ const findingsRoutes = require('./routes/findings');
 const learningRecordRoutes = require('./routes/learningRecords');
 const reportRoutes = require('./routes/reports');
 const promptRoutes = require('./routes/prompts');
+const meRoutes = require('./routes/me');
 const { startWeeklySnapshotScheduler } = require('./services/scheduler');
 
 function createApp() {
@@ -32,6 +33,7 @@ function createApp() {
   app.use('/api/learning-records', learningRecordRoutes);
   app.use('/api/reports', reportRoutes);
   app.use('/api/prompts', promptRoutes);
+  app.use('/api/me', meRoutes);
 
   startWeeklySnapshotScheduler();
 

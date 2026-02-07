@@ -86,6 +86,15 @@ async function saveMoment() {
     })
   });
 
+  if (response.status === 401) {
+    await chrome.storage.local.remove(['authToken']);
+    tokenInput.value = '';
+    updateAuthUI(false);
+    setStatus('Token invalid. Login again.', 'error');
+    await checkConnection();
+    return;
+  }
+
   if (!response.ok) {
     setStatus('Save failed.', 'error');
     await checkConnection();
@@ -106,7 +115,7 @@ async function generateReport() {
 
   setStatus('Generating...');
 
-  await fetch(`${API_BASE}/api/snapshots/run`, {
+  const response = await fetch(`${API_BASE}/api/snapshots/run`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -114,6 +123,15 @@ async function generateReport() {
     },
     body: JSON.stringify({ trigger_type: 'manual' })
   });
+
+  if (response.status === 401) {
+    await chrome.storage.local.remove(['authToken']);
+    tokenInput.value = '';
+    updateAuthUI(false);
+    setStatus('Token invalid. Login again.', 'error');
+    await checkConnection();
+    return;
+  }
 
   chrome.tabs.create({ url: WEB_APP_URL });
   setStatus('Opened report.', 'success');
@@ -167,12 +185,15 @@ async function checkConnection() {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/findings?state=unreviewed`, {
+    const response = await fetch(`${API_BASE}/api/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (response.status === 401) {
       connEl.textContent = 'Token invalid';
       connEl.classList.remove('connected');
+      await chrome.storage.local.remove(['authToken']);
+      tokenInput.value = '';
+      updateAuthUI(false);
       return;
     }
     connEl.textContent = 'Connected';

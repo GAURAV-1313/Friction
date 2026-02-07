@@ -46,6 +46,12 @@ chrome.commands.onCommand.addListener(async (command) => {
       })
     });
 
+    if (response.status === 401) {
+      await chrome.storage.local.remove(['authToken']);
+      await showBadge('Auth');
+      return;
+    }
+
     if (!response.ok) {
       await showBadge('Save failed');
       return;

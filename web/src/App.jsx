@@ -150,7 +150,7 @@ export default function App() {
       return;
     }
     try {
-      await fetch(`${API_BASE}/api/snapshots/run`, {
+      const response = await fetch(`${API_BASE}/api/snapshots/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,6 +158,13 @@ export default function App() {
         },
         body: JSON.stringify({ trigger_type: 'manual' })
       });
+      if (response.status === 401) {
+        setTokenValid(false);
+        setMessage('Token invalid. Please log in again.');
+        localStorage.removeItem('friction_token');
+        setToken('');
+        return;
+      }
       loadFindings('unreviewed');
     } catch (err) {
       alert('Failed to generate report.');
@@ -176,12 +183,19 @@ export default function App() {
     const payload = map[action];
     if (!payload) return;
 
-    await fetch(`${API_BASE}${payload.path}`, {
+    const response = await fetch(`${API_BASE}${payload.path}`, {
       method: payload.method,
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    if (response.status === 401) {
+      setTokenValid(false);
+      setMessage('Token invalid. Please log in again.');
+      localStorage.removeItem('friction_token');
+      setToken('');
+      return;
+    }
 
     setFindings((items) => items.filter((item) => item.finding_id !== id));
   };
