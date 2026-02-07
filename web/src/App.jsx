@@ -213,7 +213,7 @@ export default function App() {
       <header className="topbar">
         <div className="brand">
           <div className="title">FRICTION</div>
-          <div className="subtitle">Signal Desk</div>
+          <div className="subtitle">GS1313©</div>
         </div>
         <div className="status">
           <button className="btn ghost" onClick={handleCopyToken}>Connect</button>
