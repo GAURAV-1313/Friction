@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friction UI Preview - Signal Desk</title>
+    <link rel="stylesheet" href="preview.css" />
+  </head>
+  <body>
+    <div class="frame">
+      <header class="topbar">
+        <div class="brand">
+          <div class="title">FRICTION</div>
+          <div class="subtitle">Signal Desk · preview v2</div>
+        </div>
+        <div class="status">
+          <button class="btn ghost">Connect</button>
+          <span class="pill">Logged in</span>
+          <button class="btn">Generate report</button>
+          <button class="btn ghost">View reports</button>
+          <button class="btn ghost">Theme</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <aside class="panel">
+          <div class="panel-title">Filters</div>
+          <div class="tabrow">
+            <button class="tab active">Findings</button>
+            <button class="tab">Reports</button>
+          </div>
+          <div class="tabrow">
+            <button class="tab active">Active</button>
+            <button class="tab">Accepted</button>
+            <button class="tab">Ignored</button>
+            <button class="tab">Rejected</button>
+          </div>
+          <div class="meta">9 active findings</div>
+        </aside>
+
+        <section class="stream">
+          <details class="batch">
+            <summary>
+              <div class="summary-left">
+                <span class="chevron">▸</span>
+                <span>Feb 7, 2026 · 2:41 PM</span>
+              </div>
+              <div class="summary-right">
+                <span class="topics">Array reversal · Linked list</span>
+                <span class="count">3 findings</span>
+              </div>
+              <div class="summary-sub">
+                <div class="summary-item s1">Array reversal boundaries</div>
+                <div class="summary-item s2">Linked list insertion complexity</div>
+                <div class="summary-item s3">Off-by-one in loops</div>
+              </div>
+            </summary>
+            <div class="batch-body">
+              <article class="card">
+            <div class="card-head">
+              <span class="tag insight">insight</span>
+              <span class="tag">high</span>
+              <div class="actions">
+                <button class="btn tiny">Accept</button>
+                <button class="btn tiny ghost">Ignore</button>
+                <button class="btn tiny ghost danger">Reject</button>
+              </div>
+            </div>
+            <h3>Array reversal boundaries</h3>
+            <p>Under pressure, boundary indexes mix ho jaate hain, especially reverse range in-place cases.</p>
+            <div class="anchor">Recall: Reverse window start/end ko mentally mark karo.</div>
+              </article>
+
+              <article class="card">
+            <div class="card-head">
+              <span class="tag gap">gap</span>
+              <span class="tag">medium</span>
+              <div class="actions">
+                <button class="btn tiny">Accept</button>
+                <button class="btn tiny ghost">Ignore</button>
+                <button class="btn tiny ghost danger">Reject</button>
+              </div>
+            </div>
+            <h3>Linked list insertion complexity</h3>
+            <p>Tail insertion ko O(1) samajhne ka assumption repeat ho raha hai without tail pointer.</p>
+            <div class="anchor">Recall: Tail pointer nahi hai toh traversal needed.</div>
+              </article>
+
+              <article class="card">
+            <div class="card-head">
+              <span class="tag pattern">pattern</span>
+              <span class="tag">low</span>
+              <div class="actions">
+                <button class="btn tiny">Accept</button>
+                <button class="btn tiny ghost">Ignore</button>
+                <button class="btn tiny ghost danger">Reject</button>
+              </div>
+            </div>
+            <h3>Off-by-one in loops</h3>
+            <p>Loop bounds mein 1 index shift regularly aa raha hai in edge cases.</p>
+            <div class="anchor">Recall: inclusive/exclusive bounds first.</div>
+              </article>
+            </div>
+          </details>
+
+          <details class="batch">
+            <summary>
+              <div class="summary-left">
+                <span class="chevron">▸</span>
+                <span>Feb 6, 2026 · 11:02 PM</span>
+              </div>
+              <div class="summary-right">
+                <span class="topics">Loop start index</span>
+                <span class="count">1 finding</span>
+              </div>
+              <div class="summary-sub">
+                <div class="summary-item s1">Loop start index</div>
+                <div class="summary-item s2">Boundary comparison mismatch</div>
+                <div class="summary-item s3">Index shift at edges</div>
+              </div>
+            </summary>
+            <div class="batch-body">
+              <article class="card">
+                <div class="card-head">
+                  <span class="tag gap">gap</span>
+                  <span class="tag">low</span>
+                  <div class="actions">
+                    <button class="btn tiny">Accept</button>
+                    <button class="btn tiny ghost">Ignore</button>
+                    <button class="btn tiny ghost danger">Reject</button>
+                  </div>
+                </div>
+                <h3>Loop start index</h3>
+                <p>Zero vs one start confusion shows up in boundary cases.</p>
+                <div class="anchor">Recall: i starts from 1 when comparing with l.</div>
+              </article>
+            </div>
+          </details>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

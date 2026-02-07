@@ -11,6 +11,7 @@ const statusEl = document.getElementById('status');
 const connEl = document.getElementById('conn');
 const tokenSection = document.getElementById('tokenSection');
 const logoutButton = document.getElementById('logout');
+const themeToggle = document.getElementById('themeToggle');
 let statusTimer;
 
 function setStatus(message, tone = 'info') {
@@ -31,6 +32,12 @@ async function loadToken() {
     tokenInput.value = result.authToken;
   }
   updateAuthUI(!!result.authToken);
+}
+
+async function loadTheme() {
+  const result = await chrome.storage.local.get(['theme']);
+  const theme = result.theme || 'system';
+  applyTheme(theme);
 }
 
 async function saveToken() {
@@ -135,6 +142,22 @@ function updateAuthUI(isAuthed) {
   }
 }
 
+async function toggleTheme() {
+  const result = await chrome.storage.local.get(['theme']);
+  const current = result.theme || 'system';
+  const next = current === 'system' ? 'light' : current === 'light' ? 'dark' : 'system';
+  await chrome.storage.local.set({ theme: next });
+  applyTheme(next);
+  setStatus(`Theme: ${next}`, 'success');
+}
+
+function applyTheme(theme) {
+  document.body.classList.remove('theme-light', 'theme-dark');
+  if (theme === 'light') document.body.classList.add('theme-light');
+  if (theme === 'dark') document.body.classList.add('theme-dark');
+  if (themeToggle) themeToggle.textContent = theme === 'system' ? 'Theme' : theme;
+}
+
 async function checkConnection() {
   const token = await getToken();
   if (!token) {
@@ -165,6 +188,8 @@ saveButton.addEventListener('click', saveMoment);
 generateButton.addEventListener('click', generateReport);
 viewButton.addEventListener('click', openReports);
 logoutButton.addEventListener('click', logout);
+themeToggle.addEventListener('click', toggleTheme);
 
 loadToken();
+loadTheme();
 checkConnection();

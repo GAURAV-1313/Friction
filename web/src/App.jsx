@@ -5,8 +5,7 @@ const API_BASE = 'http://localhost:4000';
 const STATUS_LABELS = {
   unreviewed: 'Active',
   confirmed: 'Accepted',
-  deferred: 'Ignored',
-  rejected: 'Rejected'
+  deferred: 'Ignored'
 };
 
 export default function App() {
@@ -20,7 +19,7 @@ export default function App() {
   const isLoggedIn = Boolean(token);
   const [tokenValid, setTokenValid] = useState(null);
   const groupedFindings = useMemo(() => groupBySnapshot(findings), [findings]);
-  const maskedToken = token ? `${token.slice(0, 8)}••••••••` : '';
+  const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
     const stored = localStorage.getItem('friction_token');
@@ -37,6 +36,17 @@ export default function App() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    if (!token) return;
+    setView('findings');
+    setStatus('unreviewed');
+    loadFindings('unreviewed');
+  }, [token]);
 
   const activeCount = useMemo(
     () => findings.filter((item) => item.state === 'unreviewed').length,
@@ -112,23 +122,16 @@ export default function App() {
     }
   };
 
-  const handleTokenSave = () => {
-    localStorage.setItem('friction_token', token);
-    setMessage('Token saved.');
-    setTokenValid(null);
-    loadFindings('unreviewed');
-  };
-
   const handleCopyToken = async () => {
     if (!token) {
-      setMessage('No token to copy.');
+      alert('No token to copy.');
       return;
     }
     try {
       await navigator.clipboard.writeText(token);
-      setMessage('Token copied.');
+      alert('Token copied. Paste it into the extension to connect.');
     } catch (err) {
-      setMessage('Copy failed.');
+      alert('Copy failed.');
     }
   };
 
@@ -141,13 +144,32 @@ export default function App() {
     setTokenValid(null);
   };
 
+  const generateReport = async () => {
+    if (!token) {
+      alert('Login required to generate report.');
+      return;
+    }
+    try {
+      await fetch(`${API_BASE}/api/snapshots/run`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ trigger_type: 'manual' })
+      });
+      loadFindings('unreviewed');
+    } catch (err) {
+      alert('Failed to generate report.');
+    }
+  };
+
   const updateFinding = async (id, action) => {
     if (!token) return;
 
     const map = {
       confirm: { method: 'POST', path: `/api/findings/${id}/confirm` },
       defer: { method: 'POST', path: `/api/findings/${id}/defer` },
-      reject: { method: 'DELETE', path: `/api/findings/${id}` },
       resolve: { method: 'POST', path: `/api/findings/${id}/resolve` }
     };
 
@@ -169,244 +191,168 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-surface text-white">
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold">Friction</h1>
-            <p className="text-muted">{activeCount} active findings</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`border px-3 py-1 text-xs ${
-                isLoggedIn && tokenValid !== false
-                  ? 'border-emerald-500/50 text-emerald-200'
-                  : 'border-border text-muted'
-              }`}
-            >
-              {isLoggedIn
-                ? tokenValid === false
-                  ? 'Token invalid'
-                  : 'Logged in'
-                : 'Not logged in'}
-            </span>
-            <button
-              className="border border-border px-4 py-2 text-sm text-muted hover:text-white"
-              onClick={openGoogleLogin}
-            >
-              Login with Google
-            </button>
-            {isLoggedIn && (
-              <button
-                className="border border-border px-4 py-2 text-sm text-muted hover:text-white"
-                onClick={handleLogout}
-              >
-                Clear token
-              </button>
-            )}
-          </div>
+    <div className="frame">
+      <header className="topbar">
+        <div className="brand">
+          <div className="title">FRICTION</div>
+          <div className="subtitle">Signal Desk</div>
         </div>
-
-        <div className="mt-4 flex flex-col gap-3 border border-border bg-card px-4 py-3 shadow-soft lg:flex-row lg:items-center">
-          <div className="text-xs font-semibold uppercase tracking-wider text-muted">Extension token</div>
-          <div className="flex flex-1 items-center gap-2">
-            <input
-              className="w-full border border-border bg-transparent text-xs text-white"
-              type="password"
-              value={token}
-              onChange={(event) => setToken(event.target.value)}
-              placeholder="Paste JWT"
-            />
-            <button
-              className="border border-border px-3 py-2 text-xs text-muted hover:text-white"
-              onClick={handleTokenSave}
-            >
-              Save
-            </button>
-          </div>
-          <div className="border border-border bg-black/40 px-3 py-2 text-xs text-muted lg:w-[180px]">
-            {maskedToken || 'No token saved yet.'}
-          </div>
+        <div className="status">
+          <button className="btn ghost" onClick={handleCopyToken}>Connect</button>
+          <button className="btn" onClick={generateReport}>Generate report</button>
           <button
-            className="border border-border px-3 py-2 text-xs text-muted hover:text-white"
-            onClick={handleCopyToken}
+            className="btn ghost"
+            onClick={() => {
+              setView('reports');
+              loadReports();
+            }}
           >
-            Copy token
+            View reports
           </button>
-          {message && <div className="text-xs text-muted">{message}</div>}
+          <button
+            className="btn ghost"
+            onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+          >
+            Theme
+          </button>
+          <button
+            className="btn ghost"
+            onClick={isLoggedIn ? handleLogout : openGoogleLogin}
+          >
+            {isLoggedIn ? 'Logout' : 'Login'}
+          </button>
         </div>
+      </header>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-[2.3fr]">
-          <div className="border border-border bg-card p-4 shadow-soft">
-            <div className="flex flex-wrap items-center gap-2">
-              {['findings', 'reports'].map((item) => (
-                <button
-                  key={item}
-                  className={`border px-3 py-1 text-xs ${
-                    view === item
-                      ? 'border-accent bg-accent/20 text-white'
-                      : 'border-border text-muted'
-                  }`}
-                  onClick={() => {
-                    setView(item);
-                    if (item === 'findings') loadFindings(status);
-                    if (item === 'reports') loadReports();
-                  }}
-                >
-                  {item === 'findings' ? 'Findings' : 'Reports'}
-                </button>
-              ))}
+      {message && message !== 'Logged out.' && <div className="message">{message}</div>}
+
+      <main className="content">
+        <aside className="panel">
+          <div className="panel-title">Filters</div>
+          <div className="tabrow">
+            {['findings', 'reports'].map((item) => (
               <button
-                className="ml-auto border border-border px-3 py-1 text-xs text-muted"
+                key={item}
+                className={`tab ${view === item ? 'active' : ''}`}
                 onClick={() => {
-                  if (view === 'findings') loadFindings(status);
-                  if (view === 'reports') loadReports();
+                  setView(item);
+                  if (item === 'findings') loadFindings(status);
+                  if (item === 'reports') loadReports();
                 }}
               >
-                Refresh
+                {item === 'findings' ? 'Findings' : 'Reports'}
               </button>
-            </div>
+            ))}
+          </div>
+          <div className="tabrow">
+            {['unreviewed', 'confirmed', 'deferred'].map((item) => (
+              <button
+                key={item}
+                className={`tab ${status === item ? 'active' : ''}`}
+                onClick={() => {
+                  setStatus(item);
+                  loadFindings(item);
+                }}
+              >
+                {STATUS_LABELS[item]}
+              </button>
+            ))}
+          </div>
+          <div className="meta">{activeCount} active findings</div>
+        </aside>
 
-            {view === 'findings' && (
-              <div className="mt-4 space-y-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  {['unreviewed', 'confirmed', 'deferred', 'rejected'].map((item) => (
-                    <button
-                      key={item}
-                      className={`border px-3 py-1 text-xs ${
-                        status === item
-                          ? 'border-accent bg-accent/20 text-white'
-                          : 'border-border text-muted'
-                      }`}
-                      onClick={() => {
-                        setStatus(item);
-                        loadFindings(item);
-                      }}
-                    >
-                      {STATUS_LABELS[item]}
-                    </button>
-                  ))}
-                </div>
+        <section className="stream">
+          {view === 'findings' && (
+            <>
+              {loading && <div className="meta">Loading...</div>}
+              {!loading && findings.length === 0 && (
+                <div className="meta">No findings here yet.</div>
+              )}
 
-                {loading && <div className="text-sm text-muted">Loading...</div>}
-                {!loading && findings.length === 0 && (
-                  <div className="text-sm text-muted">No findings here yet.</div>
-                )}
-
-                {groupedFindings.map((group) => (
-                  <div key={group.key} className="space-y-4">
-                    <div className="flex items-center gap-3 text-xs text-muted">
-                      <div className="h-px flex-1 bg-border" />
-                      <span className="border border-border px-3 py-1">
-                        {formatTimestamp(group.timestamp)}
-                      </span>
-                      <div className="h-px flex-1 bg-border" />
+              {groupedFindings.map((group) => (
+                <details key={group.key} className="batch">
+                  <summary>
+                    <div className="summary-left">
+                      <span className="chevron">▸</span>
+                      <span>{formatTimestamp(group.timestamp)}</span>
                     </div>
+                    <div className="summary-right">
+                      <div className="dot-row">
+                        {renderDotCount('gap', group.items)}
+                        {renderDotCount('insight', group.items)}
+                        {renderDotCount('pattern', group.items)}
+                      </div>
+                      <span className="count">{group.items.length} findings</span>
+                    </div>
+                    <div className="summary-sub">
+                      {getPreviewTitles(group.items).map((title, index) => (
+                        <div key={`${group.key}-preview-${index}`} className={`summary-item s${index + 1}`}>
+                          {title}
+                        </div>
+                      ))}
+                    </div>
+                  </summary>
+                  <div className="batch-body">
                     {group.items.map((finding) => (
-                      <div
-                        key={finding.finding_id}
-                        className="border border-border bg-black/50 p-4"
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span
-                                className={`border px-3 py-1 text-xs font-semibold capitalize ${
-                                  finding.type === 'insight'
-                                    ? 'border-emerald-500/40 bg-emerald-900/60 text-emerald-200'
-                                    : 'border-amber-500/40 bg-amber-900/60 text-amber-200'
-                                }`}
-                              >
-                                {finding.type}
-                              </span>
-                              <span className="border border-border px-3 py-1 text-xs text-muted">
-                                {finding.confidence_ai}
-                              </span>
-                            </div>
-                            <h3 className="mt-2 text-lg font-semibold">{finding.topic}</h3>
-                            <p className="mt-2 text-sm text-muted">{finding.summary}</p>
-                            {finding.recall_anchor && (
-                              <p className="mt-2 text-xs text-muted">Recall: {finding.recall_anchor}</p>
-                            )}
+                      <article key={finding.finding_id} className="card">
+                        <div className="card-head">
+                          <div className="tags">
+                            <span className={`tag ${finding.type}`}>{finding.type}</span>
+                            <span className="tag">{finding.confidence_ai}</span>
                           </div>
-                          <div className="flex flex-col gap-2">
+                          <div className="actions">
                             {status !== 'confirmed' && (
-                              <button
-                                className="border border-emerald-500/40 px-3 py-1 text-xs text-emerald-200"
-                                onClick={() => updateFinding(finding.finding_id, 'confirm')}
-                              >
+                              <button className="btn tiny" onClick={() => updateFinding(finding.finding_id, 'confirm')}>
                                 Accept
                               </button>
                             )}
                             {status !== 'deferred' && (
-                              <button
-                                className="border border-amber-500/40 px-3 py-1 text-xs text-amber-200"
-                                onClick={() => updateFinding(finding.finding_id, 'defer')}
-                              >
+                              <button className="btn tiny ghost" onClick={() => updateFinding(finding.finding_id, 'defer')}>
                                 Ignore
                               </button>
                             )}
-                            {status === 'confirmed' ? (
-                              <button
-                                className="border border-emerald-500/40 px-3 py-1 text-xs text-emerald-200"
-                                onClick={() => updateFinding(finding.finding_id, 'resolve')}
-                              >
+                            {status === 'confirmed' && (
+                              <button className="btn tiny ghost" onClick={() => updateFinding(finding.finding_id, 'resolve')}>
                                 Resolve
-                              </button>
-                            ) : (
-                              <button
-                                className="border border-red-500/40 px-3 py-1 text-xs text-red-200"
-                                onClick={() => updateFinding(finding.finding_id, 'reject')}
-                              >
-                                Reject
                               </button>
                             )}
                           </div>
                         </div>
-                      </div>
+                        <h3>{finding.topic}</h3>
+                        <p>{finding.summary}</p>
+                        {finding.recall_anchor && <div className="anchor">Recall: {finding.recall_anchor}</div>}
+                      </article>
                     ))}
                   </div>
-                ))}
-              </div>
-            )}
+                </details>
+              ))}
+            </>
+          )}
 
-            {view === 'reports' && (
-              <div className="mt-4 space-y-4">
-                {loading && <div className="text-sm text-muted">Loading...</div>}
-                {!loading && records.length === 0 && (
-                  <div className="text-sm text-muted">No learning records yet.</div>
-                )}
-                {records.map((record) => (
-                  <div key={record.topic} className="border border-border bg-black/50 p-4">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`border px-3 py-1 text-xs font-semibold capitalize ${
-                          record.type === 'insight'
-                            ? 'border-emerald-500/40 bg-emerald-900/60 text-emerald-200'
-                            : 'border-amber-500/40 bg-amber-900/60 text-amber-200'
-                        }`}
-                      >
-                        {record.type}
-                      </span>
-                      <span className="border border-border px-3 py-1 text-xs text-muted">
-                        {record.occurrence_count}x
-                      </span>
-                    </div>
-                    <h3 className="mt-2 text-lg font-semibold">{record.topic}</h3>
-                    <p className="mt-2 text-sm text-muted">{record.summary}</p>
-                    {record.recall_anchor && (
-                      <p className="mt-2 text-xs text-muted">Recall: {record.recall_anchor}</p>
-                    )}
-                    <div className="mt-3 text-xs text-muted">
-                      Last seen {new Date(record.last_admitted_at).toLocaleDateString()}
+          {view === 'reports' && (
+            <>
+              {loading && <div className="meta">Loading...</div>}
+              {!loading && records.length === 0 && (
+                <div className="meta">No learning records yet.</div>
+              )}
+              {records.map((record) => (
+                <article key={record.topic} className="card">
+                  <div className="card-head">
+                    <div className="tags">
+                      <span className={`tag ${record.type}`}>{record.type}</span>
+                      <span className="tag">{record.occurrence_count}x</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+                  <h3>{record.topic}</h3>
+                  <p>{record.summary}</p>
+                  {record.recall_anchor && <div className="anchor">Recall: {record.recall_anchor}</div>}
+                  <div className="meta">Last seen {new Date(record.last_admitted_at).toLocaleDateString()}</div>
+                </article>
+              ))}
+            </>
+          )}
+        </section>
+      </main>
     </div>
   );
 }
@@ -428,4 +374,19 @@ function formatTimestamp(value) {
   if (!value) return 'Unknown snapshot';
   const date = new Date(value);
   return date.toLocaleString();
+}
+
+function renderDotCount(type, items) {
+  const count = items.filter((item) => item.type === type).length;
+  return (
+    <span className="dot-item">
+      <span className={`dot ${type}`} />
+      <span>{count}</span>
+    </span>
+  );
+}
+
+function getPreviewTitles(items) {
+  const titles = items.map((item) => item.topic).filter(Boolean);
+  return titles.slice(0, 3);
 }

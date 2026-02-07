@@ -10,13 +10,31 @@
 
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f8f9fb;
-    --card: #ffffff;
-    --text: #0d0f12;
-    --muted: #5b6470;
-    --accent: #2f6bff;
-    --border: #e6e9ee;
+    --bg: #fff4dc;
+    --card: #fffbf2;
+    --text: #111111;
+    --muted: #4f473f;
+    --accent: #1b4db3;
+    --border: #d6c8b3;
   }
+}
+
+body.theme-light {
+  --bg: #fff4dc;
+  --card: #fffbf2;
+  --text: #111111;
+  --muted: #4f473f;
+  --accent: #1b4db3;
+  --border: #d6c8b3;
+}
+
+body.theme-dark {
+  --bg: #0b0b0b;
+  --card: #141414;
+  --text: #f2f2f2;
+  --muted: #9ba1a6;
+  --accent: #4f8cff;
+  --border: #242424;
 }
 
 * {
@@ -29,6 +47,8 @@ body {
   background: var(--bg);
   color: var(--text);
   width: 240px;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .app {
@@ -48,14 +68,19 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .conn {
   font-size: 10px;
   padding: 2px 6px;
   border-radius: 999px;
-  border: 1px solid var(--border);
+  border: 0px solid var(--border);
   color: var(--muted);
+  max-width: 86px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .conn.connected {
@@ -76,8 +101,8 @@ body {
 
 .card {
   background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 0;
+  border: 0px solid var(--border);
+  border-radius: 10px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -98,8 +123,8 @@ body {
 textarea {
   width: 100%;
   min-height: 60px;
-  border-radius: 0;
-  border: 1px solid var(--border);
+  border-radius: 10px;
+  border: 0px solid var(--border);
   background: transparent;
   color: var(--text);
   padding: 6px;
@@ -109,8 +134,8 @@ textarea {
 
 input {
   width: 100%;
-  border-radius: 0;
-  border: 1px solid var(--border);
+  border-radius: 10px;
+  border: 0px solid var(--border);
   background: transparent;
   color: var(--text);
   padding: 6px 8px;
@@ -123,10 +148,10 @@ input {
 }
 
 .btn {
-  border-radius: 0;
+  border-radius: 10px;
   padding: 6px 8px;
   font-size: 11px;
-  border: 1px solid var(--border);
+  border: 0px solid var(--border);
   background: transparent;
   color: var(--text);
   cursor: pointer;
