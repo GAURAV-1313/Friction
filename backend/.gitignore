@@ -1,5 +1,2 @@
 node_modules
 .env
-001_init.sql
-002_alter_buffer_moments.sql
-003_update_schema_v2.sql
