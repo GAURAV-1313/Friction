@@ -1,5 +1,5 @@
-const API_BASE = 'http://localhost:4000';
-const WEB_APP_URL = 'http://localhost:3000/reports';
+const API_BASE = 'http://friction-production.up.railway.app';
+const WEB_APP_URL = 'https://loquacious-cocada-c4b015.netlify.app/';
 
 const momentInput = document.getElementById('moment');
 const tokenInput = document.getElementById('token');
