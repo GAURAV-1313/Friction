@@ -19,6 +19,7 @@ export default function App() {
   const isLoggedIn = Boolean(token);
   const [tokenValid, setTokenValid] = useState(null);
   const groupedFindings = useMemo(() => groupBySnapshot(findings), [findings]);
+  const [openBatchId, setOpenBatchId] = useState(null);
   const [theme, setTheme] = useState(() => {
     const storedTheme = localStorage.getItem('friction_theme');
     return storedTheme || 'dark';
@@ -216,28 +217,48 @@ export default function App() {
           <div className="subtitle">GAURAV-1313©</div>
         </div>
         <div className="status">
-          <button className="btn ghost" onClick={handleCopyToken}>Connect</button>
-          <button className="btn" onClick={generateReport}>Generate report</button>
           <button
-            className="btn ghost"
+            className="btn ghost icon"
+            onClick={handleCopyToken}
+            aria-label="Connect to ext"
+            data-tooltip="Connect to ext"
+          >
+            <IconLink />
+          </button>
+          <button
+            className="btn icon"
+            onClick={generateReport}
+            aria-label="Gen report"
+            data-tooltip="Gen report"
+          >
+            <IconSpark />
+          </button>
+          <button
+            className="btn ghost icon"
             onClick={() => {
               setView('reports');
               loadReports();
             }}
+            aria-label="View reports"
+            data-tooltip="View reports"
           >
-            View reports
+            <IconList />
           </button>
           <button
-            className="btn ghost"
+            className="btn ghost icon"
             onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+            aria-label="Theme"
+            data-tooltip="Theme"
           >
-            Theme
+            {theme === 'dark' ? <IconMoon /> : <IconSun />}
           </button>
           <button
-            className="btn ghost"
+            className="btn ghost icon"
             onClick={isLoggedIn ? handleLogout : openGoogleLogin}
+            aria-label={isLoggedIn ? 'Logout' : 'Login'}
+            data-tooltip={isLoggedIn ? 'Logout' : 'Login'}
           >
-            {isLoggedIn ? 'Logout' : 'Login'}
+            {isLoggedIn ? <IconLogout /> : <IconLogin />}
           </button>
         </div>
       </header>
@@ -245,41 +266,51 @@ export default function App() {
       {message && message !== 'Logged out.' && <div className="message">{message}</div>}
 
       <main className="content">
-        <aside className="panel">
-          <div className="panel-title">Filters</div>
-          <div className="tabrow">
-            {['findings', 'reports'].map((item) => (
-              <button
-                key={item}
-                className={`tab ${view === item ? 'active' : ''}`}
-                onClick={() => {
-                  setView(item);
-                  if (item === 'findings') loadFindings(status);
-                  if (item === 'reports') loadReports();
-                }}
-              >
-                {item === 'findings' ? 'Findings' : 'Reports'}
-              </button>
-            ))}
+        <div className="filters-bar">
+          <div className="filters-group">
+            <span className="filters-label">View</span>
+            <div className="pill-row">
+              {['findings', 'reports'].map((item) => (
+                <button
+                  key={item}
+                  className={`pill-btn ${view === item ? 'active' : ''}`}
+                  onClick={() => {
+                    setView(item);
+                    if (item === 'findings') loadFindings(status);
+                    if (item === 'reports') loadReports();
+                  }}
+                >
+                  {item === 'findings' ? 'Findings' : 'Reports'}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="tabrow">
-            {['unreviewed', 'confirmed', 'deferred'].map((item) => (
-              <button
-                key={item}
-                className={`tab ${status === item ? 'active' : ''}`}
-                onClick={() => {
-                  setStatus(item);
-                  loadFindings(item);
-                }}
-              >
-                {STATUS_LABELS[item]}
-              </button>
-            ))}
-          </div>
-          <div className="meta">{activeCount} active findings</div>
-        </aside>
+          {view === 'findings' && (
+            <>
+              <div className="filters-divider" />
+              <div className="filters-group">
+                <span className="filters-label">Status</span>
+                <div className="pill-row">
+                  {['unreviewed', 'confirmed', 'deferred'].map((item) => (
+                    <button
+                      key={item}
+                      className={`pill-btn ${status === item ? 'active' : ''}`}
+                      onClick={() => {
+                        setStatus(item);
+                        loadFindings(item);
+                      }}
+                    >
+                      {STATUS_LABELS[item]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="filters-count">{activeCount} active findings</div>
+            </>
+          )}
+        </div>
 
-        <section className="stream">
+        <section className={`stream ${view}`}>
           {view === 'findings' && (
             <>
               {loading && <div className="meta">Loading...</div>}
@@ -287,20 +318,29 @@ export default function App() {
                 <div className="meta">No findings here yet.</div>
               )}
 
-              {groupedFindings.map((group) => (
-                <details key={group.key} className="batch">
-                  <summary>
-                    <div className="summary-left">
-                      <span className="chevron">▸</span>
-                      <span>{formatTimestamp(group.timestamp)}</span>
-                    </div>
-                    <div className="summary-right">
-                      <div className="dot-row">
-                        {renderDotCount('gap', group.items)}
-                        {renderDotCount('insight', group.items)}
-                        {renderDotCount('pattern', group.items)}
+              {groupedFindings.map((group) => {
+                const isOpen = openBatchId === group.key;
+                return (
+                  <button
+                    key={group.key}
+                    type="button"
+                    className={`batch-card ${isOpen ? 'open' : ''}`}
+                    onClick={() => setOpenBatchId(isOpen ? null : group.key)}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="batch-head">
+                      <div className="summary-left">
+                        <span className="chevron">▸</span>
+                        <span>{formatTimestamp(group.timestamp)}</span>
                       </div>
-                      <span className="count">{group.items.length} findings</span>
+                      <div className="summary-right">
+                        <div className="dot-row">
+                          {renderDotCount('gap', group.items)}
+                          {renderDotCount('insight', group.items)}
+                          {renderDotCount('pattern', group.items)}
+                        </div>
+                        <span className="count">{group.items.length} findings</span>
+                      </div>
                     </div>
                     <div className="summary-sub">
                       {getPreviewTitles(group.items).map((title, index) => (
@@ -309,41 +349,95 @@ export default function App() {
                         </div>
                       ))}
                     </div>
-                  </summary>
-                  <div className="batch-body">
-                    {group.items.map((finding) => (
-                      <article key={finding.finding_id} className="card">
-                        <div className="card-head">
-                          <div className="tags">
-                            <span className={`tag ${finding.type}`}>{finding.type}</span>
-                            <span className="tag">{finding.confidence_ai}</span>
+                  </button>
+                );
+              })}
+              {openBatchId && (
+                <div className="batch-modal-overlay" onClick={() => setOpenBatchId(null)}>
+                  {groupedFindings
+                    .filter((group) => group.key === openBatchId)
+                    .map((group) => (
+                      <div
+                        key={`${group.key}-modal`}
+                        className="batch-modal"
+                        onClick={(event) => event.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                      >
+                        <button
+                          type="button"
+                          className="batch-modal-head"
+                          aria-label="Close"
+                          data-tooltip="Close"
+                          onClick={() => setOpenBatchId(null)}
+                        >
+                          <div className="summary-left">
+                            <span className="chevron">▸</span>
+                            <span>{formatTimestamp(group.timestamp)}</span>
                           </div>
-                          <div className="actions">
-                            {status !== 'confirmed' && (
-                              <button className="btn tiny" onClick={() => updateFinding(finding.finding_id, 'confirm')}>
-                                Accept
-                              </button>
-                            )}
-                            {status !== 'deferred' && (
-                              <button className="btn tiny ghost" onClick={() => updateFinding(finding.finding_id, 'defer')}>
-                                Ignore
-                              </button>
-                            )}
-                            {status === 'confirmed' && (
-                              <button className="btn tiny ghost" onClick={() => updateFinding(finding.finding_id, 'resolve')}>
-                                Resolve
-                              </button>
-                            )}
+                          <div className="summary-right">
+                            <div className="dot-row">
+                              {renderDotCount('gap', group.items)}
+                              {renderDotCount('insight', group.items)}
+                              {renderDotCount('pattern', group.items)}
+                            </div>
+                            <span className="count">{group.items.length} findings</span>
                           </div>
+                          <span className="modal-close">
+                            <IconClose />
+                          </span>
+                        </button>
+                        <div className={`batch-body ${group.items.length > 1 ? 'two-col' : 'single-col'}`}>
+                          {group.items.map((finding) => (
+                            <article key={finding.finding_id} className="card">
+                              <div className="card-head">
+                                <div className="tags">
+                                  <span className={`tag ${finding.type}`}>{finding.type}</span>
+                                  <span className="tag">{finding.confidence_ai}</span>
+                                </div>
+                                <div className="actions">
+                                  {status !== 'confirmed' && (
+                                  <button
+                                    className="btn tiny icon"
+                                    onClick={() => updateFinding(finding.finding_id, 'confirm')}
+                                    aria-label="Accept"
+                                    data-tooltip="Accept"
+                                  >
+                                    <IconCheck />
+                                  </button>
+                                  )}
+                                  {status !== 'deferred' && (
+                                  <button
+                                    className="btn tiny ghost icon"
+                                    onClick={() => updateFinding(finding.finding_id, 'defer')}
+                                    aria-label="Ignore"
+                                    data-tooltip="Ignore"
+                                  >
+                                    <IconSlash />
+                                  </button>
+                                  )}
+                                  {status === 'confirmed' && (
+                                  <button
+                                    className="btn tiny ghost icon"
+                                    onClick={() => updateFinding(finding.finding_id, 'resolve')}
+                                    aria-label="Resolve"
+                                    data-tooltip="Resolve"
+                                  >
+                                    <IconCheckCircle />
+                                  </button>
+                                  )}
+                                </div>
+                              </div>
+                              <h3>{finding.topic}</h3>
+                              <p>{finding.summary}</p>
+                              {finding.recall_anchor && <div className="anchor">Recall: {finding.recall_anchor}</div>}
+                            </article>
+                          ))}
                         </div>
-                        <h3>{finding.topic}</h3>
-                        <p>{finding.summary}</p>
-                        {finding.recall_anchor && <div className="anchor">Recall: {finding.recall_anchor}</div>}
-                      </article>
+                      </div>
                     ))}
-                  </div>
-                </details>
-              ))}
+                </div>
+              )}
             </>
           )}
 
@@ -372,6 +466,104 @@ export default function App() {
         </section>
       </main>
     </div>
+  );
+}
+
+function IconLink() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11 4" />
+      <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 1 0 7.07 7.07L13 20" />
+    </svg>
+  );
+}
+
+function IconSpark() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8L12 2z" />
+    </svg>
+  );
+}
+
+function IconList() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8 6h12M8 12h12M8 18h12" />
+      <path d="M4 6h.01M4 12h.01M4 18h.01" />
+    </svg>
+  );
+}
+
+function IconMoon() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z" />
+    </svg>
+  );
+}
+
+function IconSun() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+  );
+}
+
+function IconLogin() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+      <path d="M10 17l5-5-5-5" />
+      <path d="M15 12H3" />
+    </svg>
+  );
+}
+
+function IconLogout() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4" />
+      <path d="M14 17l5-5-5-5" />
+      <path d="M19 12H9" />
+    </svg>
+  );
+}
+
+function IconCheck() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
+}
+
+function IconSlash() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M5 5l14 14" />
+    </svg>
+  );
+}
+
+function IconCheckCircle() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M16 8l-5.5 7L8 12.5" />
+    </svg>
+  );
+}
+
+function IconClose() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M18 6L6 18" />
+      <path d="M6 6l12 12" />
+    </svg>
   );
 }
 
