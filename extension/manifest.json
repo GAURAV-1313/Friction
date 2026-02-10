@@ -16,8 +16,12 @@
     "storage",
     "tabs",
     "activeTab",
-    "scripting"
+    "scripting",
+    "sidePanel"
   ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
   "host_permissions": [
     "https://friction-production.up.railway.app/*"
   ],

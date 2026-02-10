@@ -1,5 +1,5 @@
 const API_BASE = 'https://friction-production.up.railway.app';
-const WEB_APP_URL = 'https://loquacious-cocada-c4b015.netlify.app/reports';
+const WEB_APP_URL = 'https://nofriction.netlify.app/reports';
 
 const momentInput = document.getElementById('moment');
 const tokenInput = document.getElementById('token');
@@ -133,13 +133,16 @@ async function generateReport() {
     return;
   }
 
-  chrome.tabs.create({ url: WEB_APP_URL });
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (tab && tab.id) {
+    await chrome.sidePanel.open({ tabId: tab.id });
+  }
   setStatus('Opened report.', 'success');
   await checkConnection();
 }
 
 function openReports() {
-  chrome.tabs.create({ url: WEB_APP_URL });
+  chrome.tabs.create({ url: WEB_APP_URL, active: true });
 }
 
 async function logout() {

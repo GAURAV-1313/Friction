@@ -51,11 +51,22 @@ body {
   overflow: hidden;
 }
 
+body.sidepanel {
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 0;
+  overflow: auto;
+}
+
 .app {
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+body.sidepanel .app {
+  min-height: 100vh;
 }
 
 .header {
@@ -109,6 +120,10 @@ body {
   gap: 6px;
 }
 
+body.sidepanel .card.compact {
+  flex: 1;
+}
+
 .card.compact {
   gap: 6px;
 }
@@ -157,6 +172,30 @@ input {
   cursor: pointer;
 }
 
+.btn.icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.tiny.icon {
+  width: 26px;
+  height: 26px;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .btn.primary {
   background: var(--accent);
   border-color: var(--accent);
@@ -176,6 +215,11 @@ input {
   flex: 1;
   padding: 6px 4px;
   font-size: 10px;
+}
+
+.row .btn.icon {
+  flex: 0;
+  padding: 0;
 }
 
 .hidden {
@@ -207,4 +251,144 @@ input {
 
 .status[data-tone="error"] {
   color: #f87171;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+}
+
+.chip {
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 10px;
+  border: 0px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.chip.active {
+  color: var(--text);
+  background: rgba(79, 140, 255, 0.2);
+}
+
+body.theme-light .chip {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-light .chip.active {
+  background: rgba(27, 77, 179, 0.18);
+}
+
+.findings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.sidepanel .findings-list {
+  flex: 1;
+}
+
+.finding-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.finding-group + .finding-group {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 0px solid var(--border);
+}
+
+.finding-group-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 2px 4px;
+}
+
+.finding {
+  border-radius: 10px;
+  border: 0px solid var(--border);
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+body.theme-light .finding {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.finding-head {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.badge {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.badge.insight {
+  color: #22c55e;
+}
+
+.badge.gap {
+  color: #f59f0b;
+}
+
+.badge.pattern {
+  color: #a78bfa;
+}
+
+body.theme-light .badge.insight {
+  color: #176a44;
+}
+
+body.theme-light .badge.gap {
+  color: #a35600;
+}
+
+body.theme-light .badge.pattern {
+  color: #5d35b8;
+}
+
+.finding-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.finding-summary {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.finding-anchor {
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.finding-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn.tiny {
+  padding: 4px 6px;
+  font-size: 10px;
+}
+
+.empty {
+  font-size: 10px;
+  color: var(--muted);
 }
