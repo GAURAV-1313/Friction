@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friction — Save the moment. Learn the pattern.</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f9f5ef;
+        --bg-2: #f2e8dd;
+        --ink: #12100e;
+        --muted: #5b544b;
+        --line: #e2d4c5;
+        --accent: #161616;
+        --accent-soft: #ffffff;
+        --pill: #efe3d7;
+        --glow: rgba(20, 20, 20, 0.08);
+        --shadow: 0 18px 50px rgba(13, 10, 8, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 45%, var(--bg-2) 100%);
+        color: var(--ink);
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 28px 8vw 12px;
+      }
+
+      .brand {
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        font-size: 14px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .hero {
+        padding: 60px 8vw 40px;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 28px;
+        align-items: center;
+      }
+
+      .hero-content {
+        grid-column: span 7;
+      }
+
+      .hero-kicker {
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .hero-title {
+        font-family: "Fraunces", serif;
+        font-size: clamp(34px, 4vw, 54px);
+        margin: 16px 0;
+        line-height: 1.1;
+      }
+
+      .hero-subtitle {
+        font-size: 18px;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 520px;
+      }
+
+      .hero-actions {
+        margin-top: 28px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        padding: 12px 22px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn.primary {
+        background: var(--ink);
+        color: var(--accent-soft);
+        border-color: var(--ink);
+      }
+
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+      }
+
+      .hero-card {
+        grid-column: span 5;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: 26px;
+        box-shadow: var(--shadow);
+      }
+
+      .moment-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--pill);
+        color: var(--muted);
+        font-size: 12px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        margin-bottom: 18px;
+      }
+
+      .moment-title {
+        font-weight: 600;
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+
+      .moment-text {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .section {
+        padding: 40px 8vw;
+      }
+
+      .section-title {
+        font-size: 24px;
+        margin-bottom: 18px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 8px 24px var(--glow);
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--line);
+        margin: 40px 0;
+      }
+
+      .footer {
+        padding: 30px 8vw 50px;
+        color: var(--muted);
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-content,
+        .hero-card {
+          grid-column: auto;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <nav class="nav">
+        <div class="brand">FRICTION</div>
+        <div class="nav-links">
+          <a href="#how">How it works</a>
+          <a href="#use">Use cases</a>
+          <a href="#features">Features</a>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-kicker">Learning, captured</div>
+          <h1 class="hero-title">Save the moment. Learn the pattern.</h1>
+          <p class="hero-subtitle">
+            Friction captures the exact moment of confusion or insight, then
+            surfaces the patterns later. No interruptions. No noise. Just the
+            learning signal that matters under pressure.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="https://friction-production.up.railway.app/auth/google">Login to start learning</a>
+            <a class="btn ghost" href="#how">See how it works</a>
+          </div>
+          <p class="hero-subtitle" style="margin-top: 12px;">
+            Already set up? Open your workspace at <strong>/reports</strong>.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <div class="moment-pill">Captured moment</div>
+          <h2 class="moment-title">Array reversal boundaries</h2>
+          <p class="moment-text">
+            Under pressure, start/end indices mix up, especially in reverse
+            range operations. Capture it once. Let Friction show the pattern
+            later.
+          </p>
+          <div class="divider"></div>
+          <p class="moment-text">
+            Finding: Boundary errors repeat across multiple attempts. Memory
+            anchor: mark the window before reversing.
+          </p>
+        </div>
+      </section>
+
+      <section id="how" class="section">
+        <h2 class="section-title">Capture now. Understand later.</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>1. One shortcut</h3>
+            <p>Highlight a moment and capture instantly. No AI in the moment.</p>
+          </div>
+          <div class="card">
+            <h3>2. Batch analysis</h3>
+            <p>Moments stay raw until you generate a report.</p>
+          </div>
+          <div class="card">
+            <h3>3. Pattern memory</h3>
+            <p>Confirm findings to build stable learning records.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="use" class="section">
+        <h2 class="section-title">Built for real work.</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Competitive programming</h3>
+            <p>Track recurring mistakes across practice sessions.</p>
+          </div>
+          <div class="card">
+            <h3>Interview prep</h3>
+            <p>Spot fragile understanding before the interview.</p>
+          </div>
+          <div class="card">
+            <h3>Debugging patterns</h3>
+            <p>Capture errors you keep repeating in new codebases.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <h2 class="section-title">Minimal by design.</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Delayed intelligence</h3>
+            <p>Friction analyzes later so you can stay focused now.</p>
+          </div>
+          <div class="card">
+            <h3>Neutral summaries</h3>
+            <p>No teaching. No solutions. Only learning signals.</p>
+          </div>
+          <div class="card">
+            <h3>Confirm or ignore</h3>
+            <p>Only confirmed findings become your stable memory.</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div>Friction — Signal Desk for learning.</div>
+        <div>Capture. Reflect. Repeat.</div>
+      </footer>
+    </div>
+  </body>
+</html>
