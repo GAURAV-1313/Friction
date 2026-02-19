@@ -46,7 +46,7 @@ async function loadSubdomains(pool, domainId) {
   const parsed = rows.map((row) => ({
     subdomain_id: row.subdomain_id,
     name: row.name,
-    embedding: row.embedding ? JSON.parse(row.embedding) : null
+    embedding: safeParseEmbedding(row.embedding)
   }));
   subdomainCache.set(domainId, parsed);
   return parsed;
@@ -86,3 +86,18 @@ async function resolveDomainAndSubdomain(pool, domainName, topic) {
 }
 
 module.exports = { resolveDomainAndSubdomain };
+
+function safeParseEmbedding(value) {
+  if (!value) return null;
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'object' && Array.isArray(value.values)) return value.values;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch (err) {
+      return null;
+    }
+  }
+  return null;
+}
