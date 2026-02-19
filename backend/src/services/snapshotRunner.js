@@ -1,5 +1,6 @@
 const { randomUUID } = require('crypto');
 const { analyzeMoments } = require('./llm');
+const { resolveDomainAndSubdomain } = require('./subdomainResolver');
 
 const MAX_BATCH_SIZE = 30;
 
@@ -56,10 +57,15 @@ async function runSnapshotsForUser({ pool, userId, triggerType }) {
       );
 
         for (const finding of mappedFindings) {
+          const { domainId, subdomainId } = await resolveDomainAndSubdomain(
+            connection,
+            finding.domain || 'misc',
+            finding.topic
+          );
           await connection.query(
             `INSERT INTO candidate_findings
-              (finding_id, snapshot_id, user_id, type, topic, summary, recall_anchor, confidence_ai, evidence_moment_ids, state)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'unreviewed')`,
+              (finding_id, snapshot_id, user_id, type, topic, summary, recall_anchor, confidence_ai, evidence_moment_ids, state, domain_id, subdomain_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'unreviewed', ?, ?)`,
             [
               randomUUID(),
               snapshotId,
@@ -69,7 +75,9 @@ async function runSnapshotsForUser({ pool, userId, triggerType }) {
               finding.summary,
               finding.recall_anchor || null,
               finding.confidence_ai,
-              JSON.stringify(finding.evidence_moment_ids)
+              JSON.stringify(finding.evidence_moment_ids),
+              domainId,
+              subdomainId
             ]
           );
         }
@@ -135,6 +143,7 @@ function mapFindings(findings, momentIds) {
 
       return {
         type: finding.type,
+        domain: finding.domain || 'misc',
         topic: finding.topic,
         summary: finding.summary,
         recall_anchor: finding.recall_anchor,

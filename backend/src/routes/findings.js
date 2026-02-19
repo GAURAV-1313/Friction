@@ -18,7 +18,8 @@ router.get('/', requireAuth, async (req, res) => {
     const pool = getDbPool();
     const [rows] = await pool.query(
       `SELECT f.finding_id, f.snapshot_id, f.type, f.topic, f.summary, f.recall_anchor, f.confidence_ai,
-              f.evidence_moment_ids, f.state, f.created_at, s.created_at AS snapshot_created_at
+              f.evidence_moment_ids, f.state, f.created_at, f.domain_id, f.subdomain_id,
+              s.created_at AS snapshot_created_at
        FROM candidate_findings f
        LEFT JOIN snapshots s ON s.snapshot_id = f.snapshot_id
        WHERE f.user_id = ?
@@ -102,7 +103,7 @@ async function handleFindingDecision(req, res, nextState) {
       await connection.beginTransaction();
 
       const [findingRows] = await connection.query(
-        `SELECT finding_id, type, topic, summary, state
+        `SELECT finding_id, type, topic, summary, recall_anchor, state, domain_id, subdomain_id
          FROM candidate_findings
          WHERE finding_id = ? AND user_id = ? LIMIT 1`,
         [findingId, userId]
@@ -125,20 +126,28 @@ async function handleFindingDecision(req, res, nextState) {
       );
 
       const [recordRows] = await connection.query(
-        `SELECT record_id, topic
+        `SELECT record_id, topic, domain_id, subdomain_id
          FROM learning_records
          WHERE user_id = ? AND type = ?`,
         [userId, finding.type]
       );
 
-      const bestMatch = findBestTopicMatch(recordRows, finding.topic);
+      const bestMatch = findBestTopicMatch(recordRows, finding.topic, finding.domain_id, finding.subdomain_id);
 
       if (!bestMatch) {
         await connection.query(
           `INSERT INTO learning_records
-            (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count)
-           VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0)`,
-          [userId, finding.type, finding.topic, finding.summary, finding.recall_anchor || null]
+            (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count, domain_id, subdomain_id)
+           VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0, ?, ?)`,
+          [
+            userId,
+            finding.type,
+            finding.topic,
+            finding.summary,
+            finding.recall_anchor || null,
+            finding.domain_id || null,
+            finding.subdomain_id || null
+          ]
         );
       } else {
         await connection.query(
@@ -166,7 +175,7 @@ async function handleFindingDecision(req, res, nextState) {
 
 module.exports = router;
 
-function findBestTopicMatch(records, topic) {
+function findBestTopicMatch(records, topic, domainId, subdomainId) {
   if (!records || records.length === 0) return null;
   const threshold = Number(process.env.TOPIC_SIM_THRESHOLD || 0.8);
   const target = normalizeTopic(topic);
@@ -174,6 +183,12 @@ function findBestTopicMatch(records, topic) {
   let bestScore = 0;
 
   for (const record of records) {
+    if (domainId && record.domain_id && record.domain_id !== domainId) {
+      continue;
+    }
+    if (subdomainId && record.subdomain_id && record.subdomain_id !== subdomainId) {
+      continue;
+    }
     const score = jaccardSimilarity(target, normalizeTopic(record.topic));
     if (score > bestScore) {
       bestScore = score;
