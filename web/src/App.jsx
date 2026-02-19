@@ -410,6 +410,13 @@ export default function App() {
                             <article key={finding.finding_id} className="card">
                               <div className="card-head">
                                 <div className="tags">
+                                  {(() => {
+                                    const domainLabel = finding.domain_label || finding.domain_name;
+                                    const domainText = domainLabel
+                                      ? `${domainLabel}${finding.subdomain_name ? ` · ${finding.subdomain_name}` : ''}`
+                                      : '';
+                                    return domainText ? <span className="tag domain">{domainText}</span> : null;
+                                  })()}
                                   <span className={`tag ${finding.type}`}>{finding.type}</span>
                                   <span className="tag">{finding.confidence_ai}</span>
                                 </div>

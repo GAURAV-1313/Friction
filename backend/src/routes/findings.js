@@ -19,9 +19,13 @@ router.get('/', requireAuth, async (req, res) => {
     const [rows] = await pool.query(
       `SELECT f.finding_id, f.snapshot_id, f.type, f.topic, f.summary, f.recall_anchor, f.confidence_ai,
               f.evidence_moment_ids, f.state, f.created_at, f.domain_id, f.subdomain_id,
+              d.name AS domain_name, d.label AS domain_label,
+              sd.name AS subdomain_name,
               s.created_at AS snapshot_created_at
        FROM candidate_findings f
        LEFT JOIN snapshots s ON s.snapshot_id = f.snapshot_id
+       LEFT JOIN domains d ON d.domain_id = f.domain_id
+       LEFT JOIN subdomains sd ON sd.subdomain_id = f.subdomain_id
        WHERE f.user_id = ?
        ${state ? 'AND f.state = ?' : ''}
        ORDER BY f.created_at DESC`,

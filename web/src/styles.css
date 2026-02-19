@@ -492,6 +492,12 @@ html, body {
 
 }
 
+.tag.domain {
+  text-transform: none;
+  letter-spacing: 0.2px;
+  color: var(--muted);
+}
+
 .tag.insight {
   border-color: var(--insight);
   color: var(--insight);
