@@ -1,6 +1,7 @@
 
 :root {
   --bg: #0a0d12;
+  --bg-2: #0a0d12;
   --surface: #0f141b;
   --panel: #10161f;
   --border: #1c2733;
@@ -15,18 +16,23 @@
 }
 
 :root[data-theme='light'] {
-  --bg: #fff4dc;
-  --surface: #fffbf2;
+  --bg: #f9f5ef;
+  --bg-2: #f2e8dd;
+  --surface: #ffffff;
   --panel: #fff7e8;
-  --border: #d6c8b3;
-  --text: #111111;
-  --muted: #4f473f;
-  --accent: #1b4db3;
-  --accent-2: #0ea5e9;
+  --border: #e2d4c5;
+  --text: #12100e;
+  --muted: #5b544b;
+  --accent: #161616;
+  --accent-2: #161616;
   --danger: #b01717;
   --insight: #176a44;
   --gap: #a35600;
   --pattern: #5d35b8;
+}
+
+:root[data-theme='light'] body {
+  background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 45%, var(--bg-2) 100%);
 }
 :root[data-theme='light'] .topbar {
   background: var(--panel);

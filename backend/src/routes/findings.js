@@ -27,7 +27,7 @@ router.get('/', requireAuth, async (req, res) => {
        LEFT JOIN domains d ON d.domain_id = f.domain_id
        LEFT JOIN subdomains sd ON sd.subdomain_id = f.subdomain_id
        WHERE f.user_id = ?
-       ${state ? 'AND f.state = ?' : ''}
+       ${state ? 'AND f.state = ?' : ''} 
        ORDER BY f.created_at DESC`,
       state ? [userId, state] : [userId]
     );
