@@ -7,6 +7,8 @@
   --border: #1c2733;
   --text: #e6edf3;
   --muted: #8b99a8;
+  --shadow: 0 18px 50px rgba(13, 10, 8, 0.12);
+  --pill: #efe3d7;
   --accent: #3b82f6;
   --accent-2: #22d3ee;
   --danger: #f87171;
@@ -23,6 +25,8 @@
   --border: #e2d4c5;
   --text: #12100e;
   --muted: #5b544b;
+  --shadow: 0 18px 50px rgba(13, 10, 8, 0.12);
+  --pill: #efe3d7;
   --accent: #161616;
   --accent-2: #161616;
   --danger: #b01717;
@@ -33,10 +37,6 @@
 
 :root[data-theme='light'] body {
   background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 45%, var(--bg-2) 100%);
-}
-:root[data-theme='light'] .topbar {
-  background: var(--panel);
-  border-bottom-color: var(--border);
 }
 
 :root[data-theme='light'] .title {
@@ -53,8 +53,20 @@
 }
 
 :root[data-theme='light'] .pill {
-  background: rgba(255, 255, 255, 0.5);
-  color: #111111;
+  background: var(--pill);
+  color: var(--muted);
+}
+
+:root[data-theme='light'] .topbar {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  padding: 18px 20px;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+:root[data-theme='light'] .pill {
+  border-radius: 999px;
 }
 
 * {
@@ -82,8 +94,7 @@ html, body {
 
 .topbar {
   display: flex;
-    border-radius: 8px;
-
+  border-radius: 8px;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 12px;
@@ -111,8 +122,7 @@ html, body {
 
 .pill {
   border: .1px solid var(--border);
-   border-radius: 8px;
- 
+  border-radius: 8px;
   padding: 6px 10px;
   font-size: 12px;
 }
@@ -206,8 +216,12 @@ html, body {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 0px 0 10px;
-  border-bottom: 0px solid var(--border);
+  padding: 6px 0 14px;
+  border-bottom: 1px solid rgba(226, 212, 197, 0.8);
+}
+
+:root[data-theme='light'] .filters-bar {
+  border-bottom-color: rgba(226, 212, 197, 0.8);
 }
 
 .filters-group {
@@ -235,9 +249,14 @@ html, body {
   border-radius: 999px;
   background: var(--panel);
   color: var(--muted);
-  padding: 6px 14px;
+  padding: 8px 16px;
   font-size: 12px;
   cursor: pointer;
+}
+
+:root[data-theme='light'] .pill-btn {
+  background: var(--pill);
+  color: var(--muted);
 }
 
 .pill-btn.active {
@@ -247,15 +266,19 @@ html, body {
 }
 
 :root[data-theme='light'] .pill-btn.active {
-  border-color: #b8872a;
-  color: #111111;
-  box-shadow: 0 0 0 1px rgba(184, 135, 42, 0.25) inset;
+  border-color: #c7a67f;
+  color: #12100e;
+  box-shadow: none;
 }
 
 .filters-divider {
   width: 1px;
   height: 18px;
-  background: var(--border);
+  background: rgba(226, 212, 197, 0.8);
+}
+
+:root[data-theme='light'] .filters-divider {
+  background: rgba(226, 212, 197, 0.8);
 }
 
 .filters-count {
@@ -286,7 +309,7 @@ html, body {
 }
 
 .batch-card {
-  border: 0;
+  border: 1px solid var(--border);
   background: var(--panel);
   border-radius: 8px;
   overflow: hidden;
@@ -300,16 +323,27 @@ html, body {
   cursor: pointer;
 }
 
+:root[data-theme='light'] .batch-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 18px 20px 18px;
+  box-shadow: var(--shadow);
+}
+
 .batch-card:hover {
   background: rgba(59, 130, 246, 0.08);
 }
 
 :root[data-theme='light'] .batch-card:hover {
-  background: rgba(177, 126, 60, 0.08);
+  background: #fffdf9;
 }
 
 .batch-card.open {
   outline: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+:root[data-theme='light'] .batch-card.open {
+  outline: 1px solid rgba(199, 166, 127, 0.6);
 }
 
 .batch-head {
@@ -380,6 +414,13 @@ html, body {
   overflow: hidden;
 }
 
+:root[data-theme='light'] .batch-modal {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
 .batch-modal-head {
   display: grid;
   grid-template-columns: 1fr auto auto;
@@ -396,12 +437,16 @@ html, body {
   cursor: pointer;
 }
 
+:root[data-theme='light'] .batch-modal-head {
+  padding: 18px 20px;
+}
+
 .batch-modal-head:hover {
   background: rgba(59, 130, 246, 0.08);
 }
 
 :root[data-theme='light'] .batch-modal-head:hover {
-  background: rgba(177, 126, 60, 0.08);
+  background: #fffdf9;
 }
 
 .modal-close {
