@@ -110,6 +110,14 @@ router.get('/google/callback', async (req, res) => {
 
     return res.json({ token: jwtToken });
   } catch (err) {
+    // Log provider/DB details to diagnose callback failures in local/dev.
+    // eslint-disable-next-line no-console
+    console.error('google_oauth_callback_failed', {
+      message: err.message,
+      status: err.response?.status,
+      data: err.response?.data,
+      code: err.code
+    });
     return res.status(500).json({ error: 'google_oauth_failed' });
   }
 });
