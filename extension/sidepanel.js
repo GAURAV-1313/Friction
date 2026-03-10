@@ -1,5 +1,5 @@
-const API_BASE = 'https://friction-production.up.railway.app';
-const WEB_APP_URL = 'https://nofriction.netlify.app/reports';
+const API_BASE = globalThis.FRICTION_CONFIG?.API_BASE;
+const WEB_APP_URL = globalThis.FRICTION_CONFIG?.WEB_APP_URL;
 
 const momentInput = document.getElementById('moment');
 const tokenInput = document.getElementById('token');

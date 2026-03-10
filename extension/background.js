@@ -1,4 +1,6 @@
-const API_BASE = 'https://friction-production.up.railway.app';
+importScripts('config.js');
+
+const API_BASE = globalThis.FRICTION_CONFIG?.API_BASE;
 const COOLDOWN_MS = 3000;
 let lastCaptureAt = 0;
 
