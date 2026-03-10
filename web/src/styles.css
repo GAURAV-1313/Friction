@@ -234,6 +234,16 @@ p {
   border-radius: 8px;
 }
 
+.btn.highlight {
+  border: 1px solid rgba(25, 127, 230, 0.45);
+  box-shadow: 0 0 0 2px rgba(25, 127, 230, 0.18), 0 10px 24px rgba(25, 127, 230, 0.12);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.tooltip-visible[data-tooltip]::after {
+  opacity: 1;
+}
+
 .btn.tiny {
   font-size: 11px;
   padding: 4px 8px;
@@ -644,6 +654,26 @@ p {
   margin-top: 10px;
   font-size: 12px;
   color: var(--muted);
+}
+
+.message.notice {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: rgba(25, 127, 230, 0.06);
+  color: var(--text);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(25, 127, 230, 0.2);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(25, 127, 230, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(25, 127, 230, 0);
+  }
 }
 
 @media (max-width: 1200px) {

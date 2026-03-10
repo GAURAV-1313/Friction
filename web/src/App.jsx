@@ -252,6 +252,9 @@ export default function App() {
     window.open(`${API_BASE}/auth/google`, '_blank', 'noopener');
   };
 
+  const showLoginHint = !isLoggedIn;
+  const showConnectHint = isLoggedIn;
+
   return (
     <div className="frame">
       <header className="topbar">
@@ -269,10 +272,10 @@ export default function App() {
             <IconHome />
           </a>
           <button
-            className="btn ghost icon"
+            className={`btn ghost icon ${showConnectHint ? 'highlight tooltip-visible' : ''}`}
             onClick={handleCopyToken}
             aria-label="Connect to ext"
-            data-tooltip="Connect to ext"
+            data-tooltip="Connect"
           >
             <IconLink />
           </button>
@@ -304,7 +307,7 @@ export default function App() {
             {theme === 'dark' ? <IconMoon /> : <IconSun />}
           </button>
           <button
-            className="btn ghost icon"
+            className={`btn ghost icon ${showLoginHint ? 'highlight tooltip-visible' : ''}`}
             onClick={isLoggedIn ? handleLogout : openGoogleLogin}
             aria-label={isLoggedIn ? 'Logout' : 'Login'}
             data-tooltip={isLoggedIn ? 'Logout' : 'Login'}
@@ -315,6 +318,16 @@ export default function App() {
       </header>
 
       {message && message !== 'Logged out.' && <div className="message">{message}</div>}
+      {view === 'reports' && showConnectHint && (
+        <div className="message notice">
+          If the extension isn’t connected, click the Connect button in the top bar.
+        </div>
+      )}
+      {view === 'reports' && showLoginHint && (
+        <div className="message notice">
+          Please login to access reports.
+        </div>
+      )}
 
       <main className="content">
         <div className="filters-bar">
