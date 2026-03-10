@@ -318,12 +318,12 @@ export default function App() {
       </header>
 
       {message && message !== 'Logged out.' && <div className="message">{message}</div>}
-      {view === 'reports' && showConnectHint && (
+      {showConnectHint && (
         <div className="message notice">
           If the extension isn’t connected, click the Connect button in the top bar.
         </div>
       )}
-      {view === 'reports' && showLoginHint && (
+      {showLoginHint && (
         <div className="message notice">
           Please login to access reports.
         </div>
