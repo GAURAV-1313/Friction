@@ -15,7 +15,12 @@ function initDbPool() {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     connectionLimit: 10,
-    charset: 'utf8mb4_unicode_ci'
+    charset: 'utf8mb4_unicode_ci',
+    waitForConnections: true,
+    queueLimit: 0,
+    connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 10000),
+    enableKeepAlive: true,
+    keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 0)
   });
 
   return pool;
