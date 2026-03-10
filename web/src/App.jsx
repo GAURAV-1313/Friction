@@ -16,6 +16,7 @@ export default function App() {
   const [records, setRecords] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pendingActions, setPendingActions] = useState({});
   const isLoggedIn = Boolean(token);
   const [tokenValid, setTokenValid] = useState(null);
   const groupedFindings = useMemo(() => groupBySnapshot(findings), [findings]);
@@ -188,6 +189,7 @@ export default function App() {
 
   const updateFinding = async (id, action) => {
     if (!token) return;
+    if (pendingActions[id]) return;
 
     const map = {
       confirm: { method: 'POST', path: `/api/findings/${id}/confirm` },
@@ -198,21 +200,52 @@ export default function App() {
     const payload = map[action];
     if (!payload) return;
 
-    const response = await fetch(`${API_BASE}${payload.path}`, {
-      method: payload.method,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    if (response.status === 401) {
-      setTokenValid(false);
-      setMessage('Token invalid. Please log in again.');
-      localStorage.removeItem('friction_token');
-      setToken('');
-      return;
-    }
+    setPendingActions((prev) => ({ ...prev, [id]: action }));
+    let removedFinding = null;
+    let removedIndex = -1;
 
-    setFindings((items) => items.filter((item) => item.finding_id !== id));
+    setFindings((items) => {
+      removedIndex = items.findIndex((item) => item.finding_id === id);
+      if (removedIndex === -1) return items;
+      removedFinding = items[removedIndex];
+      return items.filter((item) => item.finding_id !== id);
+    });
+
+    try {
+      const response = await fetch(`${API_BASE}${payload.path}`, {
+        method: payload.method,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.status === 401) {
+        setTokenValid(false);
+        setMessage('Token invalid. Please log in again.');
+        localStorage.removeItem('friction_token');
+        setToken('');
+        return;
+      }
+      if (!response.ok) {
+        throw new Error('finding_update_failed');
+      }
+    } catch (err) {
+      if (removedFinding) {
+        setFindings((items) => {
+          if (items.some((item) => item.finding_id === id)) return items;
+          const next = [...items];
+          const safeIndex = Math.max(0, Math.min(removedIndex, next.length));
+          next.splice(safeIndex, 0, removedFinding);
+          return next;
+        });
+      }
+      setMessage('Action failed. Please retry.');
+    } finally {
+      setPendingActions((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    }
   };
 
   const openGoogleLogin = () => {
@@ -224,12 +257,12 @@ export default function App() {
       <header className="topbar">
         <div className="brand">
           <div className="title">FRICTION</div>
-          <div className="subtitle">GAURAV-1313©</div>
+          <div className="subtitle">The Winner takes it all</div>
         </div>
         <div className="status">
           <a
             className="btn ghost icon"
-            href="/"
+            href="/landing.html"
             aria-label="Landing"
             data-tooltip="Landing"
           >
@@ -406,8 +439,13 @@ export default function App() {
                           </span>
                         </button>
                         <div className={`batch-body ${group.items.length > 1 ? 'two-col' : 'single-col'}`}>
-                          {group.items.map((finding) => (
-                            <article key={finding.finding_id} className="card">
+                          {group.items.map((finding) => {
+                            const isUpdating = Boolean(pendingActions[finding.finding_id]);
+                            return (
+                            <article
+                              key={finding.finding_id}
+                              className={`card ${isUpdating ? 'busy' : ''}`}
+                            >
                               <div className="card-head">
                                 <div className="tags">
                                   {(() => {
@@ -425,30 +463,33 @@ export default function App() {
                                   <button
                                     className="btn tiny icon"
                                     onClick={() => updateFinding(finding.finding_id, 'confirm')}
+                                    disabled={isUpdating}
                                     aria-label="Accept"
                                     data-tooltip="Accept"
                                   >
-                                    <IconCheck />
+                                    {isUpdating ? <IconLoader /> : <IconCheck />}
                                   </button>
                                   )}
                                   {status !== 'deferred' && (
                                   <button
                                     className="btn tiny ghost icon"
                                     onClick={() => updateFinding(finding.finding_id, 'defer')}
+                                    disabled={isUpdating}
                                     aria-label="Ignore"
                                     data-tooltip="Ignore"
                                   >
-                                    <IconSlash />
+                                    {isUpdating ? <IconLoader /> : <IconSlash />}
                                   </button>
                                   )}
                                   {status === 'confirmed' && (
                                   <button
                                     className="btn tiny ghost icon"
                                     onClick={() => updateFinding(finding.finding_id, 'resolve')}
+                                    disabled={isUpdating}
                                     aria-label="Resolve"
                                     data-tooltip="Resolve"
                                   >
-                                    <IconCheckCircle />
+                                    {isUpdating ? <IconLoader /> : <IconCheckCircle />}
                                   </button>
                                   )}
                                 </div>
@@ -457,7 +498,8 @@ export default function App() {
                               <p>{finding.summary}</p>
                               {finding.recall_anchor && <div className="anchor">Recall: {finding.recall_anchor}</div>}
                             </article>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     ))}
@@ -588,6 +630,14 @@ function IconCheckCircle() {
     <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="9" />
       <path d="M16 8l-5.5 7L8 12.5" />
+    </svg>
+  );
+}
+
+function IconLoader() {
+  return (
+    <svg className="icon icon-spin" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3a9 9 0 1 1-6.36 2.64" />
     </svg>
   );
 }
