@@ -1,0 +1,25 @@
+.DS_Store
+.env
+.env.*
+*.log
+logs
+coverage
+
+# dependencies
+node_modules/
+
+# build outputs
+dist/
+build/
+.vite/
+
+# OS/editor
+*.swp
+.idea/
+.vscode/
+
+# misc
+*.tgz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
