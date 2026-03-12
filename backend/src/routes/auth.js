@@ -67,27 +67,40 @@ async function verifyIdToken(idToken) {
   return ticket.getPayload();
 }
 
-async function upsertUserFromGoogle(payload) {
+async function upsertUserFromGoogle(payload, retries = 3) {
   const pool = getDbPool();
   const { sub, email, name } = payload;
 
-  const [rows] = await pool.query('SELECT user_id FROM users WHERE google_sub = ? LIMIT 1', [sub]);
-  if (rows.length > 0) {
-    return rows[0].user_id;
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const [rows] = await pool.query('SELECT user_id FROM users WHERE google_sub = ? LIMIT 1', [sub]);
+      if (rows.length > 0) {
+        return rows[0].user_id;
+      }
+
+      const userId = randomUUID();
+      await pool.query(
+        'INSERT INTO users (user_id, email, name, google_sub) VALUES (?, ?, ?, ?)',
+        [userId, email || '', name || '', sub]
+      );
+
+      await pool.query(
+        'INSERT INTO user_settings (user_id, output_language) VALUES (?, ?) ON DUPLICATE KEY UPDATE output_language = output_language',
+        [userId, 'hinglish']
+      );
+
+      return userId;
+    } catch (err) {
+      const isRetryable = ['ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'PROTOCOL_CONNECTION_LOST'].includes(err.code);
+      if (isRetryable && attempt < retries) {
+        // eslint-disable-next-line no-console
+        console.warn(`DB upsert attempt ${attempt} failed (${err.code}), retrying...`);
+        await new Promise((r) => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw err;
+    }
   }
-
-  const userId = randomUUID();
-  await pool.query(
-    'INSERT INTO users (user_id, email, name, google_sub) VALUES (?, ?, ?, ?)',
-    [userId, email || '', name || '', sub]
-  );
-
-  await pool.query(
-    'INSERT INTO user_settings (user_id, output_language) VALUES (?, ?) ON DUPLICATE KEY UPDATE output_language = output_language',
-    [userId, 'hinglish']
-  );
-
-  return userId;
 }
 
 router.get('/google', (req, res) => {

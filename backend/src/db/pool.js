@@ -18,7 +18,7 @@ function initDbPool() {
     charset: 'utf8mb4_unicode_ci',
     waitForConnections: true,
     queueLimit: 0,
-    connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 10000),
+    connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 30000),
     enableKeepAlive: true,
     keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 0)
   });
