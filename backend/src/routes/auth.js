@@ -37,11 +37,25 @@ async function exchangeCodeForTokens(code) {
     grant_type: 'authorization_code'
   });
 
-  const response = await axios.post(GOOGLE_TOKEN_URL, params.toString(), {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  });
-
-  return response.data;
+  const maxRetries = 3;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await axios.post(GOOGLE_TOKEN_URL, params.toString(), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        timeout: 15000
+      });
+      return response.data;
+    } catch (err) {
+      const isRetryable = ['ETIMEDOUT', 'ECONNRESET', 'ENOTFOUND', 'EAI_AGAIN'].includes(err.code);
+      if (isRetryable && attempt < maxRetries) {
+        // eslint-disable-next-line no-console
+        console.warn(`Token exchange attempt ${attempt} failed (${err.code}), retrying...`);
+        await new Promise((r) => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw err;
+    }
+  }
 }
 
 async function verifyIdToken(idToken) {
@@ -114,6 +128,7 @@ router.get('/google/callback', async (req, res) => {
     // eslint-disable-next-line no-console
     console.error('google_oauth_callback_failed', {
       message: err.message,
+      stack: err.stack,
       status: err.response?.status,
       data: err.response?.data,
       code: err.code
