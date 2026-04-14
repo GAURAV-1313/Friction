@@ -2,3 +2,7 @@
   base = "web"
   command = "npm run build"
   publish = "dist"
+
+[build.environment]
+  VITE_API_BASE = "https://friction.onrender.com"
+  VITE_WEB_BASE = "https://nofriction.netlify.app"

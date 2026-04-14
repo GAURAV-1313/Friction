@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: friction
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /health

@@ -7,7 +7,7 @@ const CONFIG_BY_ENV = {
     WEB_APP_URL: 'http://localhost:3000/reports'
   },
   production: {
-    API_BASE: 'https://friction-production.up.railway.app',
+    API_BASE: 'https://friction.onrender.com',
     WEB_APP_URL: 'https://nofriction.netlify.app/reports'
   }
 };

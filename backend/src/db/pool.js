@@ -20,10 +20,32 @@ function initDbPool() {
     queueLimit: 0,
     connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 30000),
     enableKeepAlive: true,
-    keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 0)
+    keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 10000)
   });
 
   return pool;
+}
+
+async function waitForDb(maxRetries = 10, intervalMs = 3000) {
+  const p = initDbPool();
+  for (let i = 1; i <= maxRetries; i++) {
+    try {
+      const conn = await p.getConnection();
+      await conn.ping();
+      conn.release();
+      // eslint-disable-next-line no-console
+      console.log('DB connected');
+      return;
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(`DB not ready (attempt ${i}/${maxRetries}): ${err.code || err.message}`);
+      if (i < maxRetries) {
+        await new Promise((r) => setTimeout(r, intervalMs));
+      }
+    }
+  }
+  // eslint-disable-next-line no-console
+  console.error('DB failed to connect after all retries — continuing anyway');
 }
 
 function getDbPool() {
@@ -33,4 +55,4 @@ function getDbPool() {
   return pool;
 }
 
-module.exports = { initDbPool, getDbPool };
+module.exports = { initDbPool, getDbPool, waitForDb };

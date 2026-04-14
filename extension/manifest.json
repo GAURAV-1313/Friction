@@ -23,7 +23,7 @@
     "default_path": "sidepanel.html"
   },
   "host_permissions": [
-    "https://friction-production.up.railway.app/*",
+    "https://friction.onrender.com/*",
     "http://localhost:4000/*"
   ],
   "background": {

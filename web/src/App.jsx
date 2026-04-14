@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:4000';
+const IS_LOCAL_HOST =
+  typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE =
+  import.meta.env.VITE_API_BASE || (IS_LOCAL_HOST ? 'http://localhost:4000' : 'https://friction.onrender.com');
+const WEB_BASE =
+  import.meta.env.VITE_WEB_BASE || (IS_LOCAL_HOST ? window.location.origin : 'https://nofriction.netlify.app');
 
 const STATUS_LABELS = {
   unreviewed: 'Active',
@@ -161,7 +167,7 @@ export default function App() {
       const left = window.screen.availWidth - width;
       const top = Math.floor((window.screen.availHeight - height) / 2);
       window.open(
-        '/reports',
+        `${WEB_BASE}/reports`,
         'friction-reports',
         `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
       );
@@ -265,7 +271,7 @@ export default function App() {
         <div className="status">
           <a
             className="btn ghost icon"
-            href="/landing.html"
+            href={`${WEB_BASE}/`}
             aria-label="Landing"
             data-tooltip="Landing"
           >

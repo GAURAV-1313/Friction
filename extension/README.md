@@ -17,9 +17,10 @@ Capture learning moments from any page and generate reports in the Friction web 
 
 ## Quick Start (Production)
 1. Open `config.js` and set `ENV = 'production'`.
-2. Load the extension as above.
-3. Click **Login** in the web app to get a token.
-4. In the extension, click **Connect** and paste the token.
+2. Ensure `CONFIG_BY_ENV.production.API_BASE` is `https://friction.onrender.com`.
+3. Load the extension as above.
+4. Click **Login** in the web app to get a token.
+5. In the extension, click **Connect** and paste the token.
 
 ## Keyboard Shortcut
 - Default: `Alt+M`
