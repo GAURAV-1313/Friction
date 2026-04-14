@@ -17,6 +17,8 @@ function createApp() {
   initDbPool();
 
   const app = express();
+  app.set('trust proxy', 1);
+
   const allowlist = (process.env.CORS_ORIGINS || '')
     .split(',')
     .map((value) => value.trim())

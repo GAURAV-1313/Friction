@@ -20,14 +20,18 @@ function getGoogleCallbackUrl(req) {
   }
 
   const forwardedProto = req.headers['x-forwarded-proto'];
-  const protocol = (forwardedProto && forwardedProto.split(',')[0].trim()) || req.protocol;
   const host = req.headers['x-forwarded-host'] || req.get('host');
 
   if (!host) {
     return '';
   }
 
-  return new URL('/auth/google/callback', `${protocol}://${host}`).toString();
+  const normalizedHost = host.split(',')[0].trim();
+  const isLocalHost = normalizedHost.startsWith('localhost') || normalizedHost.startsWith('127.0.0.1');
+  const inferredProto = (forwardedProto && forwardedProto.split(',')[0].trim()) || req.protocol;
+  const protocol = isLocalHost ? (inferredProto || 'http') : 'https';
+
+  return new URL('/auth/google/callback', `${protocol}://${normalizedHost}`).toString();
 }
 
 function getOAuthClient() {
