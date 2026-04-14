@@ -3,7 +3,11 @@ const { getDbPool } = require('../db/pool');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'friction-backend' });
+});
+
+router.get('/ready', async (req, res) => {
   try {
     const pool = getDbPool();
     await pool.query('SELECT 1');
