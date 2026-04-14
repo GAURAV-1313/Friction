@@ -10,14 +10,40 @@ const router = express.Router();
 const GOOGLE_AUTH_BASE = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 
-function getOAuthClient() {
-  return new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+function getGoogleClientId() {
+  return process.env.GOOGLE_CLIENT_ID || '';
 }
 
-function buildGoogleAuthUrl(state) {
+function getGoogleCallbackUrl(req) {
+  if (process.env.GOOGLE_CALLBACK_URL) {
+    return process.env.GOOGLE_CALLBACK_URL;
+  }
+
+  const forwardedProto = req.headers['x-forwarded-proto'];
+  const protocol = (forwardedProto && forwardedProto.split(',')[0].trim()) || req.protocol;
+  const host = req.headers['x-forwarded-host'] || req.get('host');
+
+  if (!host) {
+    return '';
+  }
+
+  return new URL('/auth/google/callback', `${protocol}://${host}`).toString();
+}
+
+function getOAuthClient() {
+  const clientId = getGoogleClientId();
+
+  if (!clientId) {
+    return null;
+  }
+
+  return new OAuth2Client(clientId);
+}
+
+function buildGoogleAuthUrl(state, callbackUrl, clientId) {
   const params = new URLSearchParams({
-    client_id: process.env.GOOGLE_CLIENT_ID || '',
-    redirect_uri: process.env.GOOGLE_CALLBACK_URL || '',
+    client_id: clientId,
+    redirect_uri: callbackUrl,
     response_type: 'code',
     scope: 'openid email profile',
     access_type: 'offline',
@@ -28,12 +54,12 @@ function buildGoogleAuthUrl(state) {
   return `${GOOGLE_AUTH_BASE}?${params.toString()}`;
 }
 
-async function exchangeCodeForTokens(code) {
+async function exchangeCodeForTokens(code, callbackUrl, clientId) {
   const params = new URLSearchParams({
     code,
-    client_id: process.env.GOOGLE_CLIENT_ID || '',
+    client_id: clientId,
     client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
-    redirect_uri: process.env.GOOGLE_CALLBACK_URL || '',
+    redirect_uri: callbackUrl,
     grant_type: 'authorization_code'
   });
 
@@ -60,6 +86,10 @@ async function exchangeCodeForTokens(code) {
 
 async function verifyIdToken(idToken) {
   const client = getOAuthClient();
+  if (!client) {
+    throw new Error('google_oauth_not_configured');
+  }
+
   const ticket = await client.verifyIdToken({
     idToken,
     audience: process.env.GOOGLE_CLIENT_ID
@@ -105,11 +135,15 @@ async function upsertUserFromGoogle(payload, retries = 3) {
 
 router.get('/google', (req, res) => {
   const state = req.query.state || 'friction';
-  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CALLBACK_URL) {
+
+  const clientId = getGoogleClientId();
+  const callbackUrl = getGoogleCallbackUrl(req);
+
+  if (!clientId || !callbackUrl) {
     return res.status(500).json({ error: 'google_oauth_not_configured' });
   }
 
-  return res.redirect(buildGoogleAuthUrl(state));
+  return res.redirect(buildGoogleAuthUrl(state, callbackUrl, clientId));
 });
 
 router.get('/google/callback', async (req, res) => {
@@ -119,7 +153,14 @@ router.get('/google/callback', async (req, res) => {
   }
 
   try {
-    const tokens = await exchangeCodeForTokens(code);
+    const clientId = getGoogleClientId();
+    const callbackUrl = getGoogleCallbackUrl(req);
+
+    if (!clientId || !callbackUrl) {
+      return res.status(500).json({ error: 'google_oauth_not_configured' });
+    }
+
+    const tokens = await exchangeCodeForTokens(code, callbackUrl, clientId);
     const payload = await verifyIdToken(tokens.id_token);
     const userId = await upsertUserFromGoogle(payload);
 
@@ -157,6 +198,10 @@ router.post('/token', async (req, res) => {
   }
 
   try {
+    if (!getGoogleClientId()) {
+      return res.status(500).json({ error: 'google_oauth_not_configured' });
+    }
+
     const payload = await verifyIdToken(id_token);
     const userId = await upsertUserFromGoogle(payload);
 
