@@ -3,6 +3,27 @@ const dotenv = require('dotenv');
 
 let pool;
 
+function parseBoolean(value, fallback = false) {
+  if (value === undefined || value === null || value === '') return fallback;
+  return ['1', 'true', 'yes', 'on', 'required'].includes(String(value).toLowerCase());
+}
+
+function getDbSslConfig() {
+  const sslEnabled = parseBoolean(process.env.DB_SSL, false) || parseBoolean(process.env.DB_SSL_MODE, false);
+  if (!sslEnabled) {
+    return undefined;
+  }
+
+  const rejectUnauthorized = parseBoolean(process.env.DB_SSL_REJECT_UNAUTHORIZED, true);
+  const ca = process.env.DB_SSL_CA ? process.env.DB_SSL_CA.replace(/\\n/g, '\n') : undefined;
+
+  if (ca) {
+    return { rejectUnauthorized, ca };
+  }
+
+  return { rejectUnauthorized };
+}
+
 function initDbPool() {
   if (pool) return pool;
 
@@ -20,7 +41,8 @@ function initDbPool() {
     queueLimit: 0,
     connectTimeout: Number(process.env.DB_CONNECT_TIMEOUT_MS || 30000),
     enableKeepAlive: true,
-    keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 10000)
+    keepAliveInitialDelay: Number(process.env.DB_KEEPALIVE_MS || 10000),
+    ssl: getDbSslConfig()
   });
 
   return pool;
