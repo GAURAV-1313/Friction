@@ -10,6 +10,9 @@ router.get('/', requireAuth, async (req, res) => {
   const userId = req.auth.user_id;
   const state = req.query.state;
 
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+
   if (state && !ALLOWED_STATES.has(state)) {
     return res.status(400).json({ error: 'invalid_state' });
   }

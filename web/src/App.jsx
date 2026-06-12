@@ -78,6 +78,7 @@ export default function App() {
     try {
       const url = `${API_BASE}/api/findings?state=${nextStatus}`;
       const response = await fetch(url, {
+        cache: 'no-store',
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -112,6 +113,7 @@ export default function App() {
 
     try {
       const response = await fetch(`${API_BASE}/api/reports/summary`, {
+        cache: 'no-store',
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -174,6 +176,7 @@ export default function App() {
 
       const response = await fetch(`${API_BASE}/api/snapshots/run`, {
         method: 'POST',
+        cache: 'no-store',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
@@ -220,6 +223,7 @@ export default function App() {
     try {
       const response = await fetch(`${API_BASE}${payload.path}`, {
         method: payload.method,
+        cache: 'no-store',
         headers: {
           Authorization: `Bearer ${token}`
         }
