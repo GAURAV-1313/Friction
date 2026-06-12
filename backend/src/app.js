@@ -19,10 +19,7 @@ function createApp() {
   const app = express();
   app.set('trust proxy', 1);
 
-  const allowlist = (process.env.CORS_ORIGINS || '')
-    .split(',')
-    .map((value) => value.trim())
-    .filter(Boolean);
+  const allowlist = buildCorsAllowlist();
 
   app.use(
     cors({
@@ -59,3 +56,31 @@ function createApp() {
 }
 
 module.exports = { createApp };
+
+function buildCorsAllowlist() {
+  const configuredOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+
+  const defaults = ['http://localhost:3000', 'http://localhost:4000'];
+  const webAppOrigin = normalizeOrigin(process.env.WEB_APP_URL);
+
+  return Array.from(
+    new Set([
+      ...defaults,
+      ...configuredOrigins,
+      ...(webAppOrigin ? [webAppOrigin] : [])
+    ])
+  );
+}
+
+function normalizeOrigin(value) {
+  if (!value) return null;
+
+  try {
+    return new URL(value).origin;
+  } catch (err) {
+    return null;
+  }
+}

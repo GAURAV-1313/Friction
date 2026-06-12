@@ -59,6 +59,30 @@ CREATE TABLE IF NOT EXISTS snapshots (
   KEY idx_snapshots_user_created (user_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- domains
+CREATE TABLE IF NOT EXISTS domains (
+  domain_id CHAR(36) PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  label VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_domains_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- subdomains
+CREATE TABLE IF NOT EXISTS subdomains (
+  subdomain_id CHAR(36) PRIMARY KEY,
+  domain_id CHAR(36) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  count_source INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_subdomains_domain
+    FOREIGN KEY (domain_id) REFERENCES domains(domain_id)
+    ON DELETE CASCADE,
+  UNIQUE KEY uniq_subdomains_domain_slug (domain_id, slug),
+  KEY idx_subdomains_domain (domain_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- candidate_findings
 CREATE TABLE IF NOT EXISTS candidate_findings (
   finding_id CHAR(36) PRIMARY KEY,

@@ -10,6 +10,10 @@ const router = express.Router();
 const GOOGLE_AUTH_BASE = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
 
+function isOAuthDebugEnabled() {
+  return ['1', 'true', 'yes', 'on'].includes(String(process.env.OAUTH_DEBUG || '').toLowerCase());
+}
+
 function getGoogleClientId() {
   return process.env.GOOGLE_CLIENT_ID || '';
 }
@@ -42,6 +46,18 @@ function getOAuthClient() {
   }
 
   return new OAuth2Client(clientId);
+}
+
+function validateJwtConfig() {
+  const missing = [];
+  if (!process.env.JWT_SECRET) missing.push('JWT_SECRET');
+  if (!process.env.JWT_ISSUER) missing.push('JWT_ISSUER');
+  if (!process.env.JWT_AUDIENCE) missing.push('JWT_AUDIENCE');
+  if (missing.length > 0) {
+    const err = new Error(`jwt_config_missing:${missing.join(',')}`);
+    err.code = 'JWT_CONFIG_MISSING';
+    throw err;
+  }
 }
 
 function buildGoogleAuthUrl(state, callbackUrl, clientId) {
@@ -137,6 +153,42 @@ async function upsertUserFromGoogle(payload, retries = 3) {
   }
 }
 
+router.get('/debug', async (req, res) => {
+  if (!isOAuthDebugEnabled()) {
+    return res.status(404).json({ error: 'not_found' });
+  }
+
+  const result = {
+    oauth_debug: true,
+    callback_url: getGoogleCallbackUrl(req),
+    web_app_url: process.env.WEB_APP_URL || '',
+    checks: {
+      google_client_id: Boolean(process.env.GOOGLE_CLIENT_ID),
+      google_client_secret: Boolean(process.env.GOOGLE_CLIENT_SECRET),
+      google_callback_url: Boolean(process.env.GOOGLE_CALLBACK_URL),
+      jwt_secret: Boolean(process.env.JWT_SECRET),
+      jwt_issuer: Boolean(process.env.JWT_ISSUER),
+      jwt_audience: Boolean(process.env.JWT_AUDIENCE)
+    },
+    db: {
+      ok: false,
+      code: null,
+      message: null
+    }
+  };
+
+  try {
+    const pool = getDbPool();
+    await pool.query('SELECT 1');
+    result.db.ok = true;
+  } catch (err) {
+    result.db.code = err.code || null;
+    result.db.message = err.message || null;
+  }
+
+  return res.json(result);
+});
+
 router.get('/google', (req, res) => {
   const state = req.query.state || 'friction';
 
@@ -156,7 +208,11 @@ router.get('/google/callback', async (req, res) => {
     return res.status(400).json({ error: 'missing_code' });
   }
 
+  const traceId = randomUUID();
+  let stage = 'init';
+
   try {
+    stage = 'load_config';
     const clientId = getGoogleClientId();
     const callbackUrl = getGoogleCallbackUrl(req);
 
@@ -164,16 +220,23 @@ router.get('/google/callback', async (req, res) => {
       return res.status(500).json({ error: 'google_oauth_not_configured' });
     }
 
+    stage = 'exchange_code';
     const tokens = await exchangeCodeForTokens(code, callbackUrl, clientId);
+    stage = 'verify_id_token';
     const payload = await verifyIdToken(tokens.id_token);
+    stage = 'upsert_user';
     const userId = await upsertUserFromGoogle(payload);
+    stage = 'validate_jwt_config';
+    validateJwtConfig();
 
+    stage = 'sign_access_token';
     const jwtToken = signAccessToken({
       user_id: userId,
       email: payload.email,
       name: payload.name
     });
 
+    stage = 'redirect';
     const webAppUrl = process.env.WEB_APP_URL;
     if (webAppUrl) {
       const redirectUrl = `${webAppUrl}/reports#token=${encodeURIComponent(jwtToken)}`;
@@ -185,12 +248,26 @@ router.get('/google/callback', async (req, res) => {
     // Log provider/DB details to diagnose callback failures in local/dev.
     // eslint-disable-next-line no-console
     console.error('google_oauth_callback_failed', {
+      traceId,
+      stage,
       message: err.message,
       stack: err.stack,
       status: err.response?.status,
       data: err.response?.data,
       code: err.code
     });
+
+    if (isOAuthDebugEnabled()) {
+      return res.status(500).json({
+        error: 'google_oauth_failed',
+        trace_id: traceId,
+        stage,
+        code: err.code || null,
+        status: err.response?.status || null,
+        message: err.message
+      });
+    }
+
     return res.status(500).json({ error: 'google_oauth_failed' });
   }
 });
