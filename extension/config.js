@@ -1,5 +1,5 @@
 // Set to 'local' for localhost dev, 'production' for deployed services.
-const ENV = 'production';
+const ENV = 'local';
 
 const CONFIG_BY_ENV = {
   local: {

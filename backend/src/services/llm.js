@@ -13,36 +13,40 @@ function buildPrompt(promptBody, outputLanguage, moments) {
 }
 
 async function analyzeMoments({ moments, promptBody, outputLanguage }) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    throw new Error('GEMINI_API_KEY is not set');
+    throw new Error('OPENAI_API_KEY is not set');
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
   const prompt = buildPrompt(promptBody, outputLanguage, moments);
-  const timeoutMs = Number(process.env.GEMINI_TIMEOUT_MS || 60000);
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const url = 'https://api.openai.com/v1/chat/completions';
 
   const response = await axios.post(
     url,
     {
-      contents: [
+      model,
+      messages: [
         {
           role: 'user',
-          parts: [{ text: prompt }]
+          content: prompt
         }
       ]
     },
     {
-      params: { key: apiKey },
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
       timeout: timeoutMs
     }
   );
 
-  const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const text = response.data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string') {
-    debugLog('Gemini response missing text', response.data);
+    debugLog('OpenAI response missing text', response.data);
     return [];
   }
 
@@ -51,13 +55,13 @@ async function analyzeMoments({ moments, promptBody, outputLanguage }) {
     const parsed = JSON.parse(extracted);
     return Array.isArray(parsed) ? parsed : [];
   } catch (err) {
-    debugLog('Gemini JSON parse failed', text);
+    debugLog('OpenAI JSON parse failed', text);
     return [];
   }
 }
 
 function extractJson(text) {
-  const fenced = text.match(/```json\\s*([\\s\\S]*?)\\s*```/i);
+  const fenced = text.match(/```json\s*([\s\S]*?)\s*```/i);
   if (fenced && fenced[1]) return fenced[1];
   const trimmed = text.trim();
   const first = trimmed.indexOf('[');
@@ -80,7 +84,163 @@ function debugLog(message, payload) {
   );
 }
 
-module.exports = { analyzeMoments };
+async function compressCluster(clusterTexts, outputLanguage) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set');
+  }
+
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  const languageLine = outputLanguage === 'english' ? 'Output language: English.' : 'Output language: Hinglish.';
+
+  const momentLines = clusterTexts
+    .map((text, index) => `${index}. ${sanitizeMoment(text)}`)
+    .join('\n');
+
+  const prompt = `These moments are related to each other. Summarize them into a single concise description that captures the core theme and key details.
+
+${languageLine}
+
+Cluster moments:
+${momentLines}
+
+Output JSON format:
+{
+  "theme": "short topic label",
+  "summary": "concise description of the cluster's core content",
+  "representative_indices": [0, 2]
+}
+
+The representative_indices should point to the most informative moments in the cluster (0-based indices into the list above).
+Return only valid JSON.`;
+
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
+  const url = 'https://api.openai.com/v1/chat/completions';
+
+  const response = await axios.post(
+    url,
+    {
+      model,
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      timeout: timeoutMs
+    }
+  );
+
+  const text = response.data?.choices?.[0]?.message?.content;
+  if (!text || typeof text !== 'string') {
+    debugLog('Cluster compression missing text', response.data);
+    return {
+      theme: 'Cluster',
+      summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
+      representative_indices: [0]
+    };
+  }
+
+  try {
+    const extracted = extractJson(text);
+    const parsed = JSON.parse(extracted);
+    return {
+      theme: parsed.theme || 'Cluster',
+      summary: parsed.summary || clusterTexts.slice(0, 2).join(' ').slice(0, 500),
+      representative_indices: Array.isArray(parsed.representative_indices)
+        ? parsed.representative_indices
+        : [0]
+    };
+  } catch (err) {
+    debugLog('Cluster compression JSON parse failed', text);
+    return {
+      theme: 'Cluster',
+      summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
+      representative_indices: [0]
+    };
+  }
+}
+
+function buildRagPrompt(promptBody, outputLanguage, items, ragContext) {
+  const languageLine = outputLanguage === 'english' ? 'Output language: English.' : 'Output language: Hinglish.';
+
+  let contextSection = '';
+  if (ragContext && ragContext.length > 0) {
+    const contextLines = ragContext
+      .map((record, index) => {
+        const typeLabel = record.type || 'insight';
+        const topic = record.topic || '';
+        const summary = record.summary || '';
+        const anchor = record.recall_anchor ? ` (Recall: ${record.recall_anchor})` : '';
+        const count = record.occurrence_count ? ` [seen ${record.occurrence_count}x]` : '';
+        return `${index + 1}. [${typeLabel}] ${topic}${count}${anchor} — ${summary}`;
+      })
+      .join('\n');
+
+    contextSection = `\n\nPast Context (from your learning history):\n${contextLines}\n\nAnalyze the items below in light of this past context. Identify recurring patterns, unresolved gaps, or evolving misunderstandings that connect to what you've already encountered.`;
+  }
+
+  const itemLines = items
+    .map((item, index) => `${index}. ${item.summary || item.text}`)
+    .join('\n');
+
+  return `${promptBody}\n\n${languageLine}${contextSection}\n\nItems (indexed, chronological):\n${itemLines}`;
+}
+
+async function analyzeWithPrompt({ prompt, outputLanguage }) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set');
+  }
+
+  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
+
+  const url = 'https://api.openai.com/v1/chat/completions';
+
+  const response = await axios.post(
+    url,
+    {
+      model,
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ]
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      timeout: timeoutMs
+    }
+  );
+
+  const text = response.data?.choices?.[0]?.message?.content;
+  if (!text || typeof text !== 'string') {
+    debugLog('OpenAI response missing text', response.data);
+    return [];
+  }
+
+  try {
+    const extracted = extractJson(text);
+    const parsed = JSON.parse(extracted);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    debugLog('OpenAI JSON parse failed', text);
+    return [];
+  }
+}
+
+module.exports = { analyzeMoments, analyzeWithPrompt, compressCluster, buildRagPrompt };
 
 function sanitizeMoment(text) {
   if (!text || typeof text !== 'string') return '';

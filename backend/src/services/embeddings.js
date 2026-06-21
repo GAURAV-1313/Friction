@@ -1,34 +1,36 @@
 const axios = require('axios');
 
 function getEmbedModel() {
-  return process.env.GEMINI_EMBED_MODEL || 'gemini-embedding-001';
+  return process.env.OPENAI_EMBED_MODEL || 'text-embedding-3-small';
 }
 
 async function embedText(text) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    throw new Error('GEMINI_API_KEY is not set');
+    throw new Error('OPENAI_API_KEY is not set');
   }
   if (!text) return null;
 
   const model = getEmbedModel();
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent`;
-  const timeoutMs = Number(process.env.GEMINI_TIMEOUT_MS || 60000);
+  const url = 'https://api.openai.com/v1/embeddings';
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
 
   const response = await axios.post(
     url,
     {
-      content: {
-        parts: [{ text }]
-      }
+      model,
+      input: text
     },
     {
-      params: { key: apiKey },
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
       timeout: timeoutMs
     }
   );
 
-  const values = response.data?.embedding?.values;
+  const values = response.data?.data?.[0]?.embedding;
   if (!Array.isArray(values)) return null;
   return values;
 }
@@ -49,4 +51,86 @@ function cosineSimilarity(a, b) {
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-module.exports = { embedText, cosineSimilarity };
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function embedBatch(texts, delayMs = 500) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set');
+  }
+  if (!Array.isArray(texts) || texts.length === 0) return [];
+
+  const model = getEmbedModel();
+  const url = 'https://api.openai.com/v1/embeddings';
+  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
+
+  const results = [];
+  for (const text of texts) {
+    if (!text) {
+      results.push(null);
+      continue;
+    }
+
+    try {
+      const response = await axios.post(
+        url,
+        {
+          model,
+          input: text
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          timeout: timeoutMs
+        }
+      );
+
+      const values = response.data?.data?.[0]?.embedding;
+      results.push(Array.isArray(values) ? values : null);
+    } catch (err) {
+      results.push(null);
+    }
+
+    if (delayMs > 0 && texts.indexOf(text) < texts.length - 1) {
+      await sleep(delayMs);
+    }
+  }
+
+  return results;
+}
+
+async function embedAndStore(pool, table, idColumn, id, text) {
+  if (!text) return null;
+
+  const embedding = await embedText(text);
+  if (!embedding) return null;
+
+  const idName = idColumn || 'id';
+  await pool.query(
+    `UPDATE ${table} SET embedding = ? WHERE ${idName} = ?`,
+    [JSON.stringify(embedding), id]
+  );
+
+  return embedding;
+}
+
+function safeParseEmbedding(value) {
+  if (!value) return null;
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'object' && Array.isArray(value.values)) return value.values;
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch (err) {
+      return null;
+    }
+  }
+  return null;
+}
+
+module.exports = { embedText, embedBatch, embedAndStore, cosineSimilarity, safeParseEmbedding };

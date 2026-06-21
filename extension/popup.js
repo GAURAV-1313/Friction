@@ -1,3 +1,4 @@
+const { getAuthToken, saveAuthToken, clearAuthToken, getTheme, saveTheme, fetchWithAuth } = globalThis.FrictionExt;
 const API_BASE = globalThis.FRICTION_CONFIG?.API_BASE;
 const WEB_APP_URL = globalThis.FRICTION_CONFIG?.WEB_APP_URL;
 
@@ -27,16 +28,15 @@ function setStatus(message, tone = 'info') {
 }
 
 async function loadToken() {
-  const result = await chrome.storage.local.get(['authToken']);
-  if (result.authToken) {
-    tokenInput.value = result.authToken;
+  const token = await getAuthToken();
+  if (token) {
+    tokenInput.value = token;
   }
-  updateAuthUI(!!result.authToken);
+  updateAuthUI(Boolean(token));
 }
 
 async function loadTheme() {
-  const result = await chrome.storage.local.get(['theme']);
-  const theme = result.theme || 'system';
+  const theme = await getTheme();
   applyTheme(theme);
 }
 
@@ -46,15 +46,10 @@ async function saveToken() {
     setStatus('Token required.', 'error');
     return;
   }
-  await chrome.storage.local.set({ authToken: token });
+  await saveAuthToken(token);
   setStatus('Token saved.', 'success');
   updateAuthUI(true);
   await checkConnection();
-}
-
-async function getToken() {
-  const result = await chrome.storage.local.get(['authToken']);
-  return result.authToken || '';
 }
 
 async function saveMoment() {
@@ -64,7 +59,7 @@ async function saveMoment() {
     return;
   }
 
-  const token = await getToken();
+  const token = await getAuthToken();
   if (!token) {
     setStatus('Missing token. Paste it once below.', 'error');
     return;
@@ -72,12 +67,9 @@ async function saveMoment() {
 
   setStatus('Saving...');
 
-  const response = await fetch(`${API_BASE}/api/moments`, {
+  const response = await fetchWithAuth(`${API_BASE}/api/moments`, token, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       raw_text: rawText,
       source_type: 'bulk_paste',
@@ -87,7 +79,7 @@ async function saveMoment() {
   });
 
   if (response.status === 401) {
-    await chrome.storage.local.remove(['authToken']);
+    await clearAuthToken();
     tokenInput.value = '';
     updateAuthUI(false);
     setStatus('Token invalid. Login again.', 'error');
@@ -107,7 +99,7 @@ async function saveMoment() {
 }
 
 async function generateReport() {
-  const token = await getToken();
+  const token = await getAuthToken();
   if (!token) {
     setStatus('Missing token. Paste it once below.', 'error');
     return;
@@ -115,17 +107,14 @@ async function generateReport() {
 
   setStatus('Generating...');
 
-  const response = await fetch(`${API_BASE}/api/snapshots/run`, {
+  const response = await fetchWithAuth(`${API_BASE}/api/snapshots/run`, token, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ trigger_type: 'manual' })
   });
 
   if (response.status === 401) {
-    await chrome.storage.local.remove(['authToken']);
+    await clearAuthToken();
     tokenInput.value = '';
     updateAuthUI(false);
     setStatus('Token invalid. Login again.', 'error');
@@ -146,7 +135,7 @@ function openReports() {
 }
 
 async function logout() {
-  await chrome.storage.local.remove(['authToken']);
+  await clearAuthToken();
   tokenInput.value = '';
   setStatus('Logged out.', 'success');
   updateAuthUI(false);
@@ -164,10 +153,9 @@ function updateAuthUI(isAuthed) {
 }
 
 async function toggleTheme() {
-  const result = await chrome.storage.local.get(['theme']);
-  const current = result.theme || 'system';
+  const current = await getTheme();
   const next = current === 'system' ? 'light' : current === 'light' ? 'dark' : 'system';
-  await chrome.storage.local.set({ theme: next });
+  await saveTheme(next);
   applyTheme(next);
   setStatus(`Theme: ${next}`, 'success');
 }
@@ -194,7 +182,7 @@ async function checkConnection() {
     if (response.status === 401) {
       connEl.textContent = 'Token invalid';
       connEl.classList.remove('connected');
-      await chrome.storage.local.remove(['authToken']);
+      await clearAuthToken();
       tokenInput.value = '';
       updateAuthUI(false);
       return;

@@ -1,4 +1,4 @@
-importScripts('config.js');
+importScripts('config.js', 'shared.js');
 
 const API_BASE = globalThis.FRICTION_CONFIG?.API_BASE;
 const COOLDOWN_MS = 3000;
@@ -27,19 +27,16 @@ chrome.commands.onCommand.addListener(async (command) => {
     return;
   }
 
-  const { authToken } = await chrome.storage.local.get(['authToken']);
+  const authToken = await globalThis.FrictionExt.getAuthToken();
   if (!authToken) {
     await showBadge('No token');
     return;
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/moments`, {
+    const response = await globalThis.FrictionExt.fetchWithAuth(`${API_BASE}/api/moments`, authToken, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         raw_text: text,
         source_type: 'highlight',
@@ -49,7 +46,7 @@ chrome.commands.onCommand.addListener(async (command) => {
     });
 
     if (response.status === 401) {
-      await chrome.storage.local.remove(['authToken']);
+      await globalThis.FrictionExt.clearAuthToken();
       await showBadge('Auth');
       return;
     }

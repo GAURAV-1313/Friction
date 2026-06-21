@@ -20,6 +20,7 @@ export default function App() {
   const [view, setView] = useState('findings');
   const [findings, setFindings] = useState([]);
   const [records, setRecords] = useState([]);
+  const [memoryView, setMemoryView] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [pendingActions, setPendingActions] = useState({});
@@ -27,6 +28,12 @@ export default function App() {
   const [tokenValid, setTokenValid] = useState(null);
   const groupedFindings = useMemo(() => groupBySnapshot(findings), [findings]);
   const [openBatchId, setOpenBatchId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchTarget, setSearchTarget] = useState('findings');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchTimer, setSearchTimer] = useState(null);
   const [theme, setTheme] = useState(() => {
     const storedTheme = localStorage.getItem('friction_theme');
     return storedTheme || 'dark';
@@ -60,6 +67,12 @@ export default function App() {
     loadFindings('unreviewed');
   }, [token]);
 
+  useEffect(() => {
+    return () => {
+      if (searchTimer) clearTimeout(searchTimer);
+    };
+  }, []);
+
   const activeCount = useMemo(
     () => findings.filter((item) => item.state === 'unreviewed').length,
     [findings]
@@ -76,7 +89,7 @@ export default function App() {
     setMessage('');
 
     try {
-      const url = `${API_BASE}/api/findings?state=${nextStatus}`;
+      const url = `${API_BASE}/api/findings?state=${nextStatus}&_=${Date.now()}`;
       const response = await fetch(url, {
         cache: 'no-store',
         headers: {
@@ -112,7 +125,7 @@ export default function App() {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_BASE}/api/reports/summary`, {
+      const response = await fetch(`${API_BASE}/api/reports/summary?_=${Date.now()}`, {
         cache: 'no-store',
         headers: {
           Authorization: `Bearer ${token}`
@@ -136,6 +149,41 @@ export default function App() {
     }
   };
 
+  const loadMemoryView = async () => {
+    if (!token) {
+      setMessage('Paste your token to load memory view.');
+      setTokenValid(false);
+      return;
+    }
+
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch(`${API_BASE}/api/memory?_=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.status === 401) {
+        setTokenValid(false);
+        setMessage('Token invalid. Please log in again.');
+        setMemoryView([]);
+        localStorage.removeItem('friction_token');
+        setToken('');
+        return;
+      }
+      setTokenValid(true);
+      const data = await response.json();
+      setMemoryView(data.memory_view || []);
+    } catch (err) {
+      setMessage('Failed to load memory view.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopyToken = async () => {
     if (!token) {
       alert('No token to copy.');
@@ -154,6 +202,7 @@ export default function App() {
     setToken('');
     setFindings([]);
     setRecords([]);
+    setMemoryView([]);
     setMessage('Logged out.');
     setTokenValid(null);
   };
@@ -262,6 +311,51 @@ export default function App() {
     window.open(`${API_BASE}/auth/google`, '_blank', 'noopener');
   };
 
+  const performSearch = async (query) => {
+    if (!query || query.trim().length < 2) {
+      setSearchResults([]);
+      setSearchOpen(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/search?q=${encodeURIComponent(query)}&target=${searchTarget}&limit=8`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      if (response.status === 401) return;
+      const data = await response.json();
+      setSearchResults(data.results || []);
+      setSearchOpen(data.results && data.results.length > 0);
+    } catch (err) {
+      setSearchResults([]);
+      setSearchOpen(false);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (searchTimer) clearTimeout(searchTimer);
+    const timer = setTimeout(() => performSearch(query), 300);
+    setSearchTimer(timer);
+  };
+
+  const toggleSearchTarget = () => {
+    const next = searchTarget === 'findings' ? 'records' : 'findings';
+    setSearchTarget(next);
+    if (searchQuery.trim().length >= 2) {
+      performSearch(searchQuery);
+    }
+  };
+
   const showLoginHint = !isLoggedIn;
   const showConnectHint = isLoggedIn;
 
@@ -273,6 +367,72 @@ export default function App() {
           <div className="subtitle">The Winner takes it all</div>
         </div>
         <div className="status">
+          {isLoggedIn && (
+            <div className="search-container">
+              <svg className="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                className="search-input"
+                type="text"
+                placeholder="Search insights..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
+                onBlur={() => setTimeout(() => setSearchOpen(false), 200)}
+              />
+              {searchResults.length > 0 && (
+                <div className={`search-results ${searchOpen ? 'visible' : ''}`}>
+                  <div className="search-results-header">
+                    <span>{searchResults.length} results</span>
+                    <div className="search-target-toggle">
+                      <button
+                        className={`search-target-btn ${searchTarget === 'findings' ? 'active' : ''}`}
+                        onClick={toggleSearchTarget}
+                      >
+                        {searchTarget === 'findings' ? 'Findings' : 'Records'}
+                      </button>
+                    </div>
+                  </div>
+                  {searchLoading ? (
+                    <div className="search-empty">Searching...</div>
+                  ) : searchResults.length === 0 ? (
+                    <div className="search-empty">No results found</div>
+                  ) : (
+                    searchResults.map((result) => (
+                      <div
+                        key={result.topic}
+                        className="search-result-item"
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setSearchQuery('');
+                        }}
+                      >
+                        <div className="search-result-topic">
+                          {result.canonical_name || result.topic}
+                        </div>
+                        <div className="search-result-summary">
+                          {result.items[0]?.summary || result.topic}
+                        </div>
+                        <div className="search-result-meta">
+                          <span className={`search-result-type ${result.type}`}>
+                            {result.items[0]?.item_type || result.type}
+                          </span>
+                          <span className="search-result-score">
+                            {result.items[0]?.similarity ? Math.round(result.items[0].similarity * 100) : 0}% match
+                          </span>
+                          {result.total_occurrences > 0 && (
+                            <span className="search-result-occurrences">seen {result.total_occurrences}x</span>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          )}
           <a
             className="btn ghost icon"
             href={`${WEB_BASE}/`}
@@ -344,7 +504,7 @@ export default function App() {
           <div className="filters-group">
             <span className="filters-label">View</span>
             <div className="pill-row">
-              {['findings', 'reports'].map((item) => (
+              {['findings', 'reports', 'memory'].map((item) => (
                 <button
                   key={item}
                   className={`pill-btn ${view === item ? 'active' : ''}`}
@@ -352,9 +512,10 @@ export default function App() {
                     setView(item);
                     if (item === 'findings') loadFindings(status);
                     if (item === 'reports') loadReports();
+                    if (item === 'memory') loadMemoryView();
                   }}
                 >
-                  {item === 'findings' ? 'Findings' : 'Reports'}
+                  {item === 'findings' ? 'Findings' : item === 'reports' ? 'Reports' : 'Memory'}
                 </button>
               ))}
             </div>
@@ -538,17 +699,58 @@ export default function App() {
                 <div className="meta">No learning records yet.</div>
               )}
               {records.map((record) => (
-                <article key={record.topic} className="card">
+                <article key={record.record_id || record.topic} className="card">
                   <div className="card-head">
                     <div className="tags">
                       <span className={`tag ${record.type}`}>{record.type}</span>
                       <span className="tag">{record.occurrence_count}x</span>
+                      {record.confidence_ai && <span className="tag">{record.confidence_ai}</span>}
                     </div>
                   </div>
-                  <h3>{record.topic}</h3>
+                  <h3>{record.canonical_name || record.topic}</h3>
                   <p>{record.summary}</p>
                   {record.recall_anchor && <div className="anchor">Recall: {record.recall_anchor}</div>}
                   <div className="meta">Last seen {new Date(record.last_admitted_at).toLocaleDateString()}</div>
+                </article>
+              ))}
+            </>
+          )}
+
+          {view === 'memory' && (
+            <>
+              {loading && <div className="meta">Loading learning memory...</div>}
+              {!loading && memoryView.length === 0 && (
+                <div className="meta">No learning memory yet. Confirm some findings to build your memory.</div>
+              )}
+              {memoryView.map((topic) => (
+                <article key={topic.topic_id} className="card memory-card">
+                  <div className="card-head">
+                    <div className="tags">
+                      <span className="tag canonical">Canonical Topic</span>
+                      <span className="tag">{topic.record_count} records</span>
+                      <span className="tag">{topic.total_occurrences}x total</span>
+                    </div>
+                  </div>
+                  <h3>{topic.name}</h3>
+                  <div className="memory-subtopics">
+                    {topic.sub_topics.map((subTopic, index) => (
+                      <div key={`${topic.topic_id}-sub-${index}`} className="memory-subtopic">
+                        <span className="memory-subtopic-name">{subTopic}</span>
+                        <span className="memory-subtopic-evidence">
+                          {topic.timeline.find(t => t.topic === subTopic)?.occurrence_count || 0}x
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {topic.timeline.length > 0 && (
+                    <div className="memory-timeline">
+                      <div className="meta">
+                        First seen: {new Date(topic.timeline[topic.timeline.length - 1].last_seen).toLocaleDateString()}
+                        {' · '}
+                        Last seen: {new Date(topic.timeline[0].last_seen).toLocaleDateString()}
+                      </div>
+                    </div>
+                  )}
                 </article>
               ))}
             </>

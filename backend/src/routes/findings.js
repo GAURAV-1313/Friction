@@ -1,6 +1,9 @@
 const express = require('express');
 const { getDbPool } = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
+const { findConsolidationCandidates, createMergeCandidate } = require('../services/consolidation');
+const { suggestCanonicalTopic, updateTopicOccurrence } = require('../services/canonicalTopics');
+const { embedAndStore } = require('../services/embeddings');
 
 const router = express.Router();
 
@@ -142,10 +145,13 @@ async function handleFindingDecision(req, res, nextState) {
       const bestMatch = findBestTopicMatch(recordRows, finding.topic, finding.domain_id, finding.subdomain_id);
 
       if (!bestMatch) {
+        const canonicalSuggestionResult = await suggestCanonicalTopic(connection, userId, finding.topic, finding.summary);
+        const canonicalTopicId = canonicalSuggestionResult ? canonicalSuggestionResult.topic_id : null;
+
         await connection.query(
           `INSERT INTO learning_records
-            (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count, domain_id, subdomain_id)
-           VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0, ?, ?)`,
+            (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count, domain_id, subdomain_id, confidence_ai, canonical_topic_id)
+           VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0, ?, ?, ?, ?)`,
           [
             userId,
             finding.type,
@@ -153,9 +159,15 @@ async function handleFindingDecision(req, res, nextState) {
             finding.summary,
             finding.recall_anchor || null,
             finding.domain_id || null,
-            finding.subdomain_id || null
+            finding.subdomain_id || null,
+            finding.confidence_ai || null,
+            canonicalTopicId
           ]
         );
+
+        if (canonicalTopicId) {
+          await updateTopicOccurrence(connection, canonicalTopicId);
+        }
       } else {
         await connection.query(
           `UPDATE learning_records
@@ -165,8 +177,38 @@ async function handleFindingDecision(req, res, nextState) {
         );
       }
 
+      let mergeCandidateId = null;
+      let canonicalSuggestion = null;
+      let createdRecordId = null;
+
+      if (nextState === 'confirmed') {
+        const [newRecords] = await connection.query(
+          'SELECT record_id FROM learning_records WHERE user_id = ? ORDER BY last_admitted_at DESC LIMIT 1',
+          [userId]
+        );
+        createdRecordId = newRecords[0] ? newRecords[0].record_id : null;
+
+        if (createdRecordId) {
+          const consolidationCandidates = await findConsolidationCandidates(
+            connection, userId, createdRecordId, finding.topic, finding.summary,
+            finding.domain_id, finding.subdomain_id
+          );
+
+          for (const candidate of consolidationCandidates) {
+            const cid = await createMergeCandidate(
+              connection, userId, createdRecordId, candidate.record_id, candidate.similarity
+            );
+            if (cid) mergeCandidateId = cid;
+          }
+        }
+      }
+
       await connection.commit();
-      return res.json({ status: nextState });
+
+      const response = { status: nextState };
+      if (mergeCandidateId) response.merge_candidate_id = mergeCandidateId;
+      if (canonicalSuggestion) response.canonical_suggestion = canonicalSuggestion;
+      return res.json(response);
     } catch (err) {
       await connection.rollback();
       throw err;
