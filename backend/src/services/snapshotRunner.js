@@ -25,6 +25,8 @@ async function runSnapshotsForUser({ pool, userId, triggerType }) {
     [userId]
   );
 
+  console.error('[SNAPSHOT] Moments found:', moments.length);
+
   if (moments.length === 0) {
     return { status: 'no_activity', snapshots: [] };
   }
@@ -38,6 +40,7 @@ async function runSnapshotsForUser({ pool, userId, triggerType }) {
   const [promptRows] = await pool.query(
     'SELECT body FROM prompts WHERE is_active = 1 ORDER BY updated_at DESC LIMIT 1'
   );
+  console.error('[SNAPSHOT] Prompt rows:', promptRows.length);
   if (promptRows.length === 0) {
     return { status: 'no_active_prompt', snapshots: [] };
   }
@@ -45,6 +48,7 @@ async function runSnapshotsForUser({ pool, userId, triggerType }) {
 
   const totalChars = moments.reduce((sum, m) => sum + (m.raw_text || '').length, 0);
   const strategy = determineProcessingStrategy(moments.length, totalChars);
+  console.error('[SNAPSHOT] Strategy:', strategy, 'Chars:', totalChars);
 
   if (strategy === 'classic') {
     return await runClassicSnapshot({ pool, userId, triggerType, moments, outputLanguage, promptBody });
@@ -70,6 +74,7 @@ function determineProcessingStrategy(momentCount, totalChars) {
 async function runClassicSnapshot({ pool, userId, triggerType, moments, outputLanguage, promptBody }) {
   const batches = chunkArray(moments, MAX_BATCH_SIZE);
   const snapshots = [];
+  console.error('[SNAPSHOT] Classic batch count:', batches.length);
 
   const ragContext = await retrieveCombinedContext(
     userId,
@@ -77,17 +82,23 @@ async function runClassicSnapshot({ pool, userId, triggerType, moments, outputLa
     RAG_TOP_K,
     RAG_SIM_THRESHOLD
   );
+  console.error('[SNAPSHOT] RAG context found:', ragContext.length);
 
   for (const batch of batches) {
+    console.error('[SNAPSHOT] Processing batch...');
     const snapshotId = randomUUID();
     const momentIds = batch.map((m) => m.moment_id);
     const momentTexts = batch.map((m) => truncateMoment(m.raw_text));
 
-    const fullPrompt = buildRagPrompt(promptBody, outputLanguage, momentTexts, ragContext);
+    const fullPrompt = buildRagPrompt(promptBody, outputLanguage, momentTexts.map((t) => ({ text: t })), ragContext);
+    console.error('[SNAPSHOT] Prompt length:', fullPrompt.length);
     const analysisResults = await analyzeWithPrompt({ prompt: fullPrompt, outputLanguage });
+    console.error('[SNAPSHOT] Analysis results:', analysisResults.length);
     const findings = mapFindings(analysisResults, momentIds);
+    console.error('[SNAPSHOT] Valid findings:', findings.length);
 
     await insertSnapshotAndFindings(pool, snapshotId, userId, triggerType, batch.length, findings);
+    console.error('[SNAPSHOT] Inserted findings into DB');
 
     await markAndDeleteMoments(pool, userId, momentIds);
 
@@ -119,7 +130,7 @@ async function runAdaptiveSnapshot({ pool, userId, triggerType, moments, outputL
 
     let findings;
     if (strategy === 'direct') {
-      const fullPrompt = buildRagPrompt(promptBody, outputLanguage, momentTexts, ragContext);
+    const fullPrompt = buildRagPrompt(promptBody, outputLanguage, momentTexts.map((t, i) => ({ text: t })), ragContext);
       const analysisResults = await analyzeWithPrompt({ prompt: fullPrompt, outputLanguage });
       findings = mapFindings(analysisResults, momentIds);
     } else if (strategy === 'very_large') {

@@ -15,6 +15,8 @@ async function embedText(text) {
   const url = 'https://api.openai.com/v1/embeddings';
   const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
 
+  console.error('[EMBED] Text length:', text.length, 'Model:', model);
+
   const response = await axios.post(
     url,
     {
@@ -31,6 +33,7 @@ async function embedText(text) {
   );
 
   const values = response.data?.data?.[0]?.embedding;
+  console.error('[EMBED] Got', values?.length || 0, 'dimensions');
   if (!Array.isArray(values)) return null;
   return values;
 }
@@ -103,19 +106,28 @@ async function embedBatch(texts, delayMs = 500) {
   return results;
 }
 
-async function embedAndStore(pool, table, idColumn, id, text) {
+async function embedAndStore(conn, table, idColumn, id, text) {
   if (!text) return null;
 
   const embedding = await embedText(text);
-  if (!embedding) return null;
+  if (!embedding) {
+    console.error('[EMBED-STORE] No embedding generated for', id);
+    return null;
+  }
 
   const idName = idColumn || 'id';
-  await pool.query(
-    `UPDATE ${table} SET embedding = ? WHERE ${idName} = ?`,
-    [JSON.stringify(embedding), id]
-  );
-
-  return embedding;
+  try {
+    const result = await conn.query(
+      `UPDATE ${table} SET embedding = ? WHERE ${idName} = ?`,
+      [JSON.stringify(embedding), id]
+    );
+    const affected = Array.isArray(result) ? result[0].affectedRows : result.affectedRows;
+    console.error('[EMBED-STORE] Result type:', Array.isArray(result) ? 'array' : 'object', 'affected:', affected, 'in', table, 'for', id);
+    return embedding;
+  } catch (err) {
+    console.error('[EMBED-STORE] UPDATE failed for', id, ':', err.message);
+    return null;
+  }
 }
 
 function safeParseEmbedding(value) {

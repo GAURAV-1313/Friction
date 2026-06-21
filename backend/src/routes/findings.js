@@ -135,6 +135,11 @@ async function handleFindingDecision(req, res, nextState) {
         [nextState, findingId, userId]
       );
 
+      if (nextState === 'confirmed') {
+        const embeddingText = `${finding.topic} ${finding.summary} ${finding.recall_anchor || ''}`;
+        await embedAndStore(connection, 'candidate_findings', 'finding_id', findingId, embeddingText);
+      }
+
       const [recordRows] = await connection.query(
         `SELECT record_id, topic, domain_id, subdomain_id
          FROM learning_records

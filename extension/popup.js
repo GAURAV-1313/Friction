@@ -168,7 +168,7 @@ function applyTheme(theme) {
 }
 
 async function checkConnection() {
-  const token = await getToken();
+  const token = await getAuthToken();
   if (!token) {
     connEl.textContent = 'Disconnected';
     connEl.classList.remove('connected');
@@ -176,9 +176,12 @@ async function checkConnection() {
   }
 
   try {
+    console.log('[EXT] Checking connection to:', `${API_BASE}/api/me`);
+    console.log('[EXT] Token:', token ? token.slice(0, 20) + '...' : 'none');
     const response = await fetch(`${API_BASE}/api/me`, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    console.log('[EXT] Response status:', response.status);
     if (response.status === 401) {
       connEl.textContent = 'Token invalid';
       connEl.classList.remove('connected');
@@ -190,6 +193,7 @@ async function checkConnection() {
     connEl.textContent = 'Connected';
     connEl.classList.add('connected');
   } catch (err) {
+    console.error('[EXT] Connection error:', err);
     connEl.textContent = 'Disconnected';
     connEl.classList.remove('connected');
   }

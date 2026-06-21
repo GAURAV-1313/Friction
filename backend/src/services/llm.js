@@ -207,6 +207,7 @@ function buildRagPrompt(promptBody, outputLanguage, items, ragContext) {
 }
 
 async function analyzeWithPrompt({ prompt, outputLanguage }) {
+  console.error('[LLM-DEBUG-12345] analyzeWithPrompt called');
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY is not set');
@@ -223,6 +224,10 @@ async function analyzeWithPrompt({ prompt, outputLanguage }) {
       model,
       messages: [
         {
+          role: 'system',
+          content: 'You must return findings as a JSON array. Even if uncertain, return your best guess. If no findings exist, return []. Never return null or empty text.'
+        },
+        {
           role: 'user',
           content: prompt
         }
@@ -237,18 +242,29 @@ async function analyzeWithPrompt({ prompt, outputLanguage }) {
     }
   );
 
+  console.error('[LLM] STATUS:', response.status);
+  console.error('[LLM] FULL DATA:', JSON.stringify(response.data, null, 2).slice(0, 5000));
+  console.error('[LLM] PROMPT SENT:', prompt.slice(0, 4000));
+  
   const text = response.data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string') {
     debugLog('OpenAI response missing text', response.data);
+    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
     return [];
   }
 
   try {
     const extracted = extractJson(text);
+    console.error('[LLM] RAW TEXT:', text.slice(0, 3000));
+    console.error('[LLM] EXTRACTED JSON:', extracted.slice(0, 3000));
     const parsed = JSON.parse(extracted);
+    console.error('[LLM] PARSED:', JSON.stringify(parsed, null, 2).slice(0, 5000));
     return Array.isArray(parsed) ? parsed : [];
   } catch (err) {
     debugLog('OpenAI JSON parse failed', text);
+    console.error('[LLM] RAW:', text.slice(0, 3000));
+    console.error('[LLM] EXTRACTED:', extractJson(text).slice(0, 3000));
+    console.error('[LLM] ERROR:', err.message);
     return [];
   }
 }
