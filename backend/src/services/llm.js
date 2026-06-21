@@ -47,15 +47,22 @@ async function analyzeMoments({ moments, promptBody, outputLanguage }) {
   const text = response.data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string') {
     debugLog('OpenAI response missing text', response.data);
+    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
     return [];
   }
 
   try {
     const extracted = extractJson(text);
     const parsed = JSON.parse(extracted);
+    console.error('[LLM] RAW:', text.slice(0, 2000));
+    console.error('[LLM] EXTRACTED:', extracted.slice(0, 2000));
+    console.error('[LLM] PARSED:', JSON.stringify(parsed, null, 2).slice(0, 4000));
     return Array.isArray(parsed) ? parsed : [];
   } catch (err) {
     debugLog('OpenAI JSON parse failed', text);
+    console.error('[LLM] RAW:', text.slice(0, 2000));
+    console.error('[LLM] EXTRACTED:', extractJson(text).slice(0, 2000));
+    console.error('[LLM] ERROR:', err.message);
     return [];
   }
 }
@@ -140,6 +147,7 @@ Return only valid JSON.`;
   const text = response.data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string') {
     debugLog('Cluster compression missing text', response.data);
+    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
     return {
       theme: 'Cluster',
       summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
@@ -150,6 +158,8 @@ Return only valid JSON.`;
   try {
     const extracted = extractJson(text);
     const parsed = JSON.parse(extracted);
+    console.error('[LLM] CLUSTER RAW:', text.slice(0, 2000));
+    console.error('[LLM] CLUSTER EXTRACTED:', extracted.slice(0, 2000));
     return {
       theme: parsed.theme || 'Cluster',
       summary: parsed.summary || clusterTexts.slice(0, 2).join(' ').slice(0, 500),
@@ -159,6 +169,9 @@ Return only valid JSON.`;
     };
   } catch (err) {
     debugLog('Cluster compression JSON parse failed', text);
+    console.error('[LLM] CLUSTER RAW:', text.slice(0, 2000));
+    console.error('[LLM] CLUSTER EXTRACTED:', extractJson(text).slice(0, 2000));
+    console.error('[LLM] CLUSTER ERROR:', err.message);
     return {
       theme: 'Cluster',
       summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
