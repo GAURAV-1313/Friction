@@ -1,3 +1,8 @@
 function renderUserInput(html) {
-  document.getElementById('output').innerHTML = html;
+  const outputElement = document.getElementById('output');
+  if (outputElement) {
+    outputElement.innerHTML = html;
+  } else {
+    console.error('Output element not found');
+  }
 }
