@@ -1,4 +1,4 @@
-const API_KEY = "sk-hardcoded-secret-12345";
+const API_KEY = process.env.API_KEY;
 
 function fetchUserData(userId) {
   return fetch(`https://api.example.com/users/${userId}`, {
