@@ -8,45 +8,116 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
+    <div class="popup-wrapper">
     <div class="app">
       <header class="header">
-        <div>
+        <div class="header-left">
           <div class="title">Friction</div>
           <div class="subtitle"></div>
         </div>
         <div class="header-actions">
-          <button id="themeToggle" class="btn ghost">Theme</button>
-          <button id="logout" class="btn ghost hidden">Logout</button>
-          <div id="conn" class="conn">Disconnected</div>
+          <div id="connDot" class="conn-dot"></div>
+          <button id="settings" class="btn icon" title="Theme">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+          </button>
+          <button id="menu" class="btn icon" title="More">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
+          <div id="menuDropdown" class="menu-dropdown hidden">
+            <button id="openWeb" class="menu-item">Open web app</button>
+            <button id="menuLogout" class="menu-item">Logout</button>
+          </div>
         </div>
       </header>
 
-      <section class="card">
-        <label class="label" for="moment">Paste moment</label>
-        <textarea id="moment" placeholder="Paste the exact thing you want to remember. No AI yet."></textarea>
-        <div class="hint">Press ⌥+M to capture highlight instantly.</div>
-        <div class="hint">If shortcut doesn't work, set it in chrome://extensions/shortcuts.</div>
-        <button id="save" class="btn primary">Save moment</button>
+      <section class="input-card">
+        <textarea id="moment" placeholder="Paste something to remember..."></textarea>
+        <div class="shortcut-hint">
+          <span class="shortcut-key">⌘M</span>
+          <span class="shortcut-text">capture selection instantly</span>
+        </div>
       </section>
 
       <section id="tokenSection" class="card compact">
-        <label class="label" for="token">Auth token</label>
         <input id="token" type="password" placeholder="Paste JWT once" />
         <button id="saveToken" class="btn ghost">Save token</button>
       </section>
 
-      <section class="card compact">
-        <div class="row">
-          <button id="generate" class="btn">Generate report</button>
-          <button id="view" class="btn ghost">View previous</button>
+      <button id="save" class="btn save-moment">Save Moment</button>
+
+      <div class="bottom-cards">
+        <button id="generate" class="bottom-card">
+          <div class="card-icon green">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M5 20h14M5 20v-6M19 20v-10" />
+            </svg>
+          </div>
+          <div class="card-label">Report</div>
+          <div class="card-sublabel">Generate insights</div>
+        </button>
+        <button id="view" class="bottom-card">
+          <div class="card-icon orange">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M12 8v4l3 3" />
+              <circle cx="12" cy="12" r="9" />
+            </svg>
+          </div>
+          <div class="card-label">Previous</div>
+          <div class="card-sublabel">Browse captures</div>
+        </button>
+      </div>
+
+      <section class="card compact auto-capture-section">
+        <div class="auto-capture-header">
+          <span>Auto Capture</span>
+          <label class="toggle">
+            <input type="checkbox" id="autoCaptureToggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div id="autoCaptureSettings" class="auto-capture-settings hidden">
+          <div class="setting-row">
+            <label>Capture Mode</label>
+            <div class="radio-group">
+              <label class="radio">
+                <input type="radio" name="captureMode" value="whole_convo" checked />
+                <span>Whole Conversation</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="captureMode" value="timestamp" />
+                <span>Timestamp Only</span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <label>Sites</label>
+            <div class="checkbox-group">
+              <label class="checkbox">
+                <input type="checkbox" id="siteChatgpt" checked />
+                <span>ChatGPT</span>
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id="siteGemini" checked />
+                <span>Gemini</span>
+              </label>
+            </div>
+          </div>
         </div>
       </section>
 
       <div id="status" class="status"></div>
     </div>
+    </div>
 
     <script src="config.js"></script>
-    <script src="shared.js"></script>
-    <script src="popup.js"></script>
+    <script src="popup-setup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>

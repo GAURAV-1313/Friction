@@ -1,4 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
+import {
+  IconLink, IconSpark, IconList, IconMoon, IconSun,
+  IconHome, IconLogin, IconLogout, IconCheck, IconSlash,
+  IconCheckCircle, IconLoader, IconClose
+} from './icons';
 
 const IS_LOCAL_HOST =
   typeof window !== 'undefined' &&
@@ -20,7 +25,6 @@ export default function App() {
   const [view, setView] = useState('findings');
   const [findings, setFindings] = useState([]);
   const [records, setRecords] = useState([]);
-  const [memoryView, setMemoryView] = useState([]);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [pendingActions, setPendingActions] = useState({});
@@ -33,7 +37,7 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTarget, setSearchTarget] = useState('findings');
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchTimer, setSearchTimer] = useState(null);
+  const searchTimerRef = useRef(null);
   const [theme, setTheme] = useState(() => {
     const storedTheme = localStorage.getItem('friction_theme');
     return storedTheme || 'dark';
@@ -69,7 +73,7 @@ export default function App() {
 
   useEffect(() => {
     return () => {
-      if (searchTimer) clearTimeout(searchTimer);
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
     };
   }, []);
 
@@ -149,51 +153,16 @@ export default function App() {
     }
   };
 
-  const loadMemoryView = async () => {
-    if (!token) {
-      setMessage('Paste your token to load memory view.');
-      setTokenValid(false);
-      return;
-    }
-
-    setLoading(true);
-    setMessage('');
-
-    try {
-      const response = await fetch(`${API_BASE}/api/memory?_=${Date.now()}`, {
-        cache: 'no-store',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (response.status === 401) {
-        setTokenValid(false);
-        setMessage('Token invalid. Please log in again.');
-        setMemoryView([]);
-        localStorage.removeItem('friction_token');
-        setToken('');
-        return;
-      }
-      setTokenValid(true);
-      const data = await response.json();
-      setMemoryView(data.memory_view || []);
-    } catch (err) {
-      setMessage('Failed to load memory view.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleCopyToken = async () => {
     if (!token) {
-      alert('No token to copy.');
+      setMessage('No token to copy.');
       return;
     }
     try {
       await navigator.clipboard.writeText(token);
-      alert('Token copied. Paste it into the extension to connect.');
+      setMessage('Token copied. Paste it into the extension to connect.');
     } catch (err) {
-      alert('Copy failed.');
+      setMessage('Copy failed.');
     }
   };
 
@@ -202,14 +171,13 @@ export default function App() {
     setToken('');
     setFindings([]);
     setRecords([]);
-    setMemoryView([]);
     setMessage('Logged out.');
     setTokenValid(null);
   };
 
   const generateReport = async () => {
     if (!token) {
-      alert('Login required to generate report.');
+      setMessage('Login required to generate report.');
       return;
     }
     try {
@@ -241,7 +209,7 @@ export default function App() {
       }
       loadFindings('unreviewed');
     } catch (err) {
-      alert('Failed to generate report.');
+      setMessage('Failed to generate report.');
     }
   };
 
@@ -343,9 +311,8 @@ export default function App() {
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    if (searchTimer) clearTimeout(searchTimer);
-    const timer = setTimeout(() => performSearch(query), 300);
-    setSearchTimer(timer);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => performSearch(query), 300);
   };
 
   const toggleSearchTarget = () => {
@@ -410,7 +377,7 @@ export default function App() {
                         }}
                       >
                         <div className="search-result-topic">
-                          {result.canonical_name || result.topic}
+                          {result.topic}
                         </div>
                         <div className="search-result-summary">
                           {result.items[0]?.summary || result.topic}
@@ -418,9 +385,6 @@ export default function App() {
                         <div className="search-result-meta">
                           <span className={`search-result-type ${result.type}`}>
                             {result.items[0]?.item_type || result.type}
-                          </span>
-                          <span className="search-result-score">
-                            {result.items[0]?.similarity ? Math.round(result.items[0].similarity * 100) : 0}% match
                           </span>
                           {result.total_occurrences > 0 && (
                             <span className="search-result-occurrences">seen {result.total_occurrences}x</span>
@@ -490,7 +454,7 @@ export default function App() {
       {message && message !== 'Logged out.' && <div className="message">{message}</div>}
       {showConnectHint && (
         <div className="message notice">
-          If the extension isn’t connected, click the Connect button in the top bar.
+          If the extension isn't connected, click the Connect button in the top bar.
         </div>
       )}
       {showLoginHint && (
@@ -504,7 +468,7 @@ export default function App() {
           <div className="filters-group">
             <span className="filters-label">View</span>
             <div className="pill-row">
-              {['findings', 'reports', 'memory'].map((item) => (
+              {['findings', 'reports'].map((item) => (
                 <button
                   key={item}
                   className={`pill-btn ${view === item ? 'active' : ''}`}
@@ -512,10 +476,9 @@ export default function App() {
                     setView(item);
                     if (item === 'findings') loadFindings(status);
                     if (item === 'reports') loadReports();
-                    if (item === 'memory') loadMemoryView();
                   }}
                 >
-                  {item === 'findings' ? 'Findings' : item === 'reports' ? 'Reports' : 'Memory'}
+                  {item === 'findings' ? 'Findings' : 'Reports'}
                 </button>
               ))}
             </div>
@@ -632,13 +595,7 @@ export default function App() {
                             >
                               <div className="card-head">
                                 <div className="tags">
-                                  {(() => {
-                                    const domainLabel = finding.domain_label || finding.domain_name;
-                                    const domainText = domainLabel
-                                      ? `${domainLabel}${finding.subdomain_name ? ` · ${finding.subdomain_name}` : ''}`
-                                      : '';
-                                    return domainText ? <span className="tag domain">{domainText}</span> : null;
-                                  })()}
+                                  {formatDomainLabel(finding)}
                                   <span className={`tag ${finding.type}`}>{finding.type}</span>
                                   <span className="tag">{finding.confidence_ai}</span>
                                 </div>
@@ -707,50 +664,10 @@ export default function App() {
                       {record.confidence_ai && <span className="tag">{record.confidence_ai}</span>}
                     </div>
                   </div>
-                  <h3>{record.canonical_name || record.topic}</h3>
+                  <h3>{record.topic}</h3>
                   <p>{record.summary}</p>
                   {record.recall_anchor && <div className="anchor">Recall: {record.recall_anchor}</div>}
                   <div className="meta">Last seen {new Date(record.last_admitted_at).toLocaleDateString()}</div>
-                </article>
-              ))}
-            </>
-          )}
-
-          {view === 'memory' && (
-            <>
-              {loading && <div className="meta">Loading learning memory...</div>}
-              {!loading && memoryView.length === 0 && (
-                <div className="meta">No learning memory yet. Confirm some findings to build your memory.</div>
-              )}
-              {memoryView.map((topic) => (
-                <article key={topic.topic_id} className="card memory-card">
-                  <div className="card-head">
-                    <div className="tags">
-                      <span className="tag canonical">Canonical Topic</span>
-                      <span className="tag">{topic.record_count} records</span>
-                      <span className="tag">{topic.total_occurrences}x total</span>
-                    </div>
-                  </div>
-                  <h3>{topic.name}</h3>
-                  <div className="memory-subtopics">
-                    {topic.sub_topics.map((subTopic, index) => (
-                      <div key={`${topic.topic_id}-sub-${index}`} className="memory-subtopic">
-                        <span className="memory-subtopic-name">{subTopic}</span>
-                        <span className="memory-subtopic-evidence">
-                          {topic.timeline.find(t => t.topic === subTopic)?.occurrence_count || 0}x
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  {topic.timeline.length > 0 && (
-                    <div className="memory-timeline">
-                      <div className="meta">
-                        First seen: {new Date(topic.timeline[topic.timeline.length - 1].last_seen).toLocaleDateString()}
-                        {' · '}
-                        Last seen: {new Date(topic.timeline[0].last_seen).toLocaleDateString()}
-                      </div>
-                    </div>
-                  )}
                 </article>
               ))}
             </>
@@ -761,119 +678,12 @@ export default function App() {
   );
 }
 
-function IconLink() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11 4" />
-      <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 1 0 7.07 7.07L13 20" />
-    </svg>
-  );
-}
-
-function IconSpark() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2l2.4 6.2L21 10l-6.6 1.8L12 18l-2.4-6.2L3 10l6.6-1.8L12 2z" />
-    </svg>
-  );
-}
-
-function IconList() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M8 6h12M8 12h12M8 18h12" />
-      <path d="M4 6h.01M4 12h.01M4 18h.01" />
-    </svg>
-  );
-}
-
-function IconMoon() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z" />
-    </svg>
-  );
-}
-
-function IconSun() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-    </svg>
-  );
-}
-
-function IconHome() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 10.5L12 3l9 7.5" />
-      <path d="M5 10v9h5v-5h4v5h5v-9" />
-    </svg>
-  );
-}
-
-function IconLogin() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-      <path d="M10 17l5-5-5-5" />
-      <path d="M15 12H3" />
-    </svg>
-  );
-}
-
-function IconLogout() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4" />
-      <path d="M14 17l5-5-5-5" />
-      <path d="M19 12H9" />
-    </svg>
-  );
-}
-
-function IconCheck() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20 6L9 17l-5-5" />
-    </svg>
-  );
-}
-
-function IconSlash() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M5 5l14 14" />
-    </svg>
-  );
-}
-
-function IconCheckCircle() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M16 8l-5.5 7L8 12.5" />
-    </svg>
-  );
-}
-
-function IconLoader() {
-  return (
-    <svg className="icon icon-spin" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 3a9 9 0 1 1-6.36 2.64" />
-    </svg>
-  );
-}
-
-function IconClose() {
-  return (
-    <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M18 6L6 18" />
-      <path d="M6 6l12 12" />
-    </svg>
-  );
+function formatDomainLabel(finding) {
+  const domainLabel = finding.domain_label || finding.domain_name;
+  const domainText = domainLabel
+    ? `${domainLabel}${finding.subdomain_name ? ` · ${finding.subdomain_name}` : ''}`
+    : '';
+  return domainText ? <span className="tag domain">{domainText}</span> : null;
 }
 
 function groupBySnapshot(items) {

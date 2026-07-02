@@ -1,275 +1,292 @@
 const axios = require('axios');
-const dotenv = require('dotenv');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-dotenv.config();
+const DEFAULT_MODEL = 'gpt-4o-mini';
+const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
+const DEFAULT_TIMEOUT_MS = 60000;
+const DEFAULT_MAX_RETRIES = 2;
+
+function getTimeoutMs() {
+  const val = Number(process.env.OPENAI_TIMEOUT_MS);
+  return val > 0 ? val : DEFAULT_TIMEOUT_MS;
+}
+
+function getMaxRetries() {
+  const val = Number(process.env.OPENAI_LLM_RETRIES);
+  return val >= 0 && val <= 10 ? val : DEFAULT_MAX_RETRIES;
+}
+
+function getLLMProvider() {
+  return (process.env.LLM_PROVIDER || 'openai').toLowerCase();
+}
+
+function getLLMModel() {
+  return process.env.OPENAI_MODEL || DEFAULT_MODEL;
+}
+
+function getGeminiModel() {
+  return process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function withTimeout(promise, ms) {
+  const timeout = new Promise((_, reject) => {
+    const err = new Error(`Request timed out after ${ms}ms`);
+    err.code = 'ETIMEDOUT';
+    setTimeout(() => reject(err), ms);
+  });
+  return Promise.race([promise, timeout]);
+}
+
+async function withRetry(fn, maxRetries) {
+  let lastError = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+
+      if (err.response?.status === 429 && attempt < maxRetries) {
+        const retryAfter = err.response.headers['retry-after'];
+        const waitMs = retryAfter
+          ? Number(retryAfter) * 1000
+          : 2000 * Math.pow(2, attempt);
+        await sleep(waitMs);
+        continue;
+      }
+
+      if ((err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') && attempt < maxRetries) {
+        const waitMs = 1000 * Math.pow(2, attempt);
+        await sleep(waitMs);
+        continue;
+      }
+
+      if (err.response?.status >= 500 && attempt < maxRetries) {
+        const waitMs = 1000 * Math.pow(2, attempt);
+        await sleep(waitMs);
+        continue;
+      }
+
+      break;
+    }
+  }
+  throw lastError;
+}
 
 function buildPrompt(promptBody, outputLanguage, moments) {
   const languageLine = outputLanguage === 'english' ? 'Output language: English.' : 'Output language: Hinglish.';
+  if (!Array.isArray(moments)) return `${promptBody}\n\n${languageLine}\n\nMoments (indexed, chronological):\n`;
+
   const momentLines = moments
     .map((text, index) => `${index}. ${sanitizeMoment(text)}`)
+    .filter((line) => line.trim().length > 0)
     .join('\n');
 
   return `${promptBody}\n\n${languageLine}\n\nMoments (indexed, chronological):\n${momentLines}`;
 }
 
 async function analyzeMoments({ moments, promptBody, outputLanguage }) {
+  const provider = getLLMProvider();
+  console.log('[LLM] Using provider:', provider);
+
+  if (!Array.isArray(moments) || moments.length === 0) return [];
+
+  const prompt = buildPrompt(promptBody, outputLanguage, moments);
+  const timeoutMs = getTimeoutMs();
+
+  if (provider === 'gemini') {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY is not set');
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: getGeminiModel(),
+      generationConfig: { responseMimeType: 'application/json' }
+    });
+
+    const fetchFn = async () => {
+      const result = await withTimeout(model.generateContent(prompt), timeoutMs);
+      return result;
+    };
+
+    try {
+      const result = await withRetry(fetchFn, getMaxRetries());
+      const text = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+      return parseLLMResponse({ data: { choices: [{ message: { content: text } }] } });
+    } catch (err) {
+      console.error('[LLM] analyzeMoments (Gemini) failed after retries:', err.message);
+      return [];
+    }
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY is not set');
   }
 
-  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-  const prompt = buildPrompt(promptBody, outputLanguage, moments);
-  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
-
+  const model = getLLMModel();
   const url = 'https://api.openai.com/v1/chat/completions';
 
-  const response = await axios.post(
-    url,
-    {
-      model,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+  const fetchFn = async () => {
+    const response = await axios.post(
+      url,
+      {
+        model,
+        messages: [{ role: 'user', content: prompt }]
       },
-      timeout: timeoutMs
-    }
-  );
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: timeoutMs
+      }
+    );
+    return response;
+  };
 
-  const text = response.data?.choices?.[0]?.message?.content;
-  if (!text || typeof text !== 'string') {
-    debugLog('OpenAI response missing text', response.data);
-    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
-    return [];
-  }
-
+  let response;
   try {
-    const extracted = extractJson(text);
-    const parsed = JSON.parse(extracted);
-    console.error('[LLM] RAW:', text.slice(0, 2000));
-    console.error('[LLM] EXTRACTED:', extracted.slice(0, 2000));
-    console.error('[LLM] PARSED:', JSON.stringify(parsed, null, 2).slice(0, 4000));
-    return Array.isArray(parsed) ? parsed : [];
+    response = await withRetry(fetchFn, getMaxRetries());
   } catch (err) {
-    debugLog('OpenAI JSON parse failed', text);
-    console.error('[LLM] RAW:', text.slice(0, 2000));
-    console.error('[LLM] EXTRACTED:', extractJson(text).slice(0, 2000));
-    console.error('[LLM] ERROR:', err.message);
+    console.error('[LLM] analyzeMoments failed after retries:', err.message);
     return [];
   }
+
+  return parseLLMResponse(response);
 }
 
 function extractJson(text) {
-  const fenced = text.match(/```json\s*([\s\S]*?)\s*```/i);
-  if (fenced && fenced[1]) return fenced[1];
+  if (!text || typeof text !== 'string') return '[]';
   const trimmed = text.trim();
-  const first = trimmed.indexOf('[');
-  const last = trimmed.lastIndexOf(']');
-  if (first !== -1 && last !== -1 && last > first) {
-    return trimmed.slice(first, last + 1);
+
+  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenced && fenced[1] && fenced[1].trim().length > 0) {
+    return fenced[1].trim();
   }
+
+  const firstBracket = trimmed.indexOf('[');
+  const lastBracket = trimmed.lastIndexOf(']');
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    return trimmed.slice(firstBracket, lastBracket + 1);
+  }
+
+  const firstCurly = trimmed.indexOf('{');
+  const lastCurly = trimmed.lastIndexOf('}');
+  if (firstCurly !== -1 && lastCurly !== -1 && lastCurly > firstCurly) {
+    return trimmed.slice(firstCurly, lastCurly + 1);
+  }
+
   return trimmed;
 }
 
-function debugLog(message, payload) {
-  if (process.env.DEBUG_LLM !== 'true') return;
-  // eslint-disable-next-line no-console
-  console.error('[LLM]', message);
-  // eslint-disable-next-line no-console
-  console.error(
-    typeof payload === 'string'
-      ? payload.slice(0, 2000)
-      : JSON.stringify(payload).slice(0, 2000)
-  );
-}
-
-async function compressCluster(clusterTexts, outputLanguage) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY is not set');
-  }
-
-  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-  const languageLine = outputLanguage === 'english' ? 'Output language: English.' : 'Output language: Hinglish.';
-
-  const momentLines = clusterTexts
-    .map((text, index) => `${index}. ${sanitizeMoment(text)}`)
-    .join('\n');
-
-  const prompt = `These moments are related to each other. Summarize them into a single concise description that captures the core theme and key details.
-
-${languageLine}
-
-Cluster moments:
-${momentLines}
-
-Output JSON format:
-{
-  "theme": "short topic label",
-  "summary": "concise description of the cluster's core content",
-  "representative_indices": [0, 2]
-}
-
-The representative_indices should point to the most informative moments in the cluster (0-based indices into the list above).
-Return only valid JSON.`;
-
-  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
-  const url = 'https://api.openai.com/v1/chat/completions';
-
-  const response = await axios.post(
-    url,
-    {
-      model,
-      messages: [
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: timeoutMs
-    }
-  );
-
+function parseLLMResponse(response) {
   const text = response.data?.choices?.[0]?.message?.content;
   if (!text || typeof text !== 'string') {
-    debugLog('Cluster compression missing text', response.data);
-    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
-    return {
-      theme: 'Cluster',
-      summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
-      representative_indices: [0]
-    };
+    return [];
   }
 
   try {
     const extracted = extractJson(text);
     const parsed = JSON.parse(extracted);
-    console.error('[LLM] CLUSTER RAW:', text.slice(0, 2000));
-    console.error('[LLM] CLUSTER EXTRACTED:', extracted.slice(0, 2000));
-    return {
-      theme: parsed.theme || 'Cluster',
-      summary: parsed.summary || clusterTexts.slice(0, 2).join(' ').slice(0, 500),
-      representative_indices: Array.isArray(parsed.representative_indices)
-        ? parsed.representative_indices
-        : [0]
-    };
+    if (Array.isArray(parsed)) return parsed;
+    if (typeof parsed === 'object' && parsed !== null) return [parsed];
+    return [];
   } catch (err) {
-    debugLog('Cluster compression JSON parse failed', text);
-    console.error('[LLM] CLUSTER RAW:', text.slice(0, 2000));
-    console.error('[LLM] CLUSTER EXTRACTED:', extractJson(text).slice(0, 2000));
-    console.error('[LLM] CLUSTER ERROR:', err.message);
-    return {
-      theme: 'Cluster',
-      summary: clusterTexts.slice(0, 2).join(' ').slice(0, 500),
-      representative_indices: [0]
-    };
+    return [];
   }
-}
-
-function buildRagPrompt(promptBody, outputLanguage, items, ragContext) {
-  const languageLine = outputLanguage === 'english' ? 'Output language: English.' : 'Output language: Hinglish.';
-
-  let contextSection = '';
-  if (ragContext && ragContext.length > 0) {
-    const contextLines = ragContext
-      .map((record, index) => {
-        const typeLabel = record.type || 'insight';
-        const topic = record.topic || '';
-        const summary = record.summary || '';
-        const anchor = record.recall_anchor ? ` (Recall: ${record.recall_anchor})` : '';
-        const count = record.occurrence_count ? ` [seen ${record.occurrence_count}x]` : '';
-        return `${index + 1}. [${typeLabel}] ${topic}${count}${anchor} — ${summary}`;
-      })
-      .join('\n');
-
-    contextSection = `\n\nPast Context (from your learning history):\n${contextLines}\n\nAnalyze the items below in light of this past context. Identify recurring patterns, unresolved gaps, or evolving misunderstandings that connect to what you've already encountered.`;
-  }
-
-  const itemLines = items
-    .map((item, index) => `${index}. ${item.summary || item.text}`)
-    .join('\n');
-
-  return `${promptBody}\n\n${languageLine}${contextSection}\n\nItems (indexed, chronological):\n${itemLines}`;
 }
 
 async function analyzeWithPrompt({ prompt, outputLanguage }) {
-  console.error('[LLM-DEBUG-12345] analyzeWithPrompt called');
+  const provider = getLLMProvider();
+  console.log('[LLM] Using provider:', provider);
+
+  if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+    return [];
+  }
+
+  const timeoutMs = getTimeoutMs();
+
+  if (provider === 'gemini') {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY is not set');
+    }
+
+    const systemMessage = 'You must return findings as a JSON array. Even if uncertain, return your best guess. If no findings exist, return []. Never return null or empty text.';
+    const fullPrompt = `${systemMessage}\n\n${prompt}`;
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({
+      model: getGeminiModel(),
+      generationConfig: { responseMimeType: 'application/json' }
+    });
+
+    const fetchFn = async () => {
+      const result = await withTimeout(model.generateContent(fullPrompt), timeoutMs);
+      return result;
+    };
+
+    try {
+      const result = await withRetry(fetchFn, getMaxRetries());
+      const text = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+      return parseLLMResponse({ data: { choices: [{ message: { content: text } }] } });
+    } catch (err) {
+      console.error('[LLM] analyzeWithPrompt (Gemini) failed after retries:', err.message);
+      return [];
+    }
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OPENAI_API_KEY is not set');
   }
 
-  const model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
-  const timeoutMs = Number(process.env.OPENAI_TIMEOUT_MS || 60000);
-
+  const model = getLLMModel();
   const url = 'https://api.openai.com/v1/chat/completions';
 
-  const response = await axios.post(
-    url,
-    {
-      model,
-      messages: [
-        {
-          role: 'system',
-          content: 'You must return findings as a JSON array. Even if uncertain, return your best guess. If no findings exist, return []. Never return null or empty text.'
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
-      ]
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+  const fetchFn = async () => {
+    const response = await axios.post(
+      url,
+      {
+        model,
+        messages: [
+          {
+            role: 'system',
+            content: 'You must return findings as a JSON array. Even if uncertain, return your best guess. If no findings exist, return []. Never return null or empty text.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
       },
-      timeout: timeoutMs
-    }
-  );
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: timeoutMs
+      }
+    );
+    return response;
+  };
 
-  console.error('[LLM] STATUS:', response.status);
-  console.error('[LLM] FULL DATA:', JSON.stringify(response.data, null, 2).slice(0, 5000));
-  console.error('[LLM] PROMPT SENT:', prompt.slice(0, 4000));
-  
-  const text = response.data?.choices?.[0]?.message?.content;
-  if (!text || typeof text !== 'string') {
-    debugLog('OpenAI response missing text', response.data);
-    console.error('[LLM] FULL RESPONSE:', JSON.stringify(response.data, null, 2).slice(0, 4000));
-    return [];
-  }
-
+  let response;
   try {
-    const extracted = extractJson(text);
-    console.error('[LLM] RAW TEXT:', text.slice(0, 3000));
-    console.error('[LLM] EXTRACTED JSON:', extracted.slice(0, 3000));
-    const parsed = JSON.parse(extracted);
-    console.error('[LLM] PARSED:', JSON.stringify(parsed, null, 2).slice(0, 5000));
-    return Array.isArray(parsed) ? parsed : [];
+    response = await withRetry(fetchFn, getMaxRetries());
   } catch (err) {
-    debugLog('OpenAI JSON parse failed', text);
-    console.error('[LLM] RAW:', text.slice(0, 3000));
-    console.error('[LLM] EXTRACTED:', extractJson(text).slice(0, 3000));
-    console.error('[LLM] ERROR:', err.message);
+    console.error('[LLM] analyzeWithPrompt failed after retries:', err.message);
     return [];
   }
-}
 
-module.exports = { analyzeMoments, analyzeWithPrompt, compressCluster, buildRagPrompt };
+  return parseLLMResponse(response);
+}
 
 function sanitizeMoment(text) {
   if (!text || typeof text !== 'string') return '';
@@ -309,3 +326,5 @@ function isChatUiNoise(line) {
     lower === 'copy code'
   );
 }
+
+module.exports = { analyzeMoments, analyzeWithPrompt };

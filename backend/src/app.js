@@ -12,10 +12,9 @@ const reportRoutes = require('./routes/reports');
 const promptRoutes = require('./routes/prompts');
 const meRoutes = require('./routes/me');
 const searchRoutes = require('./routes/search');
-const consolidationRoutes = require('./routes/consolidation');
-const canonicalTopicRoutes = require('./routes/canonicalTopics');
 const memoryRoutes = require('./routes/memory');
 const { startDailySnapshotScheduler } = require('./services/scheduler');
+const { generalLimiter, snapshotLimiter, authLimiter, momentLimiter } = require('./middleware/rateLimit');
 
 function createApp() {
   initDbPool();
@@ -54,11 +53,14 @@ function createApp() {
   app.use('/api/prompts', promptRoutes);
   app.use('/api/me', meRoutes);
   app.use('/api/search', searchRoutes);
-  app.use('/api/consolidation', consolidationRoutes);
-  app.use('/api/canonical-topics', canonicalTopicRoutes);
   app.use('/api/memory', memoryRoutes);
 
   startDailySnapshotScheduler();
+
+  app.use((err, req, res, _next) => {
+    console.error('[SERVER]', err.message);
+    res.status(500).json({ error: 'internal_error' });
+  });
 
   return app;
 }

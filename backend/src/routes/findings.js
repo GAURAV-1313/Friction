@@ -1,9 +1,7 @@
 const express = require('express');
 const { getDbPool } = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
-const { findConsolidationCandidates, createMergeCandidate } = require('../services/consolidation');
-const { suggestCanonicalTopic, updateTopicOccurrence } = require('../services/canonicalTopics');
-const { embedAndStore } = require('../services/embeddings');
+const { withTransaction } = require('../db/transaction');
 
 const router = express.Router();
 
@@ -24,23 +22,18 @@ router.get('/', requireAuth, async (req, res) => {
     const pool = getDbPool();
     const [rows] = await pool.query(
       `SELECT f.finding_id, f.snapshot_id, f.type, f.topic, f.summary, f.recall_anchor, f.confidence_ai,
-              f.evidence_moment_ids, f.state, f.created_at, f.domain_id, f.subdomain_id,
-              d.name AS domain_name, d.label AS domain_label,
-              sd.name AS subdomain_name,
+              f.evidence_moment_ids, f.state, f.created_at,
               s.created_at AS snapshot_created_at
-       FROM candidate_findings f
-       LEFT JOIN snapshots s ON s.snapshot_id = f.snapshot_id
-       LEFT JOIN domains d ON d.domain_id = f.domain_id
-       LEFT JOIN subdomains sd ON sd.subdomain_id = f.subdomain_id
-       WHERE f.user_id = ?
-       ${state ? 'AND f.state = ?' : ''} 
-       ORDER BY f.created_at DESC`,
+        FROM candidate_findings f
+        LEFT JOIN snapshots s ON s.snapshot_id = f.snapshot_id
+        WHERE f.user_id = ?
+        ${state ? 'AND f.state = ?' : ''} 
+        ORDER BY f.created_at DESC`,
       state ? [userId, state] : [userId]
     );
 
     return res.json({ findings: rows });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('findings_list_failed', err);
     return res.status(500).json({ error: 'findings_list_failed' });
   }
@@ -71,7 +64,6 @@ router.post('/:id/resolve', requireAuth, async (req, res) => {
 
     return res.json({ status: 'resolved' });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('finding_resolve_failed', err);
     return res.status(500).json({ error: 'finding_resolve_failed' });
   }
@@ -95,7 +87,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
 
     return res.json({ status: 'rejected' });
   } catch (err) {
-    // eslint-disable-next-line no-console
     console.error('finding_reject_failed', err);
     return res.status(500).json({ error: 'finding_reject_failed' });
   }
@@ -107,27 +98,22 @@ async function handleFindingDecision(req, res, nextState) {
 
   try {
     const pool = getDbPool();
-    const connection = await pool.getConnection();
 
-    try {
-      await connection.beginTransaction();
-
+    const result = await withTransaction(pool, async (connection) => {
       const [findingRows] = await connection.query(
-        `SELECT finding_id, type, topic, summary, recall_anchor, state, domain_id, subdomain_id
+        `SELECT finding_id, type, topic, summary, recall_anchor, state
          FROM candidate_findings
          WHERE finding_id = ? AND user_id = ? LIMIT 1`,
         [findingId, userId]
       );
 
       if (findingRows.length === 0) {
-        await connection.rollback();
-        return res.status(404).json({ error: 'finding_not_found' });
+        throw { status: 404, error: 'finding_not_found' };
       }
 
       const finding = findingRows[0];
       if (finding.state === 'rejected') {
-        await connection.rollback();
-        return res.status(400).json({ error: 'finding_already_rejected' });
+        throw { status: 400, error: 'finding_already_rejected' };
       }
 
       await connection.query(
@@ -136,92 +122,47 @@ async function handleFindingDecision(req, res, nextState) {
       );
 
       if (nextState === 'confirmed') {
-        const embeddingText = `${finding.topic} ${finding.summary} ${finding.recall_anchor || ''}`;
-        await embedAndStore(connection, 'candidate_findings', 'finding_id', findingId, embeddingText);
-      }
-
-      const [recordRows] = await connection.query(
-        `SELECT record_id, topic, domain_id, subdomain_id
-         FROM learning_records
-         WHERE user_id = ? AND type = ?`,
-        [userId, finding.type]
-      );
-
-      const bestMatch = findBestTopicMatch(recordRows, finding.topic, finding.domain_id, finding.subdomain_id);
-
-      if (!bestMatch) {
-        const canonicalSuggestionResult = await suggestCanonicalTopic(connection, userId, finding.topic, finding.summary);
-        const canonicalTopicId = canonicalSuggestionResult ? canonicalSuggestionResult.topic_id : null;
-
-        await connection.query(
-          `INSERT INTO learning_records
-            (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count, domain_id, subdomain_id, confidence_ai, canonical_topic_id)
-           VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0, ?, ?, ?, ?)`,
-          [
-            userId,
-            finding.type,
-            finding.topic,
-            finding.summary,
-            finding.recall_anchor || null,
-            finding.domain_id || null,
-            finding.subdomain_id || null,
-            finding.confidence_ai || null,
-            canonicalTopicId
-          ]
+        const [recordRows] = await connection.query(
+          `SELECT record_id, topic
+           FROM learning_records
+           WHERE user_id = ? AND type = ?`,
+          [userId, finding.type]
         );
 
-        if (canonicalTopicId) {
-          await updateTopicOccurrence(connection, canonicalTopicId);
-        }
-      } else {
-        await connection.query(
-          `UPDATE learning_records
-           SET summary = ?, recall_anchor = ?, last_admitted_at = CURRENT_TIMESTAMP, occurrence_count = occurrence_count + 1
-           WHERE record_id = ?`,
-          [finding.summary, finding.recall_anchor || null, bestMatch.record_id]
-        );
-      }
+        const bestMatch = findBestTopicMatch(recordRows, finding.topic);
 
-      let mergeCandidateId = null;
-      let canonicalSuggestion = null;
-      let createdRecordId = null;
-
-      if (nextState === 'confirmed') {
-        const [newRecords] = await connection.query(
-          'SELECT record_id FROM learning_records WHERE user_id = ? ORDER BY last_admitted_at DESC LIMIT 1',
-          [userId]
-        );
-        createdRecordId = newRecords[0] ? newRecords[0].record_id : null;
-
-        if (createdRecordId) {
-          const consolidationCandidates = await findConsolidationCandidates(
-            connection, userId, createdRecordId, finding.topic, finding.summary,
-            finding.domain_id, finding.subdomain_id
+        if (!bestMatch) {
+          await connection.query(
+            `INSERT INTO learning_records
+              (record_id, user_id, type, topic, summary, recall_anchor, first_seen_at, last_admitted_at, occurrence_count, ignored_count, confidence_ai)
+             VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1, 0, ?)`,
+            [
+              userId,
+              finding.type,
+              finding.topic,
+              finding.summary,
+              finding.recall_anchor || null,
+              finding.confidence_ai || null
+            ]
           );
-
-          for (const candidate of consolidationCandidates) {
-            const cid = await createMergeCandidate(
-              connection, userId, createdRecordId, candidate.record_id, candidate.similarity
-            );
-            if (cid) mergeCandidateId = cid;
-          }
+        } else {
+          await connection.query(
+            `UPDATE learning_records
+             SET summary = ?, recall_anchor = ?, last_admitted_at = CURRENT_TIMESTAMP, occurrence_count = occurrence_count + 1
+             WHERE record_id = ?`,
+            [finding.summary, finding.recall_anchor || null, bestMatch.record_id]
+          );
         }
       }
 
-      await connection.commit();
+      return { status: nextState };
+    });
 
-      const response = { status: nextState };
-      if (mergeCandidateId) response.merge_candidate_id = mergeCandidateId;
-      if (canonicalSuggestion) response.canonical_suggestion = canonicalSuggestion;
-      return res.json(response);
-    } catch (err) {
-      await connection.rollback();
-      throw err;
-    } finally {
-      connection.release();
-    }
+    return res.json(result);
   } catch (err) {
-    // eslint-disable-next-line no-console
+    if (err.status && err.error) {
+      return res.status(err.status).json({ error: err.error });
+    }
     console.error('finding_decision_failed', err);
     return res.status(500).json({ error: 'finding_decision_failed' });
   }
@@ -229,7 +170,11 @@ async function handleFindingDecision(req, res, nextState) {
 
 module.exports = router;
 
-function findBestTopicMatch(records, topic, domainId, subdomainId) {
+module.exports.findBestTopicMatch = findBestTopicMatch;
+module.exports.normalizeTopic = normalizeTopic;
+module.exports.jaccardSimilarity = jaccardSimilarity;
+
+function findBestTopicMatch(records, topic) {
   if (!records || records.length === 0) return null;
   const threshold = Number(process.env.TOPIC_SIM_THRESHOLD || 0.8);
   const target = normalizeTopic(topic);
@@ -237,12 +182,6 @@ function findBestTopicMatch(records, topic, domainId, subdomainId) {
   let bestScore = 0;
 
   for (const record of records) {
-    if (domainId && record.domain_id && record.domain_id !== domainId) {
-      continue;
-    }
-    if (subdomainId && record.subdomain_id && record.subdomain_id !== subdomainId) {
-      continue;
-    }
     const score = jaccardSimilarity(target, normalizeTopic(record.topic));
     if (score > bestScore) {
       bestScore = score;
@@ -261,8 +200,8 @@ function normalizeTopic(value) {
   const stopwords = getStopwords();
   return value
     .toLowerCase()
-    .replace(/[^a-z0-9\\s]/g, ' ')
-    .split(/\\s+/)
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
     .filter(Boolean)
     .filter((token) => token.length > 1)
     .filter((token) => !stopwords.has(token));

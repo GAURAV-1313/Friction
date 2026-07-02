@@ -2,10 +2,11 @@ const express = require('express');
 const { getDbPool } = require('../db/pool');
 const { requireAuth } = require('../middleware/auth');
 const { runSnapshotsForUser } = require('../services/snapshotRunner');
+const { snapshotLimiter } = require('../middleware/rateLimit');
 
 const router = express.Router();
 
-router.post('/run', requireAuth, async (req, res) => {
+router.post('/run', requireAuth, snapshotLimiter, async (req, res) => {
   const triggerType = req.body && req.body.trigger_type === 'scheduled' ? 'scheduled' : 'manual';
   const userId = req.auth.user_id;
 

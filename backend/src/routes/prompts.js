@@ -4,6 +4,19 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const pool = getDbPool();
+    const [rows] = await pool.query(
+      'SELECT prompt_id, name, body, is_active, updated_at FROM prompts ORDER BY updated_at DESC'
+    );
+    return res.json({ prompts: rows });
+  } catch (err) {
+    console.error('prompts_list_failed', err);
+    return res.status(500).json({ error: 'prompts_list_failed' });
+  }
+});
+
 router.get('/active', requireAuth, async (req, res) => {
   try {
     const pool = getDbPool();

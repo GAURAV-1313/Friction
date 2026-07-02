@@ -24,18 +24,32 @@
   },
   "host_permissions": [
     "https://friction.onrender.com/*",
-    "http://localhost:4000/*"
+    "http://localhost:4000/*",
+    "https://chat.openai.com/*",
+    "https://gemini.google.com/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": ["*://chat.openai.com/*", "*://chatgpt.com/*"],
+      "js": ["config.js", "content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://gemini.google.com/*"],
+      "js": ["config.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "commands": {
     "capture-moment": {
       "suggested_key": {
         "default": "Alt+M",
         "mac": "Alt+M"
       },
-      "description": "Capture selected text as a moment"
+      "description": "Capture selected text as a moment (⌥M on Mac)"
     }
   }
 }

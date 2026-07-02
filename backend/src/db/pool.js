@@ -1,5 +1,4 @@
 const mysql = require('mysql2/promise');
-const dotenv = require('dotenv');
 
 let pool;
 
@@ -26,8 +25,6 @@ function getDbSslConfig() {
 
 function initDbPool() {
   if (pool) return pool;
-
-  dotenv.config();
 
   pool = mysql.createPool({
     host: process.env.DB_HOST,
