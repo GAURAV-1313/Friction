@@ -1,19 +1,285 @@
-FRICTION"Users do NOT think while confused.
-"FRICTION is a minimalist productivity ecosystem designed to bridge the gap between raw information capture and meaningful insight. It operates on the principle of delayed intelligence: capturing "friction moments" (confusions, sparks, or patterns) instantly without interrupting your flow, then using AI to analyze those patterns in deliberate batches.0. Product PhilosophyCapture Instantly, Analyze Later: Zero-friction capture during study/work.Systemic Silence: AI acts as a silent analyst, not a proactive teacher or distractor.Patterns Over Moments: Insights emerge from the aggregation of data over time, not isolated events.Logical Boundary: $Raw Data \neq Interpreted Data$. We preserve context until you are ready to reflect.1. High-Level ArchitectureFRICTION follows a Capture-Process-Review lifecycle:Capture (Extension): Buffers raw text and URLs via keyboard shortcuts.Orchestrate (Backend): Manages the buffer and triggers snapshots (manual or scheduled).Analyze (LLM): Gemini v1 processes batches of moments to identify "Candidate Findings."Review (Web App): Users confirm, defer, or reject AI-generated insights.Persist (Stable Memory): Validated findings become permanent "Learning Records."2. Component OverviewComponentResponsibilityTech StackChrome ExtensionCapture Layer: Keyboard-driven raw text buffering. Zero interpretation.Manifest v3Backend APILogic Layer: Google OAuth, snapshot orchestration, and LLM prompt management.Express.js, Node-cronWeb AppReflection Layer: Dashboard for reviewing findings and trend reports.React, Tailwind CSSDatabasePersistence Layer: Relational storage for moments and records.MySQLAI LayerAnalysis Layer: Batch processing of text into categorized patterns.Gemini v13. Data SchemaRaw Buffer (Uninterpreted)SQL{
-  moment_id: CHAR(36),
-  user_id: CHAR(36),
-  raw_text: TEXT,
-  source_type: ENUM('highlight','bulk_paste'),
-  source_url: TEXT NULL,
-  status: ENUM('pending','processed'),
-  created_at: TIMESTAMP
-}
-Candidate Findings (AI Output)SQL{
-  finding_id: CHAR(36),
-  snapshot_id: CHAR(36),
-  type: ENUM('confusion','insight','fragile_understanding','pattern'),
-  topic: VARCHAR(255),
-  evidence_moment_ids: JSON,
-  state: ENUM('unreviewed','confirmed','deferred','rejected')
-}
-4. State TransitionsThe system treats data as a stream that gains stability as it moves through the pipeline:Buffer Moments: pending $\rightarrow$ processed (Deleted after snapshot).Findings: unreviewed $\rightarrow$ confirmed | deferred | rejected.Records: Created/updated only upon confirmation or deferral.5. API ContractExtensionPOST /api/moments: Send raw text and metadata.Snapshot LogicPOST /api/snapshots/run: Trigger LLM batch analysis (Max 30 moments per call).Web InteractionGET /api/findings?state=unreviewed: Fetch findings for dashboard.POST /api/findings/:id/confirm: Strengthen a Learning Record.DELETE /api/findings/:id: Permanently reject/delete a finding.6. Development Constraints (V1)No RAG: Pure batch analysis for V1.No Auto-Teaching: The system identifies what you are struggling with, not the solution.No Anonymity: Google OAuth is required for all capture events.7. Success MetricV1 is successful if a user says:"This surfaced a pattern I didn't realize."Since you've defined the system as "Authoritative" with non-negotiable data models, do you want me to generate the specific SQL migration scripts or the Sequelize/TypeORM models to match this schema?
+# FRICTION
+
+> **"Users do NOT think while confused."**
+
+**FRICTION** is a minimalist AI-powered productivity ecosystem designed to bridge the gap between **raw information capture** and **meaningful insights**.
+
+Instead of interrupting your workflow with AI suggestions, FRICTION captures your moments of confusion, curiosity, and realization instantly. AI analyzes them later in batches, helping you discover learning patterns you would otherwise miss.
+
+---
+
+## ✨ Product Philosophy
+
+### ⚡ Capture Instantly, Analyze Later
+Capture thoughts without breaking focus. Reflection happens later.
+
+### 🤫 Systemic Silence
+AI acts as a silent analyst—not a tutor, chatbot, or distraction.
+
+### 📈 Patterns Over Moments
+One moment rarely matters. Meaning emerges from hundreds of moments over time.
+
+### 🧠 Preserve Context
+Raw data should remain untouched until reflection.
+
+> **Raw Data ≠ Interpreted Data**
+
+---
+
+# 🚀 Features
+
+- ⚡ Instant keyboard-driven capture
+- 📝 Capture highlights, notes, and learning moments
+- 🤖 AI-generated learning insights
+- 🔍 Detect recurring confusions and knowledge gaps
+- 📊 Weekly & long-term learning pattern analysis
+- 🧠 Persistent Learning Records
+- 📚 Searchable personal knowledge base
+- 🔒 Google OAuth authentication
+- 🎯 Zero-friction workflow with delayed intelligence
+
+---
+
+# 🏗️ Architecture
+
+FRICTION follows a simple **Capture → Process → Review** lifecycle.
+
+```text
+Chrome Extension
+        │
+        ▼
+ Capture Raw Moments
+        │
+        ▼
+ Backend Snapshot Service
+        │
+        ▼
+ Gemini Batch Analysis
+        │
+        ▼
+ Candidate Findings
+        │
+        ▼
+ Review Dashboard
+        │
+        ▼
+ Stable Learning Records
+```
+
+---
+
+# 🧩 Components
+
+| Component | Responsibility | Tech Stack |
+|-----------|---------------|------------|
+| Chrome Extension | Keyboard-driven raw capture | Manifest V3 |
+| Backend API | Authentication, orchestration, snapshot pipeline | Node.js, Express |
+| Web Dashboard | Review findings and visualize trends | React, Tailwind CSS |
+| Database | Store moments, findings, learning records | MySQL |
+| AI Layer | Batch analysis and pattern detection | Gemini |
+
+---
+
+# 📦 Data Flow
+
+```
+Raw Moments
+      │
+      ▼
+Snapshot Created
+      │
+      ▼
+Gemini Batch Analysis
+      │
+      ▼
+Candidate Findings
+      │
+      ▼
+User Review
+      │
+      ├── Confirm
+      ├── Defer
+      └── Reject
+      │
+      ▼
+Learning Records
+```
+
+---
+
+# 🗄️ Data Models
+
+## Buffer Moments
+
+```sql
+moment_id      CHAR(36)
+user_id        CHAR(36)
+raw_text       TEXT
+source_type    ENUM('highlight','bulk_paste')
+source_url     TEXT
+status         ENUM('pending','processed')
+created_at     TIMESTAMP
+```
+
+---
+
+## Candidate Findings
+
+```sql
+finding_id            CHAR(36)
+snapshot_id           CHAR(36)
+type                  ENUM(
+    'confusion',
+    'insight',
+    'fragile_understanding',
+    'pattern'
+)
+topic                 VARCHAR(255)
+evidence_moment_ids   JSON
+state                 ENUM(
+    'unreviewed',
+    'confirmed',
+    'deferred',
+    'rejected'
+)
+```
+
+---
+
+# 🔄 State Transitions
+
+## Buffer Moments
+
+```
+pending
+    │
+    ▼
+processed
+    │
+    ▼
+deleted
+```
+
+---
+
+## Findings
+
+```
+unreviewed
+      │
+      ├────────► confirmed
+      │
+      ├────────► deferred
+      │
+      └────────► rejected
+```
+
+---
+
+## Learning Records
+
+Learning Records are created or updated **only** after a finding has been:
+
+- ✅ Confirmed
+- ⏳ Deferred
+
+Rejected findings are permanently discarded.
+
+---
+
+# 🌐 API
+
+## Capture
+
+```
+POST /api/moments
+```
+
+Capture raw text with metadata.
+
+---
+
+## Snapshot
+
+```
+POST /api/snapshots/run
+```
+
+Trigger batch AI analysis.
+
+Maximum:
+- 30 moments per snapshot
+
+---
+
+## Review
+
+```
+GET /api/findings?state=unreviewed
+```
+
+Fetch pending findings.
+
+```
+POST /api/findings/:id/confirm
+```
+
+Confirm a finding.
+
+```
+DELETE /api/findings/:id
+```
+
+Reject a finding permanently.
+
+---
+
+# ⚙️ Tech Stack
+
+### Frontend
+- React
+- Tailwind CSS
+
+### Backend
+- Node.js
+- Express
+
+### AI
+- Gemini
+
+### Database
+- MySQL
+
+### Authentication
+- Google OAuth
+
+### Browser
+- Chrome Extension (Manifest V3)
+
+---
+
+# 🎯 Version 1 Constraints
+
+- ❌ No RAG
+- ❌ No vector database
+- ❌ No auto-teaching
+- ❌ No AI chat
+- ✅ Batch-only AI analysis
+- ✅ Google OAuth authentication
+- ✅ Human-in-the-loop validation
+
+---
+
+# 📌 Vision
+
+Most note-taking apps remember **what you learned**.
+
+FRICTION remembers **how you learn.**
+
+Instead of storing information, it uncovers recurring mistakes, fragile understanding, and hidden learning patterns—helping you build lasting knowledge over time.
+
+---
+
+# 📈 Success Metric
+
+> **"This surfaced a pattern I didn't realize."**
