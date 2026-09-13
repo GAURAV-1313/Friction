@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fixture LeetCode</title>
+  <style>
+    :root { color-scheme: light; --bg: #f7f7f8; --card: #fff; --line: #e3e3e6; --ink: #1a1a1a; --muted: #6b6b73; --accent: #2563eb; --ok: #16a34a; --bad: #dc2626; --warn: #d97706; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+    header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 2; }
+    header .badge { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; }
+    header h1 { font-size: 16px; margin: 0; }
+    header nav { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+    a { color: var(--accent); }
+    main { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(360px, 1.2fr); gap: 12px; padding: 12px 16px; }
+    section.card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+    h2 { font-size: 13px; margin: 0 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .tags span, .pill { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; background: #eef2ff; color: #3730a3; margin: 0 4px 4px 0; }
+    .pill.easy { background: #dcfce7; color: #166534; } .pill.medium { background: #fef3c7; color: #92400e; } .pill.hard { background: #fee2e2; color: #991b1b; }
+    #description pre { background: #f3f4f6; padding: 8px; border-radius: 6px; white-space: pre-wrap; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+    button { font: inherit; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: #fff; cursor: pointer; }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button.on { background: #fde68a; border-color: #f59e0b; }
+    button:disabled { opacity: .5; cursor: default; }
+    select, label { font: inherit; }
+    #editor textarea { width: 100%; min-height: 260px; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: #fbfbfc; resize: vertical; }
+    #editor textarea.cm-content { background: #fffbeb; }
+    #result { margin-top: 8px; padding: 8px; border-radius: 6px; border: 1px dashed var(--line); min-height: 40px; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    #result.ok { border-color: var(--ok); } #result.bad { border-color: var(--bad); }
+    .switches { display: flex; flex-wrap: wrap; gap: 6px; }
+    .status { font-size: 12px; color: var(--muted); }
+    .logs { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; max-height: 220px; overflow: auto; white-space: pre-wrap; margin: 0; }
+    .hidden { display: none !important; }
+    @media (max-width: 860px) { main { grid-template-columns: 1fr; } .logs { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">fake leetcode</span>
+    <h1 id="problem-title">Loading…</h1>
+    <span id="problem-difficulty" class="pill">?</span>
+    <span id="ext-status" class="status" title="whether the Anchor content scripts attached to this page">extension: checking…</span>
+    <nav>
+      <a id="next-problem" href="#" title="history.pushState to the next fixture slug">Next problem →</a>
+      <a id="problemset-link" href="/problemset/">Problem set</a>
+      <button id="contest-toggle" type="button" title="append ?envType=contest via pushState">Contest mode: off</button>
+      <button id="reload-btn" type="button">Reload page</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="nonproblem" class="card hidden">
+      <h2>Non-problem page</h2>
+      <p>This is <code id="nonproblem-path"></code>. The extension's content scripts only match <code>/problems/*</code>, so the panel should show its non-problem state here.</p>
+      <p id="nonproblem-links"></p>
+    </section>
+
+    <section id="problem-card" class="card">
+      <h2>Description</h2>
+      <div id="problem-tags" class="tags"></div>
+      <div id="description"></div>
+      <h2>Hints (fixture)</h2>
+      <ol id="hints"></ol>
+    </section>
+
+    <section id="editor-card" class="card">
+      <h2>Editor</h2>
+      <div class="toolbar">
+        <button id="lang-button" type="button" title="LeetCode-style language button (the extension may read its text)">C++</button>
+        <select id="lang-select" title="changes the language button and localStorage.global_lang">
+          <option value="cpp">cpp</option>
+          <option value="python3">python3</option>
+          <option value="java">java</option>
+        </select>
+        <label><input id="write-global-lang" type="checkbox" checked /> write localStorage.global_lang</label>
+        <button id="focus-toggle" type="button" title="swap Monaco for a CodeMirror 6 .cm-content stub">Focus mode: off</button>
+        <button id="xhr-toggle" type="button" title="submit and poll with XMLHttpRequest instead of fetch">Transport: fetch</button>
+      </div>
+      <div id="editor"></div>
+      <div class="toolbar" style="margin-top:8px">
+        <label>Verdict
+          <select id="verdict-select" title="writes a '// verdict: X' marker into the code; the fixture judge obeys it">
+            <option>AC</option><option>WA</option><option>TLE</option><option>RE</option><option>CE</option><option>MLE</option><option>RESTRICT</option>
+          </select>
+        </label>
+        <button id="run-btn" type="button" title="POST interpret_solution + poll runcode_* (must never be captured)">Run</button>
+        <button id="submit-btn" class="primary" type="button" title="POST submit + poll v2/check">Submit</button>
+        <button id="repoll-btn" type="button" title="GET v2/check for the last id again (dedupe: no second event)" disabled>Poll last id again</button>
+        <button id="orphan-btn" type="button" title="GET v2/check for an id this page never submitted (orphan verdict)">Orphan check</button>
+      </div>
+      <div id="result">no submission yet</div>
+    </section>
+
+    <section class="card" style="grid-column: 1 / -1">
+      <h2>Fault switches (cookies read by serve-fixture.js)</h2>
+      <div class="switches">
+        <button type="button" data-switch="fake_logged_out" title="globalData says signed out; list rows TO_DO; /api/submissions/ 401">fake_logged_out: off</button>
+        <button type="button" data-switch="fake_429" title="every 7th sync request 429 with Retry-After: 3">fake_429: off</button>
+        <button type="button" data-switch="fake_cf" title="sync requests get a 200 HTML challenge page">fake_cf: off</button>
+        <button type="button" data-switch="fake_drift" title="questionDetail rejects the acRate field until the query is pruned">fake_drift: off</button>
+        <button id="clear-pending" type="button" title="localStorage.removeItem('anchor_pending_events')">Clear pending events</button>
+      </div>
+      <p class="status" id="cookie-status"></p>
+    </section>
+
+    <div class="logs">
+      <section class="card">
+        <h2>Bridge traffic (window.postMessage with __anchor) · pending events: <span id="pending-count">0</span></h2>
+        <pre id="bridge-log" class="log"></pre>
+      </section>
+      <section class="card">
+        <h2>Page log</h2>
+        <pre id="log" class="log"></pre>
+      </section>
+    </div>
+  </main>
+
+  <script src="/fake-monaco.js"></script>
+  <script src="/page.js"></script>
+</body>
+</html>

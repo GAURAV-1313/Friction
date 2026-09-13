@@ -1,0 +1,4984 @@
+{
+ "subpatterns": [
+  {
+   "id": "dp.1d_linear",
+   "family": "dp",
+   "label": "Linear 1-D DP over positions",
+   "canonical": [
+    "climbing-stairs",
+    "house-robber",
+    "decode-ways",
+    "min-cost-climbing-stairs"
+   ],
+   "problems": [
+    {
+     "slug": "climbing-stairs",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i]=dp[i-1]+dp[i-2]"
+    },
+    {
+     "slug": "house-robber",
+     "primary": true,
+     "confidence": "high",
+     "why": "take-or-skip with no-adjacent constraint"
+    },
+    {
+     "slug": "decode-ways",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i] from dp[i-1] and dp[i-2] with validity checks"
+    },
+    {
+     "slug": "min-cost-climbing-stairs",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i]=cost[i]+min(dp[i-1],dp[i-2])"
+    },
+    {
+     "slug": "house-robber-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "delete-and-earn",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "fibonacci-number",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "n-th-tribonacci-number",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "decode-ways-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-for-tickets",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "solving-questions-with-brainpower",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-ways-to-build-good-strings",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-texts",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game-vi",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "constrained-subsequence-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-taps-to-open-to-water-a-garden",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "video-stitching",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-valid-parentheses",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-earnings-from-taxi",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-profit-in-job-scheduling",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-coins-for-fruits",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "pizza-with-3n-slices",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "domino-and-tromino-tiling",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "combination-sum-iv",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-break",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "paint-fence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "house-robber-iii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "longest-continuous-increasing-subsequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "arithmetic-slices",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "integer-break",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "stone-game-iii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "stone-game-iv",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "divisor-game",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "check-if-there-is-a-valid-partition-for-the-array",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-of-events-that-can-be-attended-ii",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.kadane_max_subarray",
+   "family": "dp",
+   "label": "Kadane-style running best subarray ending here",
+   "canonical": [
+    "maximum-subarray",
+    "maximum-product-subarray",
+    "best-time-to-buy-and-sell-stock",
+    "maximum-sum-circular-subarray"
+   ],
+   "problems": [
+    {
+     "slug": "maximum-subarray",
+     "primary": true,
+     "confidence": "high",
+     "why": "cur=max(cur+a[i],a[i]), track global best"
+    },
+    {
+     "slug": "maximum-product-subarray",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kadane with running max and min product"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kadane on the difference array / running min"
+    },
+    {
+     "slug": "maximum-sum-circular-subarray",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kadane for max and min subarray, wrap via total-min"
+    },
+    {
+     "slug": "longest-turbulent-subarray",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-subarray-sum-with-one-deletion",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-absolute-sum-of-any-subarray",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-length-of-subarray-with-positive-product",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "k-concatenation-maximum-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-score-of-spliced-array",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "best-sightseeing-pair",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-difference-between-increasing-elements",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-ascending-subarray-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-continuous-increasing-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "max-consecutive-ones",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "consecutive-characters",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "arithmetic-slices",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-zero-filled-subarrays",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-subarray-of-1s-after-deleting-one-element",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-strength-of-a-group",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-strictly-increasing-or-strictly-decreasing-subarray",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "gas-station",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "max-sum-of-rectangle-no-larger-than-k",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-subarray-sum-after-one-operation",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-alternating-subsequence-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "constrained-subsequence-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-strength-of-k-disjoint-subarrays",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.knapsack_01",
+   "family": "dp",
+   "label": "0/1 knapsack / subset-sum",
+   "canonical": [
+    "partition-equal-subset-sum",
+    "target-sum",
+    "last-stone-weight-ii",
+    "ones-and-zeroes"
+   ],
+   "problems": [
+    {
+     "slug": "partition-equal-subset-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "subset-sum feasibility to total/2"
+    },
+    {
+     "slug": "target-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "count subsets reaching (S+target)/2"
+    },
+    {
+     "slug": "last-stone-weight-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "max subset sum <= total/2"
+    },
+    {
+     "slug": "ones-and-zeroes",
+     "primary": true,
+     "confidence": "high",
+     "why": "two-dimensional capacity knapsack"
+    },
+    {
+     "slug": "length-of-the-longest-subsequence-that-sums-to-target",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "profitable-schemes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "tallest-billboard",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "ways-to-express-an-integer-as-sum-of-powers",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-great-partitions",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "split-array-with-same-average",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-refueling-stops",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-value-of-k-coins-from-piles",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "closest-dessert-cost",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimize-the-difference-between-target-and-chosen-elements",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-earn-points",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-of-sub-multisets-with-bounded-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-total-reward-using-operations-i",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-array-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-profit-from-trading-stocks",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-total-tastiness-of-purchased-fruits",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-maximum-bitwise-or-subsets",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "partition-array-into-two-arrays-to-minimize-sum-difference",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "pizza-with-3n-slices",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-of-events-that-can-be-attended-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "greatest-sum-divisible-by-three",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-number-of-good-subsets",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "number-of-dice-rolls-with-target-sum",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-profit-in-job-scheduling",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-length-of-a-concatenated-string-with-unique-characters",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "painting-the-walls",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-build-house-of-cards",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.knapsack_unbounded",
+   "family": "dp",
+   "label": "Unbounded / complete knapsack",
+   "canonical": [
+    "coin-change",
+    "coin-change-ii",
+    "combination-sum-iv",
+    "perfect-squares"
+   ],
+   "problems": [
+    {
+     "slug": "coin-change",
+     "primary": true,
+     "confidence": "high",
+     "why": "min reusable coins to reach amount"
+    },
+    {
+     "slug": "coin-change-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "count combinations, coin-outer loop"
+    },
+    {
+     "slug": "combination-sum-iv",
+     "primary": true,
+     "confidence": "high",
+     "why": "ordered counting, target-outer loop"
+    },
+    {
+     "slug": "perfect-squares",
+     "primary": true,
+     "confidence": "high",
+     "why": "coin change with square coins"
+    },
+    {
+     "slug": "integer-break",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "form-largest-integer-with-digits-that-add-up-to-target",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-number-of-ways-to-make-the-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "combination-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shopping-offers",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-cost-for-tickets",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-ways-to-build-good-strings",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-earn-points",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-of-sub-multisets-with-bounded-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-break",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "extra-characters-in-a-string",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "climbing-stairs",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-dice-rolls-with-target-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-texts",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "dp.lis",
+   "family": "dp",
+   "label": "Longest increasing subsequence family",
+   "canonical": [
+    "longest-increasing-subsequence",
+    "russian-doll-envelopes",
+    "number-of-longest-increasing-subsequence",
+    "largest-divisible-subset"
+   ],
+   "problems": [
+    {
+     "slug": "longest-increasing-subsequence",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i]=1+max dp[j], j<i, nums[j]<nums[i]"
+    },
+    {
+     "slug": "russian-doll-envelopes",
+     "primary": true,
+     "confidence": "high",
+     "why": "sort then 1-D LIS on heights"
+    },
+    {
+     "slug": "number-of-longest-increasing-subsequence",
+     "primary": true,
+     "confidence": "high",
+     "why": "LIS carrying (length,count)"
+    },
+    {
+     "slug": "largest-divisible-subset",
+     "primary": true,
+     "confidence": "high",
+     "why": "LIS with divisibility comparator"
+    },
+    {
+     "slug": "maximum-length-of-pair-chain",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "increasing-triplet-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-arithmetic-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-arithmetic-subsequence-of-given-difference",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "length-of-longest-fibonacci-subsequence",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-string-chain",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-removals-to-make-mountain-array",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "best-team-with-no-conflicts",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "delete-columns-to-make-sorted-iii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-operations-to-make-a-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-increasing-subsequence-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-height-by-stacking-cuboids",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-the-longest-valid-obstacle-course-at-each-position",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-ideal-subsequence",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-teams",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-square-streak-in-an-array",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-balanced-subsequence-sum",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-unequal-adjacent-groups-subsequence-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "wiggle-subsequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "make-array-strictly-increasing",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "dp.two_sequence",
+   "family": "dp",
+   "label": "Two-sequence alignment DP",
+   "canonical": [
+    "longest-common-subsequence",
+    "edit-distance",
+    "distinct-subsequences",
+    "regular-expression-matching"
+   ],
+   "problems": [
+    {
+     "slug": "longest-common-subsequence",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i][j] over prefixes, match diagonal else max"
+    },
+    {
+     "slug": "edit-distance",
+     "primary": true,
+     "confidence": "high",
+     "why": "insert/delete/replace transitions over prefixes"
+    },
+    {
+     "slug": "distinct-subsequences",
+     "primary": true,
+     "confidence": "high",
+     "why": "count ways s[:i] forms t[:j]"
+    },
+    {
+     "slug": "regular-expression-matching",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i][j] with . and * branching"
+    },
+    {
+     "slug": "wildcard-matching",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "interleaving-string",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "delete-operation-for-two-strings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-ascii-delete-sum-for-two-strings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "uncrossed-lines",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-common-supersequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-length-of-repeated-subarray",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "max-dot-product-of-two-subsequences",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-window-subsequence",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-form-a-target-string-given-a-dictionary",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-substrings-that-differ-by-one-character",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-total-distance-traveled",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "make-array-strictly-increasing",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "is-subsequence",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "scramble-string",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-palindromic-subsequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-insertion-steps-to-make-a-string-palindrome",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-score-from-performing-multiplication-operations",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-operations-to-make-a-subsequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-palindrome-length-from-subsequences",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "freedom-trail",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-most-similar-path-in-a-graph",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "dp.grid_paths",
+   "family": "dp",
+   "label": "Grid path DP from neighbours",
+   "canonical": [
+    "unique-paths",
+    "unique-paths-ii",
+    "minimum-path-sum",
+    "minimum-falling-path-sum"
+   ],
+   "problems": [
+    {
+     "slug": "unique-paths",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[r][c]=dp[r-1][c]+dp[r][c-1]"
+    },
+    {
+     "slug": "unique-paths-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "same with obstacles zeroed"
+    },
+    {
+     "slug": "minimum-path-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "grid+min(up,left)"
+    },
+    {
+     "slug": "minimum-falling-path-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "min of three cells above"
+    },
+    {
+     "slug": "triangle",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "dungeon-game",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-falling-path-sum-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-path-cost-in-a-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-number-of-points-with-cost",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-non-negative-product-in-a-matrix",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "paths-in-matrix-whose-sum-is-divisible-by-k",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-paths-with-max-score",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "cherry-pickup",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "cherry-pickup-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-paths-with-the-given-xor-value",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-visited-cells-in-a-grid",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximal-square",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-square-submatrices-with-all-ones",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-fertile-pyramids-in-a-land",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "largest-plus-sign",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "pascals-triangle",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "champagne-tower",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "range-sum-query-2d-immutable",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "out-of-boundary-paths",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "knight-probability-in-chessboard",
+     "primary": false,
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "id": "dp.interval",
+   "family": "dp",
+   "label": "Interval DP over [i..j]",
+   "canonical": [
+    "burst-balloons",
+    "minimum-cost-to-cut-a-stick",
+    "minimum-score-triangulation-of-polygon",
+    "strange-printer"
+   ],
+   "problems": [
+    {
+     "slug": "burst-balloons",
+     "primary": true,
+     "confidence": "high",
+     "why": "choose last balloon k in (i,j)"
+    },
+    {
+     "slug": "minimum-cost-to-cut-a-stick",
+     "primary": true,
+     "confidence": "high",
+     "why": "first cut k between cuts i and j"
+    },
+    {
+     "slug": "minimum-score-triangulation-of-polygon",
+     "primary": true,
+     "confidence": "high",
+     "why": "apex k for edge (i,j), matrix-chain form"
+    },
+    {
+     "slug": "strange-printer",
+     "primary": true,
+     "confidence": "high",
+     "why": "extend s[i] stroke to k, split"
+    },
+    {
+     "slug": "minimum-cost-to-merge-stones",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "guess-number-higher-or-lower-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-tree-from-leaf-values",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "remove-boxes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-different-palindromic-subsequences",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-palindromic-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-insertion-steps-to-make-a-string-palindrome",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "scramble-string",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "different-ways-to-add-parentheses",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-score-of-students-solving-math-expression",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "unique-binary-search-trees-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game-v",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximize-palindrome-length-from-subsequences",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-palindromic-substring",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "selling-pieces-of-wood",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "palindrome-removal",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "unique-binary-search-trees",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "predict-the-winner",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game-vii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "palindrome-partitioning-ii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "palindrome-partitioning-iii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-of-non-overlapping-palindrome-substrings",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.bitmask",
+   "family": "dp",
+   "label": "Bitmask DP over subsets",
+   "canonical": [
+    "partition-to-k-equal-sum-subsets",
+    "find-the-shortest-superstring",
+    "minimum-xor-sum-of-two-arrays",
+    "number-of-ways-to-wear-different-hats-to-each-other"
+   ],
+   "problems": [
+    {
+     "slug": "partition-to-k-equal-sum-subsets",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[mask]=remainder of bucket being filled"
+    },
+    {
+     "slug": "find-the-shortest-superstring",
+     "primary": true,
+     "confidence": "high",
+     "why": "TSP dp[mask][last]"
+    },
+    {
+     "slug": "minimum-xor-sum-of-two-arrays",
+     "primary": true,
+     "confidence": "high",
+     "why": "assignment dp[mask]"
+    },
+    {
+     "slug": "number-of-ways-to-wear-different-hats-to-each-other",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[hat][people mask]"
+    },
+    {
+     "slug": "matchsticks-to-square",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-work-sessions-to-finish-the-tasks",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "parallel-courses-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-students-taking-exam",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "smallest-sufficient-team",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "stickers-to-spell-word",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "beautiful-arrangement",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "special-permutations",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-squareful-arrays",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximize-score-after-n-operations",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-connect-two-groups-of-points",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "distribute-repeating-integers",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-incompatibility",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-minimum-time-to-finish-all-jobs",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-compatibility-score-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-and-sum-of-array",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-number-of-good-subsets",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-the-number-of-square-free-subsets",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "campus-bikes-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "optimal-account-balancing",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "fair-distribution-of-cookies",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-minimum-cost-array-permutation",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-length-of-a-concatenated-string-with-unique-characters",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-grid-happiness",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "painting-a-grid-with-three-different-colors",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-time-to-break-locks-i",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "select-cells-in-grid-with-maximum-score",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-time-to-kill-all-monsters",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-lines-to-cover-points",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-moves-to-spread-stones-over-grid",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shortest-path-visiting-all-nodes",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "can-i-win",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shortest-path-to-get-all-keys",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "unique-paths-iii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "android-unlock-patterns",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-special-integers",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "numbers-with-repeated-digits",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-possible-sets-of-closing-branches",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-subtrees-with-max-distance-among-cities",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.digit",
+   "family": "dp",
+   "label": "Digit DP with tight/leading-zero state",
+   "canonical": [
+    "numbers-at-most-n-given-digit-set",
+    "count-special-integers",
+    "number-of-digit-one",
+    "non-negative-integers-without-consecutive-ones"
+   ],
+   "problems": [
+    {
+     "slug": "numbers-at-most-n-given-digit-set",
+     "primary": true,
+     "confidence": "high",
+     "why": "walk digits of N with tight flag"
+    },
+    {
+     "slug": "count-special-integers",
+     "primary": true,
+     "confidence": "high",
+     "why": "(pos, used mask, tight, leading zero)"
+    },
+    {
+     "slug": "number-of-digit-one",
+     "primary": true,
+     "confidence": "high",
+     "why": "fixed-position prefix/suffix counting"
+    },
+    {
+     "slug": "non-negative-integers-without-consecutive-ones",
+     "primary": true,
+     "confidence": "high",
+     "why": "binary digit DP with prev bit and tight"
+    },
+    {
+     "slug": "numbers-with-repeated-digits",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-of-integers",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-beautiful-integers-in-the-range",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-stepping-numbers-in-range",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-the-number-of-powerful-integers",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-k-reducible-numbers-less-than-n",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-all-good-strings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "rotated-digits",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "digit-count-in-range",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-numbers-with-non-decreasing-digits",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-beautiful-numbers",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-integers-with-even-digit-sum",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "count-symmetric-integers",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "confusing-number-ii",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "strobogrammatic-number-iii",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "count-numbers-with-unique-digits",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.tree",
+   "family": "dp",
+   "label": "DP on trees (post-order combine)",
+   "canonical": [
+    "house-robber-iii",
+    "binary-tree-cameras",
+    "diameter-of-binary-tree",
+    "binary-tree-maximum-path-sum"
+   ],
+   "problems": [
+    {
+     "slug": "house-robber-iii",
+     "primary": true,
+     "confidence": "high",
+     "why": "(rob, not rob) pair per node"
+    },
+    {
+     "slug": "binary-tree-cameras",
+     "primary": true,
+     "confidence": "high",
+     "why": "three states per subtree"
+    },
+    {
+     "slug": "diameter-of-binary-tree",
+     "primary": true,
+     "confidence": "high",
+     "why": "single-arm depth, combine two arms"
+    },
+    {
+     "slug": "binary-tree-maximum-path-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "max downward gain, combine at node"
+    },
+    {
+     "slug": "longest-univalue-path",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-path-with-different-adjacent-characters",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "distribute-coins-in-binary-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-product-of-splitted-binary-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-sum-bst-in-binary-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-zigzag-path-in-a-binary-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-good-leaf-nodes-pairs",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "most-frequent-subtree-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "binary-tree-tilt",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-nodes-equal-to-average-of-subtree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "smallest-subtree-with-all-the-deepest-nodes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "balanced-binary-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-time-to-collect-all-apples-in-a-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "time-needed-to-inform-all-employees",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-fuel-cost-to-report-to-the-capital",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-nodes-in-the-sub-tree-with-the-same-label",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-number-of-k-divisible-components",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimize-the-total-price-of-the-trips",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-score-after-applying-operations-on-a-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-depth-of-binary-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "binary-tree-longest-consecutive-sequence-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "sum-of-distances-in-tree",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-reorder-array-to-get-same-bst",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-sum-iii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "height-of-binary-tree-after-subtree-removal-queries",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-score-after-removals-on-a-tree",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "dp.state_machine",
+   "family": "dp",
+   "label": "State-machine DP with few explicit states",
+   "canonical": [
+    "best-time-to-buy-and-sell-stock-with-cooldown",
+    "best-time-to-buy-and-sell-stock-with-transaction-fee",
+    "paint-house",
+    "paint-fence"
+   ],
+   "problems": [
+    {
+     "slug": "best-time-to-buy-and-sell-stock-with-cooldown",
+     "primary": true,
+     "confidence": "high",
+     "why": "holding/cooldown/free states per day"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-with-transaction-fee",
+     "primary": true,
+     "confidence": "high",
+     "why": "hold/cash with fee on sell"
+    },
+    {
+     "slug": "paint-house",
+     "primary": true,
+     "confidence": "high",
+     "why": "colour state per house, differ from previous"
+    },
+    {
+     "slug": "paint-fence",
+     "primary": true,
+     "confidence": "high",
+     "why": "same/diff-as-previous states"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-iii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-iv",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "paint-house-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "paint-house-iv",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "student-attendance-record-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "wiggle-subsequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "flip-string-to-monotone-increasing",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-deletions-to-make-string-balanced",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-swaps-to-make-sequences-increasing",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "dice-roll-simulation",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-paint-n-x-3-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-alternating-subsequence-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "greatest-sum-divisible-by-three",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-sideway-jumps",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-number-of-special-subsequences",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-sum-of-3-non-overlapping-subarrays",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-costs-using-the-train-line",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-v",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-vacation-days",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "paint-house-iii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "house-robber",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-vowels-permutation",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "knight-dialer",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-sorted-vowel-strings",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "domino-and-tromino-tiling",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-turbulent-subarray",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-subarray-sum-with-one-deletion",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-falling-path-sum-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-subarray-of-1s-after-deleting-one-element",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-subarray-sum-after-one-operation",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "painting-a-grid-with-three-different-colors",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-divide-a-long-corridor",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-select-buildings",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.partition_1d",
+   "family": "dp",
+   "label": "Partition into valid pieces dp[i] over cut points",
+   "canonical": [
+    "word-break",
+    "palindrome-partitioning-ii",
+    "partition-array-for-maximum-sum",
+    "minimum-difficulty-of-a-job-schedule"
+   ],
+   "problems": [
+    {
+     "slug": "word-break",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[i]=OR dp[j] and s[j..i) in dict"
+    },
+    {
+     "slug": "palindrome-partitioning-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "min cuts with palindrome validity"
+    },
+    {
+     "slug": "partition-array-for-maximum-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "piece length <=k, value of whole piece"
+    },
+    {
+     "slug": "minimum-difficulty-of-a-job-schedule",
+     "primary": true,
+     "confidence": "high",
+     "why": "k-pieces partition with max per piece"
+    },
+    {
+     "slug": "word-break-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "palindrome-partitioning",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "palindrome-partitioning-iii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "palindrome-partitioning-iv",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "split-array-largest-sum",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "allocate-mailboxes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "largest-sum-of-averages",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "filling-bookcase-shelves",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "extra-characters-in-a-string",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "concatenated-words",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-split-an-array",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "check-if-there-is-a-valid-partition-for-the-array",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "partition-string-into-minimum-beautiful-substrings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-number-of-non-overlapping-palindrome-substrings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-separate-numbers",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-beautiful-partitions",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-total-space-wasted-with-k-resizing-operations",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-strength-of-k-disjoint-subarrays",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "restore-ip-addresses",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "split-array-into-fibonacci-sequence",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "additive-number",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "splitting-a-string-into-descending-consecutive-values",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "split-a-string-into-the-max-number-of-unique-substrings",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "partition-string-into-substrings-with-values-at-most-k",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "delete-string",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "string-compression-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "decode-ways",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-texts",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-for-tickets",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-total-distance-traveled",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-sum-of-3-non-overlapping-subarrays",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.game_minimax",
+   "family": "dp",
+   "label": "Two-player optimal play / minimax DP",
+   "canonical": [
+    "predict-the-winner",
+    "stone-game",
+    "stone-game-iii",
+    "can-i-win"
+   ],
+   "problems": [
+    {
+     "slug": "predict-the-winner",
+     "primary": true,
+     "confidence": "high",
+     "why": "score difference over interval, take either end"
+    },
+    {
+     "slug": "stone-game",
+     "primary": true,
+     "confidence": "high",
+     "why": "identical to predict-the-winner"
+    },
+    {
+     "slug": "stone-game-iii",
+     "primary": true,
+     "confidence": "high",
+     "why": "suffix dp[i], take 1..3, minus opponent"
+    },
+    {
+     "slug": "can-i-win",
+     "primary": true,
+     "confidence": "high",
+     "why": "can-win over bitmask of used numbers"
+    },
+    {
+     "slug": "stone-game-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game-iv",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game-vii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "stone-game-viii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "divisor-game",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "nim-game",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "flip-game-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "cat-and-mouse",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "cat-and-mouse-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "stone-game-v",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "guess-number-higher-or-lower-ii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "super-egg-drop",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "egg-drop-with-2-eggs-and-n-floors",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.counting_combinatorial",
+   "family": "dp",
+   "label": "Counting structures with a recurrence",
+   "canonical": [
+    "unique-binary-search-trees",
+    "domino-and-tromino-tiling",
+    "count-vowels-permutation",
+    "number-of-dice-rolls-with-target-sum"
+   ],
+   "problems": [
+    {
+     "slug": "unique-binary-search-trees",
+     "primary": true,
+     "confidence": "high",
+     "why": "Catalan split on root"
+    },
+    {
+     "slug": "domino-and-tromino-tiling",
+     "primary": true,
+     "confidence": "high",
+     "why": "tiling with column-profile states"
+    },
+    {
+     "slug": "count-vowels-permutation",
+     "primary": true,
+     "confidence": "high",
+     "why": "count strings via 5-state follow graph"
+    },
+    {
+     "slug": "number-of-dice-rolls-with-target-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "dp[dice][sum] convolution"
+    },
+    {
+     "slug": "knight-dialer",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-music-playlists",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-sorted-vowel-strings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-numbers-with-unique-digits",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-all-valid-pickup-and-delivery-options",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-rearrange-sticks-with-k-sticks-visible",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-reorder-array-to-get-same-bst",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-divide-a-long-corridor",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-select-buildings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-reach-a-position-after-exactly-k-steps",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-sets-of-k-non-overlapping-line-segments",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "valid-permutations-for-di-sequence",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-build-house-of-cards",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-ways-to-distribute-candies",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "dice-roll-simulation",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-stay-in-the-same-place-after-some-steps",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-paint-n-x-3-grid",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "student-attendance-record-ii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-ways-to-build-good-strings",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-number-of-texts",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-number-of-special-subsequences",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "out-of-boundary-paths",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-to-form-a-target-string-given-a-dictionary",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "paint-fence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "climbing-stairs",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "decode-ways",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "combination-sum-iv",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "target-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "coin-change-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "distinct-subsequences",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-longest-increasing-subsequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "unique-paths",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "knight-probability-in-chessboard",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-all-possible-routes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-of-cutting-a-pizza",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "k-inverse-pairs-array",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-increasing-paths-in-a-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-wear-different-hats-to-each-other",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "beautiful-arrangement",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-number-of-teams",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-beautiful-partitions",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-separate-numbers",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "profitable-schemes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-arrive-at-destination",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "dp.memo_recursion_general",
+   "family": "dp",
+   "label": "Top-down memo over multi-parameter state",
+   "canonical": [
+    "longest-increasing-path-in-a-matrix",
+    "out-of-boundary-paths",
+    "paint-house-iii",
+    "maximum-score-from-performing-multiplication-operations"
+   ],
+   "problems": [
+    {
+     "slug": "longest-increasing-path-in-a-matrix",
+     "primary": true,
+     "confidence": "high",
+     "why": "memo DFS on implicit DAG of cells"
+    },
+    {
+     "slug": "out-of-boundary-paths",
+     "primary": true,
+     "confidence": "high",
+     "why": "state (moves, r, c)"
+    },
+    {
+     "slug": "paint-house-iii",
+     "primary": true,
+     "confidence": "high",
+     "why": "(index, prev colour, neighbourhoods left)"
+    },
+    {
+     "slug": "maximum-score-from-performing-multiplication-operations",
+     "primary": true,
+     "confidence": "high",
+     "why": "(ops done, left index)"
+    },
+    {
+     "slug": "number-of-ways-to-stay-in-the-same-place-after-some-steps",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "knight-probability-in-chessboard",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-all-possible-routes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "super-egg-drop",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "egg-drop-with-2-eggs-and-n-floors",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "string-compression-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-ways-of-cutting-a-pizza",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-number-of-events-that-can-be-attended-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "frog-jump",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "freedom-trail",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "k-inverse-pairs-array",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-days-to-eat-n-oranges",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "integer-replacement",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "soup-servings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "painting-the-walls",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "build-array-where-you-can-find-the-maximum-exactly-k-comparisons",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game-v",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-increasing-paths-in-a-grid",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "2-keys-keyboard",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-skips-to-arrive-at-meeting-on-time",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "cherry-pickup",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "cherry-pickup-ii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-difficulty-of-a-job-schedule",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "remove-boxes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "scramble-string",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "knight-dialer",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "dice-roll-simulation",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-dice-rolls-with-target-sum",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-music-playlists",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "stone-game-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "tallest-billboard",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "ones-and-zeroes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "profitable-schemes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "pizza-with-3n-slices",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-form-a-target-string-given-a-dictionary",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "target-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "student-attendance-record-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "paths-in-matrix-whose-sum-is-divisible-by-k",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-value-of-k-coins-from-piles",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "palindrome-partitioning-iii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "best-time-to-buy-and-sell-stock-iv",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "selling-pieces-of-wood",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "matchsticks-to-square",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "integer-break",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shopping-offers",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-break-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "different-ways-to-add-parentheses",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-score-of-students-solving-math-expression",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "unique-binary-search-trees-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "flip-game-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-all-good-strings",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-grid-happiness",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "race-car",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "delete-string",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "loud-and-rich",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-to-reach-destination-in-time",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-restricted-paths-from-first-to-last-node",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-reorder-array-to-get-same-bst",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "graph.bfs_grid",
+   "family": "graph",
+   "label": "BFS on a grid (single/multi-source)",
+   "canonical": [
+    "rotting-oranges",
+    "01-matrix",
+    "shortest-path-in-binary-matrix",
+    "walls-and-gates"
+   ],
+   "problems": [
+    {
+     "slug": "rotting-oranges",
+     "primary": true,
+     "confidence": "high",
+     "why": "multi-source BFS, layers are minutes"
+    },
+    {
+     "slug": "01-matrix",
+     "primary": true,
+     "confidence": "high",
+     "why": "multi-source BFS from zeros"
+    },
+    {
+     "slug": "shortest-path-in-binary-matrix",
+     "primary": true,
+     "confidence": "high",
+     "why": "single-source 8-directional BFS"
+    },
+    {
+     "slug": "walls-and-gates",
+     "primary": true,
+     "confidence": "high",
+     "why": "multi-source BFS from gates"
+    },
+    {
+     "slug": "as-far-from-land-as-possible",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "map-of-highest-peak",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "nearest-exit-from-entrance-in-maze",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-knight-moves",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-bridge",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-distance-from-all-buildings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-path-to-get-food",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "cut-off-trees-for-golf-event",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "escape-a-large-maze",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "escape-the-spreading-fire",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-maze",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "check-if-there-is-a-valid-path-in-a-grid",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shortest-path-in-a-grid-with-obstacles-elimination",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-path-to-get-all-keys",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-moves-to-move-a-box-to-their-target-location",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-obstacle-removal-to-reach-corner",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-to-make-at-least-one-valid-path-in-a-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-safest-path-in-a-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "pacific-atlantic-water-flow",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "snakes-and-ladders",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-moves-to-reach-target-with-rotations",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "trapping-rain-water-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-with-minimum-effort",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "swim-in-rising-water",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-if-path-exists-in-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "shortest-cycle-in-a-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "distance-to-a-cycle-in-undirected-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "divide-nodes-into-the-maximum-number-of-groups",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "last-day-where-you-can-still-cross",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "count-the-number-of-houses-at-a-certain-distance-i",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.dfs_components",
+   "family": "graph",
+   "label": "DFS/BFS flood fill and connected components",
+   "canonical": [
+    "number-of-islands",
+    "max-area-of-island",
+    "flood-fill",
+    "number-of-provinces"
+   ],
+   "problems": [
+    {
+     "slug": "number-of-islands",
+     "primary": true,
+     "confidence": "high",
+     "why": "flood fill each land component, count seeds"
+    },
+    {
+     "slug": "max-area-of-island",
+     "primary": true,
+     "confidence": "high",
+     "why": "flood fill returning component size"
+    },
+    {
+     "slug": "flood-fill",
+     "primary": true,
+     "confidence": "high",
+     "why": "DFS recolor from start cell"
+    },
+    {
+     "slug": "number-of-provinces",
+     "primary": true,
+     "confidence": "high",
+     "why": "components on adjacency matrix"
+    },
+    {
+     "slug": "surrounded-regions",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "pacific-atlantic-water-flow",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-closed-islands",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-enclaves",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-sub-islands",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "keys-and-rooms",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "clone-graph",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-if-path-exists-in-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-unreachable-pairs-of-nodes-in-an-undirected-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "making-a-large-island",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-distinct-islands",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-the-number-of-complete-components",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-score-of-a-path-between-two-cities",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "reachable-nodes-with-restrictions",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-number-of-fish-in-a-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "coloring-a-border",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-all-groups-of-farmland",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-connected-components-in-an-undirected-graph",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-operations-to-make-network-connected",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-bridge",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "accounts-merge",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "graph-valid-tree",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "is-graph-bipartite",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "possible-bipartition",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-maze",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "check-if-there-is-a-valid-path-in-a-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game-iii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "detect-cycles-in-2d-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-days-to-disconnect-island",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "most-stones-removed-with-same-row-or-column",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "smallest-string-with-swaps",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "regions-cut-by-slashes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "similar-string-groups",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimize-malware-spread",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "evaluate-division",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "reorder-routes-to-make-all-paths-lead-to-the-city-zero",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "detonate-the-maximum-bombs",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "lexicographically-smallest-string-after-applying-operations",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "restore-the-array-from-adjacent-pairs",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "graph.topological_sort",
+   "family": "graph",
+   "label": "Topological ordering / DAG DP",
+   "canonical": [
+    "course-schedule",
+    "course-schedule-ii",
+    "alien-dictionary",
+    "parallel-courses-iii"
+   ],
+   "problems": [
+    {
+     "slug": "course-schedule",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kahn/DFS on prerequisite DAG, all processed?"
+    },
+    {
+     "slug": "course-schedule-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "emit the topological order"
+    },
+    {
+     "slug": "alien-dictionary",
+     "primary": true,
+     "confidence": "high",
+     "why": "derive letter edges, topo sort"
+    },
+    {
+     "slug": "parallel-courses-iii",
+     "primary": true,
+     "confidence": "high",
+     "why": "longest path in weighted DAG"
+    },
+    {
+     "slug": "parallel-courses",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "course-schedule-iv",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "all-ancestors-of-a-node-in-a-directed-acyclic-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-all-possible-recipes-from-given-supplies",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "sort-items-by-groups-respecting-dependencies",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "build-a-matrix-with-conditions",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "sequence-reconstruction",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "largest-color-value-in-a-directed-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "loud-and-rich",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-vertices-to-reach-all-nodes",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-champion-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-height-trees",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "collect-coins-in-a-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "distance-to-a-cycle-in-undirected-graph",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "strange-printer-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-increasing-path-in-a-matrix",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-increasing-paths-in-a-grid",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-eventual-safe-states",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-visited-nodes-in-a-directed-graph",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-employees-to-be-invited-to-a-meeting",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "longest-cycle-in-a-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "jump-game-v",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-runes-to-add-to-cast-spell",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "graph.dijkstra",
+   "family": "graph",
+   "label": "Dijkstra / best-first with priority queue",
+   "canonical": [
+    "network-delay-time",
+    "path-with-minimum-effort",
+    "swim-in-rising-water",
+    "path-with-maximum-probability"
+   ],
+   "problems": [
+    {
+     "slug": "network-delay-time",
+     "primary": true,
+     "confidence": "high",
+     "why": "single-source shortest path with min-heap"
+    },
+    {
+     "slug": "path-with-minimum-effort",
+     "primary": true,
+     "confidence": "high",
+     "why": "min-of-max relaxation on grid"
+    },
+    {
+     "slug": "swim-in-rising-water",
+     "primary": true,
+     "confidence": "high",
+     "why": "minimax path keyed by max cell so far"
+    },
+    {
+     "slug": "path-with-maximum-probability",
+     "primary": true,
+     "confidence": "high",
+     "why": "max-heap multiplicative relaxation"
+    },
+    {
+     "slug": "number-of-ways-to-arrive-at-destination",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-reach-destination-in-time",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "the-maze-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-maze-iii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "reachable-nodes-in-subdivided-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-time-to-visit-a-cell-in-a-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-obstacle-removal-to-reach-corner",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-make-at-least-one-valid-path-in-a-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-weighted-subgraph-with-the-required-paths",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "second-minimum-time-to-reach-destination",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-restricted-paths-from-first-to-last-node",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "modify-graph-edge-weights",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-of-a-path-with-special-roads",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "design-graph-with-shortest-path-calculator",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "trapping-rain-water-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "path-with-maximum-minimum-value",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-to-reach-city-with-discounts",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-to-buy-apples",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-safest-path-in-a-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-time-to-visit-disappearing-nodes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-edges-in-shortest-paths",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-minimum-time-to-reach-last-room-i",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-minimum-time-to-reach-last-room-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "cheapest-flights-within-k-stops",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-convert-string-i",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-moves-to-move-a-box-to-their-target-location",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-of-points-from-grid-queries",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.bellman_ford_k_edges",
+   "family": "graph",
+   "label": "Bellman-Ford / k-rounds / Floyd-Warshall",
+   "canonical": [
+    "cheapest-flights-within-k-stops",
+    "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance",
+    "minimum-cost-to-convert-string-i"
+   ],
+   "problems": [
+    {
+     "slug": "cheapest-flights-within-k-stops",
+     "primary": true,
+     "confidence": "high",
+     "why": "k+1 rounds of edge relaxation"
+    },
+    {
+     "slug": "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance",
+     "primary": true,
+     "confidence": "high",
+     "why": "Floyd-Warshall all-pairs then count"
+    },
+    {
+     "slug": "minimum-cost-to-convert-string-i",
+     "primary": true,
+     "confidence": "high",
+     "why": "26x26 Floyd-Warshall"
+    },
+    {
+     "slug": "minimum-cost-to-convert-string-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-possible-sets-of-closing-branches",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-subtrees-with-max-distance-among-cities",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-the-number-of-houses-at-a-certain-distance-i",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "the-most-similar-path-in-a-graph",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-with-maximum-probability",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "network-delay-time",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-cost-to-reach-destination-in-time",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "evaluate-division",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "course-schedule-iv",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "design-graph-with-shortest-path-calculator",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-cost-to-reach-city-with-discounts",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-all-possible-routes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-ways-to-arrive-at-destination",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "shortest-path-visiting-all-nodes",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "knight-dialer",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-vacation-days",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.union_find",
+   "family": "graph",
+   "label": "Disjoint set union",
+   "canonical": [
+    "redundant-connection",
+    "accounts-merge",
+    "number-of-connected-components-in-an-undirected-graph"
+   ],
+   "problems": [
+    {
+     "slug": "redundant-connection",
+     "primary": true,
+     "confidence": "high",
+     "why": "first edge whose endpoints share a root"
+    },
+    {
+     "slug": "accounts-merge",
+     "primary": true,
+     "confidence": "high",
+     "why": "union accounts sharing an email"
+    },
+    {
+     "slug": "number-of-connected-components-in-an-undirected-graph",
+     "primary": true,
+     "confidence": "high",
+     "why": "n minus successful unions"
+    },
+    {
+     "slug": "graph-valid-tree",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "satisfiability-of-equality-equations",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "most-stones-removed-with-same-row-or-column",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "smallest-string-with-swaps",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-operations-to-make-network-connected",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "lexicographically-smallest-equivalent-string",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "regions-cut-by-slashes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "checking-existence-of-edge-length-limited-paths",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-islands-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-earliest-moment-when-everyone-become-friends",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "redundant-connection-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "remove-max-number-of-edges-to-keep-graph-fully-traversable",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "bricks-falling-when-hit",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "largest-component-size-by-common-factor",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "similar-string-groups",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "couples-holding-hands",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimize-malware-spread",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-good-paths",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "number-of-provinces",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "evaluate-division",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "swim-in-rising-water",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-if-path-exists-in-graph",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "path-with-minimum-effort",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-with-maximum-minimum-value",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "surrounded-regions",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-unreachable-pairs-of-nodes-in-an-undirected-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "making-a-large-island",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-the-number-of-complete-components",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-score-of-a-path-between-two-cities",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "reachable-nodes-with-restrictions",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "is-graph-bipartite",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "possible-bipartition",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimize-maximum-component-cost",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-spanning-tree-stability-with-upgrades",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-time-for-k-connected-components",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "checking-existence-of-edge-length-limited-paths-ii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "last-day-where-you-can-still-cross",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-number-of-points-from-grid-queries",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "detect-cycles-in-2d-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimize-malware-spread-ii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "check-if-there-is-a-valid-path-in-a-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-safest-path-in-a-grid",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.bipartite_coloring",
+   "family": "graph",
+   "label": "Two-colouring / bipartite check",
+   "canonical": [
+    "is-graph-bipartite",
+    "possible-bipartition",
+    "divide-nodes-into-the-maximum-number-of-groups",
+    "maximize-the-number-of-target-nodes-after-connecting-trees-ii"
+   ],
+   "problems": [
+    {
+     "slug": "is-graph-bipartite",
+     "primary": true,
+     "confidence": "high",
+     "why": "colour neighbours opposite, conflict = odd cycle"
+    },
+    {
+     "slug": "possible-bipartition",
+     "primary": true,
+     "confidence": "high",
+     "why": "2-colour the dislike graph"
+    },
+    {
+     "slug": "divide-nodes-into-the-maximum-number-of-groups",
+     "primary": true,
+     "confidence": "high",
+     "why": "bipartite check then BFS layering"
+    },
+    {
+     "slug": "maximize-the-number-of-target-nodes-after-connecting-trees-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "even-distance nodes = same colour class"
+    },
+    {
+     "slug": "flower-planting-with-no-adjacent",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-number-of-accepted-invitations",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-students-taking-exam",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.mst",
+   "family": "graph",
+   "label": "Minimum spanning tree (Kruskal/Prim)",
+   "canonical": [
+    "min-cost-to-connect-all-points",
+    "connecting-cities-with-minimum-cost",
+    "optimize-water-distribution-in-a-village",
+    "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree"
+   ],
+   "problems": [
+    {
+     "slug": "min-cost-to-connect-all-points",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kruskal/Prim on Manhattan complete graph"
+    },
+    {
+     "slug": "connecting-cities-with-minimum-cost",
+     "primary": true,
+     "confidence": "high",
+     "why": "sort edges, union, sum n-1 accepted"
+    },
+    {
+     "slug": "optimize-water-distribution-in-a-village",
+     "primary": true,
+     "confidence": "high",
+     "why": "virtual source for wells, then MST"
+    },
+    {
+     "slug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+     "primary": true,
+     "confidence": "high",
+     "why": "Kruskal with edge forced in/out"
+    },
+    {
+     "slug": "minimize-maximum-component-cost",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximize-spanning-tree-stability-with-upgrades",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-time-for-k-connected-components",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "checking-existence-of-edge-length-limited-paths-ii",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "last-day-where-you-can-still-cross",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-number-of-points-from-grid-queries",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "remove-max-number-of-edges-to-keep-graph-fully-traversable",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "checking-existence-of-edge-length-limited-paths",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "the-earliest-moment-when-everyone-become-friends",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "path-with-minimum-effort",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "swim-in-rising-water",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-with-maximum-minimum-value",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-good-paths",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "redundant-connection",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-safest-path-in-a-grid",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "number-of-operations-to-make-network-connected",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.cycle_detection",
+   "family": "graph",
+   "label": "Cycle detection in directed / functional graphs",
+   "canonical": [
+    "find-eventual-safe-states",
+    "longest-cycle-in-a-graph",
+    "linked-list-cycle-ii"
+   ],
+   "problems": [
+    {
+     "slug": "find-eventual-safe-states",
+     "primary": true,
+     "confidence": "high",
+     "why": "three-colour DFS, safe iff no cycle reachable"
+    },
+    {
+     "slug": "longest-cycle-in-a-graph",
+     "primary": true,
+     "confidence": "high",
+     "why": "functional graph visit stamps"
+    },
+    {
+     "slug": "linked-list-cycle-ii",
+     "primary": true,
+     "confidence": "high",
+     "why": "Floyd finds cycle entry"
+    },
+    {
+     "slug": "detect-cycles-in-2d-grid",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "maximum-employees-to-be-invited-to-a-meeting",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-visited-nodes-in-a-directed-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "array-nesting",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-closest-node-to-given-two-nodes",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "linked-list-cycle",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "find-the-duplicate-number",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "circular-array-loop",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "happy-number",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "all-paths-from-source-lead-to-destination",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-cycle-in-a-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-operations-to-sort-a-binary-tree-by-level",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "course-schedule",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "course-schedule-ii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "redundant-connection-ii",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "redundant-connection",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "graph-valid-tree",
+     "primary": false,
+     "confidence": "high"
+    },
+    {
+     "slug": "largest-color-value-in-a-directed-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "strange-printer-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-all-possible-recipes-from-given-supplies",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "alien-dictionary",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "parallel-courses",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "sort-items-by-groups-respecting-dependencies",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "build-a-matrix-with-conditions",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "distance-to-a-cycle-in-undirected-graph",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "graph.bfs_state_space",
+   "family": "graph",
+   "label": "BFS over an implicit state space",
+   "canonical": [
+    "word-ladder",
+    "open-the-lock",
+    "sliding-puzzle",
+    "minimum-genetic-mutation"
+   ],
+   "problems": [
+    {
+     "slug": "word-ladder",
+     "primary": true,
+     "confidence": "high",
+     "why": "words as states, one-letter mutations"
+    },
+    {
+     "slug": "open-the-lock",
+     "primary": true,
+     "confidence": "high",
+     "why": "4-wheel strings, deadend visited set"
+    },
+    {
+     "slug": "sliding-puzzle",
+     "primary": true,
+     "confidence": "high",
+     "why": "serialized board states"
+    },
+    {
+     "slug": "minimum-genetic-mutation",
+     "primary": true,
+     "confidence": "high",
+     "why": "gene strings, single-char mutations"
+    },
+    {
+     "slug": "word-ladder-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "bus-routes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "jump-game-iv",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "jump-game-iii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-jumps-to-reach-home",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-path-to-get-all-keys",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-path-in-a-grid-with-obstacles-elimination",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "water-and-jug-problem",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "k-similar-strings",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "race-car",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "shortest-path-visiting-all-nodes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "snakes-and-ladders",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-operations-to-convert-number",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-moves-to-move-a-box-to-their-target-location",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "minimum-moves-to-reach-target-with-rotations",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "remove-invalid-parentheses",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "lexicographically-smallest-string-after-applying-operations",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "zuma-game",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-reverse-operations",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "perfect-squares",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "escape-a-large-maze",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-knight-moves",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "second-minimum-time-to-reach-destination",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "stickers-to-spell-word",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "cat-and-mouse",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "cat-and-mouse-ii",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "id": "graph.bridges_scc_tarjan",
+   "family": "graph",
+   "label": "Tarjan bridges / articulation points / SCC",
+   "canonical": [
+    "critical-connections-in-a-network",
+    "minimum-number-of-days-to-disconnect-island",
+    "minimum-runes-to-add-to-cast-spell"
+   ],
+   "problems": [
+    {
+     "slug": "critical-connections-in-a-network",
+     "primary": true,
+     "confidence": "high",
+     "why": "bridge iff low[v] > disc[u]"
+    },
+    {
+     "slug": "minimum-number-of-days-to-disconnect-island",
+     "primary": true,
+     "confidence": "high",
+     "why": "articulation point of land grid"
+    },
+    {
+     "slug": "minimum-runes-to-add-to-cast-spell",
+     "primary": true,
+     "confidence": "medium",
+     "why": "SCC condensation, count unreached sources"
+    },
+    {
+     "slug": "detonate-the-maximum-bombs",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimize-malware-spread-ii",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-score-after-removals-on-a-tree",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "find-eventual-safe-states",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-number-of-vertices-to-reach-all-nodes",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "longest-cycle-in-a-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "count-visited-nodes-in-a-directed-graph",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-employees-to-be-invited-to-a-meeting",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "redundant-connection",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "all-paths-from-source-lead-to-destination",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "distance-to-a-cycle-in-undirected-graph",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.tree_rerooting",
+   "family": "graph",
+   "label": "Rerooting / two-pass tree DP",
+   "canonical": [
+    "sum-of-distances-in-tree",
+    "minimum-edge-reversals-so-every-node-is-reachable",
+    "count-number-of-possible-root-nodes",
+    "difference-between-maximum-and-minimum-price-sum"
+   ],
+   "problems": [
+    {
+     "slug": "sum-of-distances-in-tree",
+     "primary": true,
+     "confidence": "high",
+     "why": "ans[child]=ans[parent]-size+(n-size)"
+    },
+    {
+     "slug": "minimum-edge-reversals-so-every-node-is-reachable",
+     "primary": true,
+     "confidence": "high",
+     "why": "reroot adjusting +/-1 per edge direction"
+    },
+    {
+     "slug": "count-number-of-possible-root-nodes",
+     "primary": true,
+     "confidence": "high",
+     "why": "reroot flips only guesses on crossed edge"
+    },
+    {
+     "slug": "difference-between-maximum-and-minimum-price-sum",
+     "primary": true,
+     "confidence": "high",
+     "why": "top-2 downward path pushed through parent"
+    },
+    {
+     "slug": "time-taken-to-mark-all-nodes",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "count-nodes-with-the-highest-score",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-last-marked-nodes-in-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "tree-diameter",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "diameter-of-n-ary-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-minimum-diameter-after-merging-two-trees",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "height-of-binary-tree-after-subtree-removal-queries",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "reorder-routes-to-make-all-paths-lead-to-the-city-zero",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "amount-of-time-for-binary-tree-to-be-infected",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-height-trees",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "maximum-product-of-splitted-binary-tree",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximize-the-number-of-target-nodes-after-connecting-trees-ii",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.eulerian_path",
+   "family": "graph",
+   "label": "Eulerian path / Hierholzer",
+   "canonical": [
+    "reconstruct-itinerary",
+    "valid-arrangement-of-pairs",
+    "cracking-the-safe"
+   ],
+   "problems": [
+    {
+     "slug": "reconstruct-itinerary",
+     "primary": true,
+     "confidence": "high",
+     "why": "Hierholzer with lexicographic edge order"
+    },
+    {
+     "slug": "valid-arrangement-of-pairs",
+     "primary": true,
+     "confidence": "high",
+     "why": "start at outdeg-indeg=1, Hierholzer"
+    },
+    {
+     "slug": "cracking-the-safe",
+     "primary": true,
+     "confidence": "high",
+     "why": "de Bruijn Eulerian circuit"
+    },
+    {
+     "slug": "restore-the-array-from-adjacent-pairs",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "add-edges-to-make-degrees-of-all-nodes-even",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "find-the-town-judge",
+     "primary": true,
+     "confidence": "low"
+    },
+    {
+     "slug": "minimum-number-of-vertices-to-reach-all-nodes",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "course-schedule-ii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "all-paths-from-source-to-target",
+     "primary": false,
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "id": "graph.dfs_backtracking_paths",
+   "family": "graph",
+   "label": "Enumerate paths / DFS with backtracking",
+   "canonical": [
+    "all-paths-from-source-to-target",
+    "word-search",
+    "unique-paths-iii",
+    "path-with-maximum-gold"
+   ],
+   "problems": [
+    {
+     "slug": "all-paths-from-source-to-target",
+     "primary": true,
+     "confidence": "high",
+     "why": "push/pop path stack on a DAG"
+    },
+    {
+     "slug": "word-search",
+     "primary": true,
+     "confidence": "high",
+     "why": "grid DFS mark/unmark visited"
+    },
+    {
+     "slug": "unique-paths-iii",
+     "primary": true,
+     "confidence": "high",
+     "why": "Hamiltonian paths by backtracking"
+    },
+    {
+     "slug": "path-with-maximum-gold",
+     "primary": true,
+     "confidence": "high",
+     "why": "zero cell, explore, restore"
+    },
+    {
+     "slug": "maximum-path-quality-of-a-graph",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "evaluate-division",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-search-ii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "robot-room-cleaner",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "android-unlock-patterns",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "binary-tree-paths",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "path-sum-ii",
+     "primary": true,
+     "confidence": "high"
+    },
+    {
+     "slug": "sum-root-to-leaf-numbers",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "smallest-string-starting-from-leaf",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "pseudo-palindromic-paths-in-a-binary-tree",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "path-sum-iii",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "step-by-step-directions-from-a-binary-tree-node-to-another",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "frog-position-after-t-seconds",
+     "primary": true,
+     "confidence": "medium"
+    },
+    {
+     "slug": "all-paths-from-source-lead-to-destination",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "reconstruct-itinerary",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-squareful-arrays",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-break-ii",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "number-of-increasing-paths-in-a-grid",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "find-if-path-exists-in-graph",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "reorder-routes-to-make-all-paths-lead-to-the-city-zero",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "time-needed-to-inform-all-employees",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "cracking-the-safe",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "combination-sum",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "palindrome-partitioning",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "restore-ip-addresses",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "split-array-into-fibonacci-sequence",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "additive-number",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "splitting-a-string-into-descending-consecutive-values",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "split-a-string-into-the-max-number-of-unique-substrings",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "fair-distribution-of-cookies",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "minimum-moves-to-spread-stones-over-grid",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "confusing-number-ii",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "maximum-number-of-accepted-invitations",
+     "primary": false,
+     "confidence": "low"
+    },
+    {
+     "slug": "remove-invalid-parentheses",
+     "primary": false,
+     "confidence": "medium"
+    },
+    {
+     "slug": "word-ladder-ii",
+     "primary": false,
+     "confidence": "medium"
+    }
+   ]
+  }
+ ],
+ "conflicts_resolved": [
+  "domino-and-tromino-tiling: chosen dp.counting_combinatorial over dp.1d_linear/dp.state_machine because it is canonical there (tiling count is the named shape).",
+  "count-ways-to-build-good-strings: chosen dp.1d_linear over dp.knapsack_unbounded/dp.counting_combinatorial because it has two fixed step sizes like climbing-stairs.",
+  "count-number-of-texts: chosen dp.1d_linear over dp.counting_combinatorial/dp.partition_1d/dp.knapsack_unbounded because it is a decode-ways-style fixed-window position DP; confidence lowered to medium.",
+  "combination-sum-iv: chosen dp.knapsack_unbounded over dp.1d_linear/dp.counting_combinatorial because it is canonical there (arbitrary reusable step set).",
+  "minimum-cost-for-tickets: chosen dp.1d_linear over dp.knapsack_unbounded/dp.partition_1d because the axis is days with fixed jumps.",
+  "word-break: chosen dp.partition_1d over dp.1d_linear/dp.knapsack_unbounded because it is canonical there.",
+  "extra-characters-in-a-string: chosen dp.partition_1d over dp.knapsack_unbounded because it is word-break with a cost.",
+  "paint-fence: chosen dp.state_machine over dp.1d_linear/dp.counting_combinatorial because it is canonical there.",
+  "pizza-with-3n-slices: chosen dp.1d_linear over dp.knapsack_01/dp.memo_recursion_general because it is house-robber-ii with a count dimension.",
+  "maximum-profit-in-job-scheduling: chosen dp.1d_linear over dp.knapsack_01 because it is take-or-skip with no capacity dimension.",
+  "best-time-to-buy-and-sell-stock: chosen dp.kadane_max_subarray over dp.state_machine because it is canonical there.",
+  "longest-turbulent-subarray, maximum-subarray-sum-with-one-deletion, longest-subarray-of-1s-after-deleting-one-element, maximum-subarray-sum-after-one-operation: chosen dp.kadane_max_subarray over dp.state_machine because the core is extend-or-reset.",
+  "maximum-alternating-subsequence-sum: chosen dp.state_machine over dp.kadane_max_subarray because state_machine rated high vs medium and the two sign states are explicit.",
+  "longest-continuous-increasing-subsequence, arithmetic-slices, constrained-subsequence-sum: primary dp.kadane_max_subarray / dp.1d_linear as drafted, cross-listed.",
+  "greatest-sum-divisible-by-three: chosen dp.state_machine over dp.knapsack_01 because residue classes are three explicit states (high vs medium).",
+  "number-of-ways-to-earn-points, count-of-sub-multisets-with-bounded-sum: chosen dp.knapsack_01 over dp.knapsack_unbounded because items are bounded per type; slug normalised to count-of-sub-multisets-with-bounded-sum (the knapsack_01 draft's ...-sums variant dropped as a misspelling of the same problem).",
+  "the-number-of-good-subsets: chosen dp.bitmask over dp.knapsack_01 (high vs low).",
+  "number-of-dice-rolls-with-target-sum: chosen dp.counting_combinatorial over dp.knapsack_01/dp.knapsack_unbounded/dp.memo_recursion_general because it is canonical there.",
+  "perfect-squares: chosen dp.knapsack_unbounded over graph.bfs_state_space because canonical there.",
+  "climbing-stairs, decode-ways: chosen dp.1d_linear over dp.counting_combinatorial/dp.knapsack_unbounded/dp.partition_1d because canonical there.",
+  "target-sum, ones-and-zeroes, profitable-schemes, tallest-billboard, maximum-value-of-k-coins-from-piles, painting-the-walls: chosen dp.knapsack_01 over dp.memo_recursion_general because they are capacity-table knapsacks.",
+  "maximum-number-of-events-that-can-be-attended-ii: chosen dp.memo_recursion_general over dp.knapsack_01 (high vs medium; state is index + remaining count with binary-search jump).",
+  "wiggle-subsequence: chosen dp.state_machine over dp.lis (high vs medium).",
+  "make-array-strictly-increasing: kept dp.two_sequence (low) as drafted, dp.lis secondary.",
+  "scramble-string: chosen dp.interval over dp.two_sequence/dp.memo_recursion_general because the transition is a split point k over a length.",
+  "longest-palindromic-subsequence, minimum-insertion-steps-to-make-a-string-palindrome, maximize-palindrome-length-from-subsequences: chosen dp.interval over dp.two_sequence because the taught form is interval DP (high vs medium).",
+  "number-of-ways-to-form-a-target-string-given-a-dictionary: chosen dp.two_sequence over dp.counting_combinatorial/dp.memo_recursion_general because dp[i][j] over two prefixes with take/skip is the alignment shape; confidence kept medium.",
+  "maximum-score-from-performing-multiplication-operations: chosen dp.memo_recursion_general over dp.two_sequence because canonical there.",
+  "minimum-total-distance-traveled: kept dp.two_sequence over dp.partition_1d as drafted.",
+  "cherry-pickup, cherry-pickup-ii, paths-in-matrix-whose-sum-is-divisible-by-k, minimum-falling-path-sum-ii: chosen dp.grid_paths over dp.memo_recursion_general/dp.state_machine because transitions come from row/neighbour cells.",
+  "out-of-boundary-paths, knight-probability-in-chessboard: chosen dp.memo_recursion_general over dp.grid_paths/dp.counting_combinatorial because out-of-boundary-paths is canonical there and knight-probability shares its (moves,r,c) state.",
+  "guess-number-higher-or-lower-ii, stone-game-v: chosen dp.interval over dp.game_minimax because the split-by-k transition dominates.",
+  "stone-game, predict-the-winner, stone-game-vii: chosen dp.game_minimax over dp.interval because score-difference minimax is the point (canonical there for the first two).",
+  "unique-binary-search-trees: chosen dp.counting_combinatorial over dp.interval because canonical there.",
+  "remove-boxes, selling-pieces-of-wood: chosen dp.interval over dp.memo_recursion_general.",
+  "palindrome-partitioning-ii, palindrome-partitioning-iii, minimum-difficulty-of-a-job-schedule, word-break-ii: chosen dp.partition_1d over dp.interval/dp.memo_recursion_general/graph.dfs_backtracking_paths because canonical or high there.",
+  "string-compression-ii: chosen dp.memo_recursion_general over dp.partition_1d (high vs medium).",
+  "can-i-win: chosen dp.game_minimax over dp.bitmask because canonical there.",
+  "stone-game-ii: chosen dp.game_minimax over dp.memo_recursion_general (high vs medium).",
+  "super-egg-drop: chosen dp.memo_recursion_general over dp.game_minimax (high vs medium); egg-drop-with-2-eggs-and-n-floors moved alongside it via its also field.",
+  "shortest-path-visiting-all-nodes, minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix, shortest-path-to-get-all-keys: chosen graph.bfs_state_space over dp.bitmask/graph.bfs_grid because the solution is BFS over augmented states.",
+  "number-of-squareful-arrays, stickers-to-spell-word, maximum-students-taking-exam, matchsticks-to-square: chosen dp.bitmask over backtracking/bfs/bipartite/memo alternatives.",
+  "unique-paths-iii: chosen graph.dfs_backtracking_paths over dp.bitmask because canonical there.",
+  "android-unlock-patterns: chosen graph.dfs_backtracking_paths over dp.bitmask (both medium; DFS is the usual solution).",
+  "count-numbers-with-unique-digits: chosen dp.counting_combinatorial over dp.digit (high vs medium; tight never triggers).",
+  "sum-of-distances-in-tree: chosen graph.tree_rerooting over dp.tree because canonical there.",
+  "maximum-product-of-splitted-binary-tree, time-needed-to-inform-all-employees: chosen dp.tree over graph.tree_rerooting/graph.dfs_backtracking_paths.",
+  "number-of-ways-to-reorder-array-to-get-same-bst: chosen dp.counting_combinatorial over dp.tree (high vs medium).",
+  "paint-house-iii: chosen dp.memo_recursion_general over dp.state_machine because canonical there.",
+  "student-attendance-record-ii, dice-roll-simulation, number-of-ways-to-paint-n-x-3-grid, count-number-of-special-subsequences: chosen dp.state_machine over dp.counting_combinatorial/dp.memo_recursion_general because the small explicit state set is the mechanism.",
+  "count-vowels-permutation, knight-dialer, count-sorted-vowel-strings: chosen dp.counting_combinatorial over dp.state_machine/dp.memo_recursion_general/graph.bellman_ford_k_edges because count-vowels is canonical there and the others share its shape.",
+  "number-of-ways-to-stay-in-the-same-place-after-some-steps: chosen dp.memo_recursion_general over dp.counting_combinatorial for consistency with out-of-boundary-paths.",
+  "number-of-music-playlists, k-inverse-pairs-array: number-of-music-playlists to dp.counting_combinatorial (high vs medium); k-inverse-pairs kept in memo as drafted.",
+  "best-time-to-buy-and-sell-stock-iv: chosen dp.state_machine over dp.memo_recursion_general (high vs medium).",
+  "house-robber: chosen dp.1d_linear over dp.state_machine because canonical there.",
+  "integer-break, shopping-offers, combination-sum: kept dp.knapsack_unbounded as drafted.",
+  "longest-increasing-path-in-a-matrix, number-of-increasing-paths-in-a-grid, jump-game-v: chosen dp.memo_recursion_general over graph.topological_sort/graph.dfs_backtracking_paths because longest-increasing-path is canonical there.",
+  "count-all-possible-routes: chosen dp.memo_recursion_general over graph.bellman_ford_k_edges (high vs medium).",
+  "number-of-provinces: chosen graph.dfs_components over graph.union_find (both canonical; DFS on adjacency matrix is the standard); union_find canonical set reduced to redundant-connection, accounts-merge, number-of-connected-components.",
+  "number-of-connected-components-in-an-undirected-graph, graph-valid-tree, number-of-operations-to-make-network-connected, accounts-merge: chosen graph.union_find over graph.dfs_components/graph.cycle_detection/graph.mst.",
+  "find-if-path-exists-in-graph, pacific-atlantic-water-flow: chosen graph.dfs_components over graph.union_find/graph.bfs_grid/graph.dfs_backtracking_paths.",
+  "shortest-bridge, minimum-knight-moves, escape-a-large-maze: chosen graph.bfs_grid over graph.dfs_components/graph.bfs_state_space.",
+  "shortest-path-in-a-grid-with-obstacles-elimination, minimum-moves-to-move-a-box-to-their-target-location, snakes-and-ladders: chosen graph.bfs_state_space over graph.bfs_grid/graph.dijkstra because the state carries more than a cell.",
+  "minimum-obstacle-removal-to-reach-corner, minimum-cost-to-make-at-least-one-valid-path-in-a-grid, find-the-safest-path-in-a-grid: chosen graph.dijkstra over graph.bfs_grid/graph.mst (0-1 BFS / maximin PQ).",
+  "course-schedule, course-schedule-ii: chosen graph.topological_sort over graph.cycle_detection/graph.eulerian_path because canonical there.",
+  "find-eventual-safe-states, longest-cycle-in-a-graph: chosen graph.cycle_detection over graph.topological_sort/graph.bridges_scc_tarjan because canonical there.",
+  "count-visited-nodes-in-a-directed-graph, maximum-employees-to-be-invited-to-a-meeting: chosen graph.cycle_detection over graph.topological_sort/graph.bridges_scc_tarjan because the functional-graph cycle is the core.",
+  "largest-color-value-in-a-directed-graph, find-all-possible-recipes-from-given-supplies, strange-printer-ii, minimum-number-of-vertices-to-reach-all-nodes, distance-to-a-cycle-in-undirected-graph, minimum-height-trees: chosen graph.topological_sort over cycle_detection/tarjan/eulerian/rerooting alternatives.",
+  "all-paths-from-source-lead-to-destination: chosen graph.cycle_detection over graph.dfs_backtracking_paths/graph.bridges_scc_tarjan (high vs medium/low).",
+  "path-with-maximum-probability, network-delay-time: chosen graph.dijkstra over graph.bellman_ford_k_edges because canonical/high there.",
+  "find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance, minimum-cost-to-convert-string-i, cheapest-flights-within-k-stops: chosen graph.bellman_ford_k_edges over graph.dijkstra because canonical there (Floyd-Warshall / k rounds).",
+  "minimum-cost-to-reach-destination-in-time, design-graph-with-shortest-path-calculator, minimum-cost-to-reach-city-with-discounts, number-of-ways-to-arrive-at-destination: chosen graph.dijkstra over graph.bellman_ford_k_edges.",
+  "course-schedule-iv: chosen graph.topological_sort over graph.bellman_ford_k_edges.",
+  "evaluate-division: chosen graph.dfs_backtracking_paths over graph.bellman_ford_k_edges/graph.union_find because per-query DFS path product is the usual solution; confidence lowered to medium.",
+  "path-with-minimum-effort, swim-in-rising-water, path-with-maximum-minimum-value: chosen graph.dijkstra over graph.mst/graph.union_find because canonical/high there.",
+  "redundant-connection, redundant-connection-ii, checking-existence-of-edge-length-limited-paths, the-earliest-moment-when-everyone-become-friends, remove-max-number-of-edges-to-keep-graph-fully-traversable, number-of-good-paths: chosen graph.union_find over graph.mst/graph.cycle_detection/graph.bridges_scc_tarjan.",
+  "find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree: chosen graph.mst over graph.bridges_scc_tarjan (canonical vs low).",
+  "maximize-the-number-of-target-nodes-after-connecting-trees-ii: chosen graph.bipartite_coloring over graph.tree_rerooting (canonical vs low).",
+  "reorder-routes-to-make-all-paths-lead-to-the-city-zero: kept graph.tree_rerooting (medium) over graph.dfs_backtracking_paths (low).",
+  "reconstruct-itinerary, cracking-the-safe: chosen graph.eulerian_path over graph.dfs_backtracking_paths because canonical there.",
+  "all-paths-from-source-to-target: chosen graph.dfs_backtracking_paths over graph.eulerian_path because canonical there.",
+  "second-minimum-time-to-reach-destination: chosen graph.dijkstra over graph.bfs_state_space (high vs medium).",
+  "maximum-vacation-days: chosen dp.state_machine over graph.bellman_ford_k_edges (medium vs low)."
+ ]
+}

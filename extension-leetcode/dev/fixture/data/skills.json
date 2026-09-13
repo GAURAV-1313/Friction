@@ -1,0 +1,150 @@
+{
+ "username": "fixture_student",
+ "tagProblemCounts": {
+  "fundamental": [
+   {
+    "tagName": "Array",
+    "tagSlug": "array",
+    "problemsSolved": 8
+   },
+   {
+    "tagName": "Binary Search",
+    "tagSlug": "binary-search",
+    "problemsSolved": 2
+   },
+   {
+    "tagName": "Matrix",
+    "tagSlug": "matrix",
+    "problemsSolved": 2
+   },
+   {
+    "tagName": "Sorting",
+    "tagSlug": "sorting",
+    "problemsSolved": 1
+   },
+   {
+    "tagName": "String",
+    "tagSlug": "string",
+    "problemsSolved": 1
+   }
+  ],
+  "intermediate": [
+   {
+    "tagName": "Dynamic Programming",
+    "tagSlug": "dynamic-programming",
+    "problemsSolved": 7
+   },
+   {
+    "tagName": "Breadth-First Search",
+    "tagSlug": "breadth-first-search",
+    "problemsSolved": 5
+   },
+   {
+    "tagName": "Depth-First Search",
+    "tagSlug": "depth-first-search",
+    "problemsSolved": 5
+   },
+   {
+    "tagName": "Graph",
+    "tagSlug": "graph",
+    "problemsSolved": 4
+   },
+   {
+    "tagName": "Heap (Priority Queue)",
+    "tagSlug": "heap-priority-queue",
+    "problemsSolved": 3
+   },
+   {
+    "tagName": "Union Find",
+    "tagSlug": "union-find",
+    "problemsSolved": 2
+   },
+   {
+    "tagName": "Backtracking",
+    "tagSlug": "backtracking",
+    "problemsSolved": 1
+   }
+  ],
+  "advanced": [
+   {
+    "tagName": "0-1 Knapsack",
+    "tagSlug": "0-1-knapsack",
+    "problemsSolved": 3
+   },
+   {
+    "tagName": "Dijkstra",
+    "tagSlug": "dijkstra",
+    "problemsSolved": 3
+   },
+   {
+    "tagName": "Knapsack Problem",
+    "tagSlug": "knapsack-problem",
+    "problemsSolved": 3
+   },
+   {
+    "tagName": "Topological Sort",
+    "tagSlug": "topological-sort",
+    "problemsSolved": 3
+   },
+   {
+    "tagName": "Directed Acyclic Graph",
+    "tagSlug": "directed-acyclic-graph",
+    "problemsSolved": 2
+   },
+   {
+    "tagName": "Minimax Algorithm",
+    "tagSlug": "minimax-algorithm",
+    "problemsSolved": 1
+   },
+   {
+    "tagName": "Shortest Path",
+    "tagSlug": "shortest-path",
+    "problemsSolved": 1
+   }
+  ]
+ },
+ "progress": {
+  "numAcceptedQuestions": [
+   {
+    "count": 0,
+    "difficulty": "EASY"
+   },
+   {
+    "count": 8,
+    "difficulty": "MEDIUM"
+   },
+   {
+    "count": 4,
+    "difficulty": "HARD"
+   }
+  ],
+  "numFailedQuestions": [
+   {
+    "count": 0,
+    "difficulty": "EASY"
+   },
+   {
+    "count": 2,
+    "difficulty": "MEDIUM"
+   },
+   {
+    "count": 0,
+    "difficulty": "HARD"
+   }
+  ],
+  "numUntouchedQuestions": [
+   {
+    "count": 880,
+    "difficulty": "EASY"
+   },
+   {
+    "count": 1890,
+    "difficulty": "MEDIUM"
+   },
+   {
+    "count": 850,
+    "difficulty": "HARD"
+   }
+  ]
+ }
+}

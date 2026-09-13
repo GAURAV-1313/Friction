@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anchor</title>
+    <link rel="icon" type="image/png" href="icons/icon128.png" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body class="sidepanel">
+    <div class="app">
+      <header class="header">
+        <div class="header-left">
+          <div class="title">Anchor</div>
+          <div id="subtitle" class="subtitle">for LeetCode</div>
+        </div>
+        <div class="header-actions">
+          <div id="captureDot" class="conn-dot" title="Live capture: no problem open" role="img"></div>
+          <span id="captureLabel" class="sr-only">Live capture: no problem open</span>
+        </div>
+      </header>
+
+      <div id="banners" class="banners"></div>
+
+      <main id="view" class="view"></main>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+
+      <section id="issueForm" class="card issue-form hidden">
+        <textarea id="issueText" placeholder="What went wrong? Your code is never included."></textarea>
+        <div class="row between">
+          <span class="view-text muted">Goes to the Anchor developer.</span>
+          <div class="row">
+            <button id="issueCancel" class="btn ghost" type="button">Cancel</button>
+            <button id="issueSend" class="btn primary" type="button">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span id="footVersion" class="foot-item" title="Extension version"></span>
+        <span class="foot-sep">·</span>
+        <button id="footSync" class="foot-item link" type="button" title="Sync your LeetCode history again">sync: never</button>
+        <span class="foot-spacer"></span>
+        <button id="reportIssue" class="link" type="button">Report an issue</button>
+      </footer>
+    </div>
+
+    <!-- View templates. Cloned by sidepanel.js; every dynamic string is set with textContent. -->
+
+    <template id="tpl-no-token">
+      <section class="card view-card">
+        <div class="view-title">Connect Anchor</div>
+        <p class="view-text warn hidden" data-role="expired">Your token expired. Paste a new one.</p>
+        <ol class="steps">
+          <li>Sign in to the Friction web app.</li>
+          <li>Click the <strong>Connect</strong> (link) button: it copies your token.</li>
+          <li>Paste it here. It works like a password: never share it.</li>
+        </ol>
+        <div class="row">
+          <input id="token" type="password" placeholder="Paste your token" autocomplete="off" spellcheck="false" />
+          <button id="saveToken" class="btn primary" type="button">Save</button>
+        </div>
+        <button class="link" type="button" data-role="openWeb">Open the web app to copy a token</button>
+      </section>
+    </template>
+
+    <template id="tpl-waking">
+      <section class="card view-card center">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="view-title">Waking the server</div>
+        <p class="view-text">Anchor's server sleeps when idle. This can take up to a minute.</p>
+        <p class="view-text muted" data-role="elapsed"></p>
+      </section>
+    </template>
+
+    <template id="tpl-update">
+      <section class="card view-card">
+        <div class="view-title">Update required</div>
+        <p class="view-text" data-role="versions"></p>
+        <p class="view-text muted">
+          Unzip the new build over this extension's folder, then click <strong>Reload</strong> on
+          chrome://extensions.
+        </p>
+      </section>
+    </template>
+
+    <template id="tpl-unavailable">
+      <section class="card view-card">
+        <div class="view-title">Tutor unavailable</div>
+        <p class="view-text" data-role="reason"></p>
+        <button class="btn primary" type="button" data-role="retry">Try again</button>
+      </section>
+    </template>
+
+    <template id="tpl-no-profile">
+      <section class="card view-card">
+        <div class="view-title">Build your map</div>
+        <p class="view-text">
+          Anchor reads your LeetCode history once (6 to 8 minutes for a large account) to find the
+          problems you already solved that relate to the one you are on.
+        </p>
+        <p class="disclosure">
+          Anchor reads your public profile, your submission list and judge output (your code only
+          while the popup toggle is on), stores them in the developer's database, and uses Gemini or
+          Anthropic under paid API terms to word hints. No LeetCode cookies or passwords leave the
+          browser. "Delete my data" in the popup wipes everything instantly. Your token is a password.
+        </p>
+        <details class="more">
+          <summary>Details and known limitations</summary>
+          <ul class="view-list">
+            <li>Read at sync: your public profile, the solved list, every submission's verdict and
+              timestamp, judge output for failed attempts, and (only with the toggle on) the code of
+              failed and first-accepted attempts.</li>
+            <li>Read at hint time: the code in your editor and your latest verdict, only with the
+              toggle on. Editor code is never stored.</li>
+            <li>Stored in the developer's database, visible to the developer only.</li>
+            <li>Verdict buckets are tuned for C++. English by default, Hinglish toggle.</li>
+            <li>Habits come from verdicts and timing only; no code mining.</li>
+            <li>Off during contests. Anchors for DP and graph families only.</li>
+            <li>60 hints per day. Hints never contain code. Desktop Chrome only.</li>
+          </ul>
+          <p class="view-text muted">
+            Hinglish: Anchor aapki public profile, submissions aur judge output padhta hai (code sirf
+            toggle on hone par), developer ke database mein rakhta hai, aur hints Gemini ya Anthropic
+            se banata hai. "Delete my data" sab kuch turant mita deta hai.
+          </p>
+        </details>
+        <label class="check">
+          <input type="checkbox" data-role="consent" />
+          <span>I have read this and agree (consent v1)</span>
+        </label>
+        <button class="btn primary wide" type="button" data-role="sync" disabled>Sync once</button>
+        <p class="view-text muted" data-role="hint"></p>
+      </section>
+    </template>
+
+    <template id="tpl-syncing">
+      <section class="card view-card">
+        <div class="row between">
+          <div class="view-title">Syncing your history</div>
+          <span class="pill" data-role="state"></span>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" data-role="bar">
+          <div class="progress-fill" data-role="fill"></div>
+        </div>
+        <div class="row between">
+          <span class="view-text" data-role="phase"></span>
+          <span class="view-text muted" data-role="eta"></span>
+        </div>
+        <div class="view-text muted" data-role="counts"></div>
+        <div class="view-text muted" data-role="chunk"></div>
+        <p class="view-text warn hidden" data-role="message"></p>
+        <div class="row sync-actions">
+          <button class="btn" type="button" data-role="pause">Pause</button>
+          <button class="btn primary" type="button" data-role="resume">Resume</button>
+          <button class="btn ghost danger" type="button" data-role="cancel">Cancel</button>
+        </div>
+        <p class="view-text muted" data-role="tabHint">
+          Keep the LeetCode tab open and visible. You can close this panel; the sync resumes where it
+          stopped.
+        </p>
+      </section>
+    </template>
+
+    <template id="tpl-simple">
+      <section class="card view-card">
+        <div class="view-title" data-role="title"></div>
+        <p class="view-text" data-role="text"></p>
+        <button class="btn primary hidden" type="button" data-role="action"></button>
+      </section>
+    </template>
+
+    <template id="tpl-problem">
+      <div class="problem">
+        <div class="memory" data-role="memory"></div>
+
+        <section class="transcript" data-role="transcript"></section>
+
+        <section class="composer">
+          <div class="slot" data-role="slot" aria-live="polite"></div>
+          <div class="stance" data-role="stance" aria-live="polite"></div>
+          <textarea data-role="input" placeholder="Where are you stuck? (Enter to send)"></textarea>
+          <div class="paste hidden" data-role="pasteWrap">
+            <div class="view-text muted">Anchor could not read the editor. Paste your code here (optional).</div>
+            <textarea class="paste-box" data-role="paste" placeholder="Your current code" spellcheck="false"></textarea>
+          </div>
+          <div class="row between">
+            <span class="view-text muted code-note" data-role="codeNote"></span>
+            <button class="btn primary" type="button" data-role="send">Send</button>
+          </div>
+        </section>
+      </div>
+    </template>
+
+    <script src="config.js"></script>
+    <script src="anchor-setup.js"></script>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>

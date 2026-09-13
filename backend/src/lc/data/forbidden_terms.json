@@ -1,0 +1,19 @@
+{
+  "note": "Technique names that must not appear in a rung-1 hint (word-boundary, case-insensitive). Hinglish list holds Roman-script transliterations and common Hinglish phrasings.",
+  "en": [
+    "dynamic programming", "dp", "memoization", "memoize", "memo table", "tabulation", "knapsack", "0/1 knapsack", "unbounded knapsack",
+    "longest increasing subsequence", "lis", "longest common subsequence", "lcs", "edit distance", "kadane", "interval dp", "bitmask", "digit dp",
+    "tree dp", "rerooting", "state machine", "minimax", "game theory",
+    "bfs", "breadth first search", "breadth-first search", "dfs", "depth first search", "depth-first search", "dijkstra", "bellman ford", "bellman-ford",
+    "floyd warshall", "floyd-warshall", "topological sort", "topo sort", "kahn", "union find", "union-find", "disjoint set", "dsu", "kruskal", "prim",
+    "minimum spanning tree", "mst", "bipartite", "two coloring", "tarjan", "kosaraju", "strongly connected", "articulation point", "bridge",
+    "eulerian", "hierholzer", "0-1 bfs", "binary search on answer", "two pointers", "sliding window", "monotonic stack", "monotonic queue",
+    "prefix sum", "trie", "segment tree", "fenwick", "binary indexed tree", "heap", "priority queue", "backtracking", "bit manipulation"
+  ],
+  "hinglish": [
+    "dp lagao", "dp table", "dp wala", "memo lagao", "memoization karo", "tabulation karo", "knapsack wala", "lis wala", "lcs wala",
+    "bfs lagao", "dfs lagao", "bfs karo", "dfs karo", "dijkstra lagao", "dijkstra wala", "topo sort", "topological", "union find lagao", "dsu lagao",
+    "heap lagao", "priority queue lagao", "two pointer lagao", "sliding window lagao", "prefix sum lagao", "binary search lagao", "bitmask wala",
+    "backtracking karo", "recursion memo"
+  ]
+}

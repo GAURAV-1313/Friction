@@ -1,0 +1,7 @@
+# raw account exports contain a person's source code and submission history
+exports/
+lc-export-*/
+*.zip
+fixture-export/
+demo/
+demo_*.json

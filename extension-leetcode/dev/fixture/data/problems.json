@@ -1,0 +1,830 @@
+{
+ "burst-balloons": {
+  "questionId": "312",
+  "questionFrontendId": "312",
+  "title": "Burst Balloons",
+  "titleSlug": "burst-balloons",
+  "difficulty": "Hard",
+  "isPaidOnly": false,
+  "acRate": 0.42,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Minimum Cost To Merge Stones",
+    "titleSlug": "minimum-cost-to-merge-stones",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Burst Balloons: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Burst Balloons: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.interval",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Burst Balloons</strong> (#312). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable interval dp over [i..j] approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 300</code></li><li><code>0 <= nums[i] <= 100</code></li><li><code>1 <= cuts.length <= min(n - 1, 100)</code></li></ul>"
+ },
+ "minimum-cost-to-cut-a-stick": {
+  "questionId": "1669",
+  "questionFrontendId": "1547",
+  "title": "Minimum Cost to Cut a Stick",
+  "titleSlug": "minimum-cost-to-cut-a-stick",
+  "difficulty": "Hard",
+  "isPaidOnly": false,
+  "acRate": 0.77,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Sorting",
+    "slug": "sorting"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Number Of Ways To Divide A Long Corridor",
+    "titleSlug": "number-of-ways-to-divide-a-long-corridor",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Divide An Array Into Subarrays With Minimum Cost Ii",
+    "titleSlug": "divide-an-array-into-subarrays-with-minimum-cost-ii",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Minimum Cost to Cut a Stick: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Minimum Cost to Cut a Stick: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.interval",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Minimum Cost to Cut a Stick</strong> (#1547). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable interval dp over [i..j] approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 300</code></li><li><code>0 <= nums[i] <= 100</code></li><li><code>1 <= cuts.length <= min(n - 1, 100)</code></li></ul>"
+ },
+ "longest-palindromic-subsequence": {
+  "questionId": "516",
+  "questionFrontendId": "516",
+  "title": "Longest Palindromic Subsequence",
+  "titleSlug": "longest-palindromic-subsequence",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.46,
+  "topicTags": [
+   {
+    "name": "String",
+    "slug": "string"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Longest Palindromic Substring",
+    "titleSlug": "longest-palindromic-substring",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Palindromic Substrings",
+    "titleSlug": "palindromic-substrings",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Count Different Palindromic Subsequences",
+    "titleSlug": "count-different-palindromic-subsequences",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Longest Common Subsequence",
+    "titleSlug": "longest-common-subsequence",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Longest Palindromic Subsequence: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Longest Palindromic Subsequence: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.two_sequence",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Longest Palindromic Subsequence</strong> (#516). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable two-sequence alignment dp approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "partition-equal-subset-sum": {
+  "questionId": "416",
+  "questionFrontendId": "416",
+  "title": "Partition Equal Subset Sum",
+  "titleSlug": "partition-equal-subset-sum",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.46,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Knapsack Problem",
+    "slug": "knapsack-problem"
+   },
+   {
+    "name": "0-1 Knapsack",
+    "slug": "0-1-knapsack"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Partition To K Equal Sum Subsets",
+    "titleSlug": "partition-to-k-equal-sum-subsets",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Minimize The Difference Between Target And Chosen Elements",
+    "titleSlug": "minimize-the-difference-between-target-and-chosen-elements",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Maximum Number Of Ways To Partition An Array",
+    "titleSlug": "maximum-number-of-ways-to-partition-an-array",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Partition Array Into Two Arrays To Minimize Sum Difference",
+    "titleSlug": "partition-array-into-two-arrays-to-minimize-sum-difference",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Partition Equal Subset Sum: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Partition Equal Subset Sum: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.knapsack_01",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Partition Equal Subset Sum</strong> (#416). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable 0/1 knapsack / subset-sum approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "target-sum": {
+  "questionId": "494",
+  "questionFrontendId": "494",
+  "title": "Target Sum",
+  "titleSlug": "target-sum",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.74,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Backtracking",
+    "slug": "backtracking"
+   },
+   {
+    "name": "Knapsack Problem",
+    "slug": "knapsack-problem"
+   },
+   {
+    "name": "0-1 Knapsack",
+    "slug": "0-1-knapsack"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Expression Add Operators",
+    "titleSlug": "expression-add-operators",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Ways To Express An Integer As Sum Of Powers",
+    "titleSlug": "ways-to-express-an-integer-as-sum-of-powers",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Target Sum: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Target Sum: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.knapsack_01",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Target Sum</strong> (#494). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable 0/1 knapsack / subset-sum approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "last-stone-weight-ii": {
+  "questionId": "1049",
+  "questionFrontendId": "1049",
+  "title": "Last Stone Weight II",
+  "titleSlug": "last-stone-weight-ii",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.79,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Knapsack Problem",
+    "slug": "knapsack-problem"
+   },
+   {
+    "name": "0-1 Knapsack",
+    "slug": "0-1-knapsack"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Partition Array Into Two Arrays To Minimize Sum Difference",
+    "titleSlug": "partition-array-into-two-arrays-to-minimize-sum-difference",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Last Stone Weight II: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Last Stone Weight II: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.knapsack_01",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Last Stone Weight II</strong> (#1049). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable 0/1 knapsack / subset-sum approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "network-delay-time": {
+  "questionId": "743",
+  "questionFrontendId": "743",
+  "title": "Network Delay Time",
+  "titleSlug": "network-delay-time",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.73,
+  "topicTags": [
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Heap (Priority Queue)",
+    "slug": "heap-priority-queue"
+   },
+   {
+    "name": "Shortest Path",
+    "slug": "shortest-path"
+   },
+   {
+    "name": "Dijkstra",
+    "slug": "dijkstra"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "The Time When The Network Becomes Idle",
+    "titleSlug": "the-time-when-the-network-becomes-idle",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Second Minimum Time To Reach Destination",
+    "titleSlug": "second-minimum-time-to-reach-destination",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Network Delay Time: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Network Delay Time: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.dijkstra",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Network Delay Time</strong> (#743). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable dijkstra / best-first with priority queue approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "path-with-minimum-effort": {
+  "questionId": "1631",
+  "questionFrontendId": "1631",
+  "title": "Path With Minimum Effort",
+  "titleSlug": "path-with-minimum-effort",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.61,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Binary Search",
+    "slug": "binary-search"
+   },
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Union Find",
+    "slug": "union-find"
+   },
+   {
+    "name": "Heap (Priority Queue)",
+    "slug": "heap-priority-queue"
+   },
+   {
+    "name": "Matrix",
+    "slug": "matrix"
+   },
+   {
+    "name": "Dijkstra",
+    "slug": "dijkstra"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Swim In Rising Water",
+    "titleSlug": "swim-in-rising-water",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Path With Maximum Minimum Value",
+    "titleSlug": "path-with-maximum-minimum-value",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Find The Safest Path In A Grid",
+    "titleSlug": "find-the-safest-path-in-a-grid",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Path With Minimum Effort: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Path With Minimum Effort: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.bfs_grid",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Path With Minimum Effort</strong> (#1631). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable bfs on a grid (single/multi-source) approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "swim-in-rising-water": {
+  "questionId": "794",
+  "questionFrontendId": "778",
+  "title": "Swim in Rising Water",
+  "titleSlug": "swim-in-rising-water",
+  "difficulty": "Hard",
+  "isPaidOnly": false,
+  "acRate": 0.58,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Binary Search",
+    "slug": "binary-search"
+   },
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Union Find",
+    "slug": "union-find"
+   },
+   {
+    "name": "Minimax Algorithm",
+    "slug": "minimax-algorithm"
+   },
+   {
+    "name": "Heap (Priority Queue)",
+    "slug": "heap-priority-queue"
+   },
+   {
+    "name": "Matrix",
+    "slug": "matrix"
+   },
+   {
+    "name": "Dijkstra",
+    "slug": "dijkstra"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Path With Minimum Effort",
+    "titleSlug": "path-with-minimum-effort",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Swim in Rising Water: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Swim in Rising Water: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.bfs_grid",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Swim in Rising Water</strong> (#778). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable bfs on a grid (single/multi-source) approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 300</code></li><li><code>0 <= nums[i] <= 100</code></li><li><code>1 <= cuts.length <= min(n - 1, 100)</code></li></ul>"
+ },
+ "course-schedule": {
+  "questionId": "207",
+  "questionFrontendId": "207",
+  "title": "Course Schedule",
+  "titleSlug": "course-schedule",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.37,
+  "topicTags": [
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Topological Sort",
+    "slug": "topological-sort"
+   },
+   {
+    "name": "Directed Acyclic Graph",
+    "slug": "directed-acyclic-graph"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Course Schedule Ii",
+    "titleSlug": "course-schedule-ii",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Graph Valid Tree",
+    "titleSlug": "graph-valid-tree",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Minimum Height Trees",
+    "titleSlug": "minimum-height-trees",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Course Schedule Iii",
+    "titleSlug": "course-schedule-iii",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Course Schedule: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Course Schedule: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.topological_sort",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Course Schedule</strong> (#207). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable topological ordering / dag dp approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "course-schedule-ii": {
+  "questionId": "210",
+  "questionFrontendId": "210",
+  "title": "Course Schedule II",
+  "titleSlug": "course-schedule-ii",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.4,
+  "topicTags": [
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Topological Sort",
+    "slug": "topological-sort"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Course Schedule",
+    "titleSlug": "course-schedule",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Alien Dictionary",
+    "titleSlug": "alien-dictionary",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Minimum Height Trees",
+    "titleSlug": "minimum-height-trees",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Sequence Reconstruction",
+    "titleSlug": "sequence-reconstruction",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Course Schedule II: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Course Schedule II: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.topological_sort",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Course Schedule II</strong> (#210). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable topological ordering / dag dp approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "parallel-courses-iii": {
+  "questionId": "2176",
+  "questionFrontendId": "2050",
+  "title": "Parallel Courses III",
+  "titleSlug": "parallel-courses-iii",
+  "difficulty": "Hard",
+  "isPaidOnly": false,
+  "acRate": 0.3,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Topological Sort",
+    "slug": "topological-sort"
+   },
+   {
+    "name": "Directed Acyclic Graph",
+    "slug": "directed-acyclic-graph"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Course Schedule Iii",
+    "titleSlug": "course-schedule-iii",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Parallel Courses",
+    "titleSlug": "parallel-courses",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Single Threaded Cpu",
+    "titleSlug": "single-threaded-cpu",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Process Tasks Using Servers",
+    "titleSlug": "process-tasks-using-servers",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Parallel Courses III: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Parallel Courses III: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.topological_sort",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Parallel Courses III</strong> (#2050). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable topological ordering / dag dp approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 300</code></li><li><code>0 <= nums[i] <= 100</code></li><li><code>1 <= cuts.length <= min(n - 1, 100)</code></li></ul>"
+ },
+ "minimum-score-triangulation-of-polygon": {
+  "questionId": "1039",
+  "questionFrontendId": "1039",
+  "title": "Minimum Score Triangulation of Polygon",
+  "titleSlug": "minimum-score-triangulation-of-polygon",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.69,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Triangulation",
+    "slug": "triangulation"
+   },
+   {
+    "name": "Polygons",
+    "slug": "polygons"
+   }
+  ],
+  "similarQuestions": [],
+  "hints": [
+   "Fixture hint 1 for Minimum Score Triangulation of Polygon: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Minimum Score Triangulation of Polygon: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.interval",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Minimum Score Triangulation of Polygon</strong> (#1039). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable interval dp over [i..j] approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "ones-and-zeroes": {
+  "questionId": "474",
+  "questionFrontendId": "474",
+  "title": "Ones and Zeroes",
+  "titleSlug": "ones-and-zeroes",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.54,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "String",
+    "slug": "string"
+   },
+   {
+    "name": "Dynamic Programming",
+    "slug": "dynamic-programming"
+   },
+   {
+    "name": "Knapsack Problem",
+    "slug": "knapsack-problem"
+   },
+   {
+    "name": "0-1 Knapsack",
+    "slug": "0-1-knapsack"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Count Subarrays With More Ones Than Zeros",
+    "titleSlug": "count-subarrays-with-more-ones-than-zeros",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "Non Negative Integers Without Consecutive Ones",
+    "titleSlug": "non-negative-integers-without-consecutive-ones",
+    "difficulty": "Medium"
+   },
+   {
+    "title": "All Divisions With The Highest Score Of A Binary Array",
+    "titleSlug": "all-divisions-with-the-highest-score-of-a-binary-array",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Ones and Zeroes: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Ones and Zeroes: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "dp.knapsack_01",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Ones and Zeroes</strong> (#474). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable 0/1 knapsack / subset-sum approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "path-with-maximum-probability": {
+  "questionId": "1325",
+  "questionFrontendId": "1514",
+  "title": "Path with Maximum Probability",
+  "titleSlug": "path-with-maximum-probability",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.44,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Heap (Priority Queue)",
+    "slug": "heap-priority-queue"
+   },
+   {
+    "name": "Shortest Path",
+    "slug": "shortest-path"
+   },
+   {
+    "name": "Dijkstra",
+    "slug": "dijkstra"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "Number Of Ways To Arrive At Destination",
+    "titleSlug": "number-of-ways-to-arrive-at-destination",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [
+   "Fixture hint 1 for Path with Maximum Probability: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Path with Maximum Probability: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.dijkstra",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Path with Maximum Probability</strong> (#1514). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable dijkstra / best-first with priority queue approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "course-schedule-iv": {
+  "questionId": "1558",
+  "questionFrontendId": "1462",
+  "title": "Course Schedule IV",
+  "titleSlug": "course-schedule-iv",
+  "difficulty": "Medium",
+  "isPaidOnly": false,
+  "acRate": 0.42,
+  "topicTags": [
+   {
+    "name": "Depth-First Search",
+    "slug": "depth-first-search"
+   },
+   {
+    "name": "Breadth-First Search",
+    "slug": "breadth-first-search"
+   },
+   {
+    "name": "Graph",
+    "slug": "graph"
+   },
+   {
+    "name": "Topological Sort",
+    "slug": "topological-sort"
+   }
+  ],
+  "similarQuestions": [],
+  "hints": [
+   "Fixture hint 1 for Course Schedule IV: think about which decision you can make first and what is left after it.",
+   "Fixture hint 2 for Course Schedule IV: the answer for a small piece of the input can be reused by the larger piece that contains it."
+  ],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": "graph.topological_sort",
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Course Schedule IV</strong> (#1462). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable topological ordering / dag dp approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>1 <= n <= 200</code></li><li><code>0 <= values[i] <= 100</code></li><li><code>1 <= edges.length <= 2 * 10<sup>4</sup></code></li></ul>"
+ },
+ "two-sum": {
+  "questionId": "1",
+  "questionFrontendId": "1",
+  "title": "Two Sum",
+  "titleSlug": "two-sum",
+  "difficulty": "Easy",
+  "isPaidOnly": false,
+  "acRate": 0.31,
+  "topicTags": [
+   {
+    "name": "Array",
+    "slug": "array"
+   },
+   {
+    "name": "Hash Table",
+    "slug": "hash-table"
+   }
+  ],
+  "similarQuestions": [
+   {
+    "title": "3sum",
+    "titleSlug": "3sum",
+    "difficulty": "Medium"
+   }
+  ],
+  "hints": [],
+  "stats": "{\"totalAccepted\":\"1.2M\",\"totalSubmission\":\"2.4M\",\"acRate\":\"50.0%\"}",
+  "subpattern": null,
+  "content": "<p><em>Synthetic fixture statement</em> for <strong>Two Sum</strong> (#1). This text is not the LeetCode statement; it exists so the extension has a statement excerpt, hints and constraints to read.</p><p>You are given an input of the shape used by this problem. Return the value described by the fixture rules. The rules are chosen so that a naive approach times out and a reasonable two-pass approach passes.</p><p><strong>Example 1:</strong></p><pre><strong>Input:</strong> nums = [3,1,5,8]\n<strong>Output:</strong> 167\n</pre><p><strong>Constraints:</strong></p><ul><li><code>2 <= nums.length <= 10<sup>4</sup></code></li><li><code>-10<sup>9</sup> <= nums[i] <= 10<sup>9</sup></code></li></ul>"
+ }
+}

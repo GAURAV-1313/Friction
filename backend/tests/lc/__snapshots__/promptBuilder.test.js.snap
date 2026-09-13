@@ -1,0 +1,311 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`snapshot full rung-3 english prompt 1`] = `
+"STUDENT
+band: intermediate; solved: 210 (easy 80, medium 110, hard 20)
+dynamic programming: developing (18 solved); graphs: strong (41 solved)
+strengths: binary-search (30), two-pointers (22)
+
+CURRENT PROBLEM
+title: Cheapest Route Through Toll Roads (#9901); difficulty: medium
+family: graphs
+tags: graph, shortest-path, dijkstra, heap-priority-queue
+statement:
+<<<DATA statement
+You are given n towns numbered 0 to n-1 and a list of toll roads roads[i] = [a, b, toll] connecting town a and town b in both directions for the given toll. Return the smallest total toll to travel from town src to town dst, or -1 if no route exists.
+>>>
+constraints:
+<<<DATA constraints
+- 1 <= n <= 10^4
+- 0 <= roads.length <= 10^5
+- 1 <= toll <= 10^6
+- src != dst
+>>>
+leetcode_hints (rewrite, never quote):
+<<<DATA leetcode_hints
+1. Think of every town as a node and every toll road as a weighted edge between two nodes.
+2. Always expand the town with the smallest known total toll first, then update its neighbours.
+>>>
+
+ANCHORS (problems this student already solved; cite by title only)
+1. Minimum Cost Courier Route (medium)
+   why: same idea: best-first search with a priority queue; solved on 2026-04-08; attempts to AC: 1
+   student's accepted code (excerpt, first 40 of 45 lines; data):
+<<<DATA anchor_code minimum-cost-courier-route
+class Solution {
+public:
+    // synthetic fixture: not real student code
+    int courier(int n, vector<vector<int>>& roads, int src, int dst) {
+        vector<vector<pair<int,int>>> adj(n);
+        for (auto& r : roads) {
+            adj[r[0]].push_back({r[1], r[2]});
+            adj[r[1]].push_back({r[0], r[2]});
+        }
+        vector<long long> best(n, LLONG_MAX);
+        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;
+        best[src] = 0;
+        pq.push({0, src});
+        while (!pq.empty()) {
+            auto [d, u] = pq.top(); pq.pop();
+            if (d > best[u]) continue;
+            for (auto [v, w] : adj[u]) {
+                if (best[u] + w < best[v]) {
+                    best[v] = best[u] + w;
+                    pq.push({best[v], v});
+                }
+            }
+        }
+        return best[dst] == LLONG_MAX ? -1 : (int)best[dst];
+    }
+};
+// filler line 1 to exceed the 40-line excerpt cap
+// filler line 2 to exceed the 40-line excerpt cap
+// filler line 3 to exceed the 40-line excerpt cap
+// filler line 4 to exceed the 40-line excerpt cap
+// filler line 5 to exceed the 40-line excerpt cap
+// filler line 6 to exceed the 40-line excerpt cap
+// filler line 7 to exceed the 40-line excerpt cap
+// filler line 8 to exceed the 40-line excerpt cap
+// filler line 9 to exceed the 40-line excerpt cap
+// filler line 10 to exceed the 40-line excerpt cap
+// filler line 11 to exceed the 40-line excerpt cap
+// filler line 12 to exceed the 40-line excerpt cap
+// filler line 13 to exceed the 40-line excerpt cap
+// filler line 14 to exceed the 40-line excerpt cap
+... (5 more lines omitted)
+>>>
+2. Water Flow Through Pipes (medium)
+   why: same idea: expand the cheapest frontier node; solved on 2026-03-12; attempts to AC: 2
+   student's accepted code (excerpt, first 40 of 45 lines; data):
+<<<DATA anchor_code water-flow-through-pipes
+class Solution {
+public:
+    // synthetic fixture: not real student code
+    int courier(int n, vector<vector<int>>& roads, int src, int dst) {
+        vector<vector<pair<int,int>>> adj(n);
+        for (auto& r : roads) {
+            adj[r[0]].push_back({r[1], r[2]});
+            adj[r[1]].push_back({r[0], r[2]});
+        }
+        vector<long long> best(n, LLONG_MAX);
+        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;
+        best[src] = 0;
+        pq.push({0, src});
+        while (!pq.empty()) {
+            auto [d, u] = pq.top(); pq.pop();
+            if (d > best[u]) continue;
+            for (auto [v, w] : adj[u]) {
+                if (best[u] + w < best[v]) {
+                    best[v] = best[u] + w;
+                    pq.push({best[v], v});
+                }
+            }
+        }
+        return best[dst] == LLONG_MAX ? -1 : (int)best[dst];
+    }
+};
+// filler line 1 to exceed the 40-line excerpt cap
+// filler line 2 to exceed the 40-line excerpt cap
+// filler line 3 to exceed the 40-line excerpt cap
+// filler line 4 to exceed the 40-line excerpt cap
+// filler line 5 to exceed the 40-line excerpt cap
+// filler line 6 to exceed the 40-line excerpt cap
+// filler line 7 to exceed the 40-line excerpt cap
+// filler line 8 to exceed the 40-line excerpt cap
+// filler line 9 to exceed the 40-line excerpt cap
+// filler line 10 to exceed the 40-line excerpt cap
+// filler line 11 to exceed the 40-line excerpt cap
+// filler line 12 to exceed the 40-line excerpt cap
+// filler line 13 to exceed the 40-line excerpt cap
+// filler line 14 to exceed the 40-line excerpt cap
+... (5 more lines omitted)
+>>>
+3. Count Paths In A Weighted Maze (hard)
+   why: shared fine tag: shortest-path; solved on 2026-01-30; attempts to AC: 3
+
+LIVE HABITS (may sharpen the diagnostic; never lecture, never "you always", never narrate history)
+- [high tier: may be stated as fact] 5 of your 40 failed submissions were integer overflow or missing-modulo errors, 3 of them in the last 6 months.
+- [medium tier: phrase as a question or as "it looks like"] On best-first search problems, 4 of your 6 failures were a wrong answer on a normal case.
+
+LATEST VERDICT
+status: Wrong Answer; passed: 12/40
+bucket: wa_logic (medium tier: phrase as a question or as "it looks like")
+<<<DATA verdict
+last testcase: 4
+[[0,1,5],[1,2,3],[0,2,9]]
+0
+2
+expected: 8
+got: 9
+>>>
+
+STUDENT PLAN
+<<<DATA plan
+Relax every road once in input order and keep the smallest cost per town.
+>>>
+
+CURRENT CODE (cpp; 162 lines, first 150 shown; data)
+<<<DATA current_code
+class Solution {
+public:
+    // synthetic fixture: greedy attempt that is wrong on purpose
+    int cheapest(int n, vector<vector<int>>& roads, int src, int dst) {
+        vector<int> cost(n, INT_MAX);
+        cost[src] = 0;
+        for (auto& r : roads) {
+            if (cost[r[0]] != INT_MAX) cost[r[1]] = min(cost[r[1]], cost[r[0]] + r[2]);
+        }
+        return cost[dst] == INT_MAX ? -1 : cost[dst];
+    }
+};
+// padding line 1 so the file passes the 150-line cap
+// padding line 2 so the file passes the 150-line cap
+// padding line 3 so the file passes the 150-line cap
+// padding line 4 so the file passes the 150-line cap
+// padding line 5 so the file passes the 150-line cap
+// padding line 6 so the file passes the 150-line cap
+// padding line 7 so the file passes the 150-line cap
+// padding line 8 so the file passes the 150-line cap
+// padding line 9 so the file passes the 150-line cap
+// padding line 10 so the file passes the 150-line cap
+// padding line 11 so the file passes the 150-line cap
+// padding line 12 so the file passes the 150-line cap
+// padding line 13 so the file passes the 150-line cap
+// padding line 14 so the file passes the 150-line cap
+// padding line 15 so the file passes the 150-line cap
+// padding line 16 so the file passes the 150-line cap
+// padding line 17 so the file passes the 150-line cap
+// padding line 18 so the file passes the 150-line cap
+// padding line 19 so the file passes the 150-line cap
+// padding line 20 so the file passes the 150-line cap
+// padding line 21 so the file passes the 150-line cap
+// padding line 22 so the file passes the 150-line cap
+// padding line 23 so the file passes the 150-line cap
+// padding line 24 so the file passes the 150-line cap
+// padding line 25 so the file passes the 150-line cap
+// padding line 26 so the file passes the 150-line cap
+// padding line 27 so the file passes the 150-line cap
+// padding line 28 so the file passes the 150-line cap
+// padding line 29 so the file passes the 150-line cap
+// padding line 30 so the file passes the 150-line cap
+// padding line 31 so the file passes the 150-line cap
+// padding line 32 so the file passes the 150-line cap
+// padding line 33 so the file passes the 150-line cap
+// padding line 34 so the file passes the 150-line cap
+// padding line 35 so the file passes the 150-line cap
+// padding line 36 so the file passes the 150-line cap
+// padding line 37 so the file passes the 150-line cap
+// padding line 38 so the file passes the 150-line cap
+// padding line 39 so the file passes the 150-line cap
+// padding line 40 so the file passes the 150-line cap
+// padding line 41 so the file passes the 150-line cap
+// padding line 42 so the file passes the 150-line cap
+// padding line 43 so the file passes the 150-line cap
+// padding line 44 so the file passes the 150-line cap
+// padding line 45 so the file passes the 150-line cap
+// padding line 46 so the file passes the 150-line cap
+// padding line 47 so the file passes the 150-line cap
+// padding line 48 so the file passes the 150-line cap
+// padding line 49 so the file passes the 150-line cap
+// padding line 50 so the file passes the 150-line cap
+// padding line 51 so the file passes the 150-line cap
+// padding line 52 so the file passes the 150-line cap
+// padding line 53 so the file passes the 150-line cap
+// padding line 54 so the file passes the 150-line cap
+// padding line 55 so the file passes the 150-line cap
+// padding line 56 so the file passes the 150-line cap
+// padding line 57 so the file passes the 150-line cap
+// padding line 58 so the file passes the 150-line cap
+// padding line 59 so the file passes the 150-line cap
+// padding line 60 so the file passes the 150-line cap
+// padding line 61 so the file passes the 150-line cap
+// padding line 62 so the file passes the 150-line cap
+// padding line 63 so the file passes the 150-line cap
+// padding line 64 so the file passes the 150-line cap
+// padding line 65 so the file passes the 150-line cap
+// padding line 66 so the file passes the 150-line cap
+// padding line 67 so the file passes the 150-line cap
+// padding line 68 so the file passes the 150-line cap
+// padding line 69 so the file passes the 150-line cap
+// padding line 70 so the file passes the 150-line cap
+// padding line 71 so the file passes the 150-line cap
+// padding line 72 so the file passes the 150-line cap
+// padding line 73 so the file passes the 150-line cap
+// padding line 74 so the file passes the 150-line cap
+// padding line 75 so the file passes the 150-line cap
+// padding line 76 so the file passes the 150-line cap
+// padding line 77 so the file passes the 150-line cap
+// padding line 78 so the file passes the 150-line cap
+// padding line 79 so the file passes the 150-line cap
+// padding line 80 so the file passes the 150-line cap
+// padding line 81 so the file passes the 150-line cap
+// padding line 82 so the file passes the 150-line cap
+// padding line 83 so the file passes the 150-line cap
+// padding line 84 so the file passes the 150-line cap
+// padding line 85 so the file passes the 150-line cap
+// padding line 86 so the file passes the 150-line cap
+// padding line 87 so the file passes the 150-line cap
+// padding line 88 so the file passes the 150-line cap
+// padding line 89 so the file passes the 150-line cap
+// padding line 90 so the file passes the 150-line cap
+// padding line 91 so the file passes the 150-line cap
+// padding line 92 so the file passes the 150-line cap
+// padding line 93 so the file passes the 150-line cap
+// padding line 94 so the file passes the 150-line cap
+// padding line 95 so the file passes the 150-line cap
+// padding line 96 so the file passes the 150-line cap
+// padding line 97 so the file passes the 150-line cap
+// padding line 98 so the file passes the 150-line cap
+// padding line 99 so the file passes the 150-line cap
+// padding line 100 so the file passes the 150-line cap
+// padding line 101 so the file passes the 150-line cap
+// padding line 102 so the file passes the 150-line cap
+// padding line 103 so the file passes the 150-line cap
+// padding line 104 so the file passes the 150-line cap
+// padding line 105 so the file passes the 150-line cap
+// padding line 106 so the file passes the 150-line cap
+// padding line 107 so the file passes the 150-line cap
+// padding line 108 so the file passes the 150-line cap
+// padding line 109 so the file passes the 150-line cap
+// padding line 110 so the file passes the 150-line cap
+// padding line 111 so the file passes the 150-line cap
+// padding line 112 so the file passes the 150-line cap
+// padding line 113 so the file passes the 150-line cap
+// padding line 114 so the file passes the 150-line cap
+// padding line 115 so the file passes the 150-line cap
+// padding line 116 so the file passes the 150-line cap
+// padding line 117 so the file passes the 150-line cap
+// padding line 118 so the file passes the 150-line cap
+// padding line 119 so the file passes the 150-line cap
+// padding line 120 so the file passes the 150-line cap
+// padding line 121 so the file passes the 150-line cap
+// padding line 122 so the file passes the 150-line cap
+// padding line 123 so the file passes the 150-line cap
+// padding line 124 so the file passes the 150-line cap
+// padding line 125 so the file passes the 150-line cap
+// padding line 126 so the file passes the 150-line cap
+// padding line 127 so the file passes the 150-line cap
+// padding line 128 so the file passes the 150-line cap
+// padding line 129 so the file passes the 150-line cap
+// padding line 130 so the file passes the 150-line cap
+// padding line 131 so the file passes the 150-line cap
+// padding line 132 so the file passes the 150-line cap
+// padding line 133 so the file passes the 150-line cap
+// padding line 134 so the file passes the 150-line cap
+// padding line 135 so the file passes the 150-line cap
+// padding line 136 so the file passes the 150-line cap
+// padding line 137 so the file passes the 150-line cap
+// padding line 138 so the file passes the 150-line cap
+... (12 more lines omitted)
+>>>
+
+CONTRACT
+{"rung":3,"max_rung":3,"diagnostic_focus":"wa_logic","code_allowed":"none","must_end_with_question":true,"word_cap":200}
+OFFERED_ANCHORS: minimum-cost-courier-route (Minimum Cost Courier Route); water-flow-through-pipes (Water Flow Through Pipes); count-paths-in-a-weighted-maze (Count Paths In A Weighted Maze)
+OFFERED_HABITS: overflow; bucket:graph.bestfirst:wa_logic
+
+STUDENT MESSAGE
+<<<DATA message
+My greedy pass gives 9 on the third test but the judge wants 8. What am I missing?
+>>>"
+`;

@@ -1,0 +1,378 @@
+{
+ "generated": "synthetic fixture (dev/gen); real slugs from backend/src/lc/data/subpatterns.json, fake history",
+ "username": "fixture_student",
+ "questions": [
+  {
+   "id": "312",
+   "titleSlug": "burst-balloons",
+   "title": "Burst Balloons",
+   "questionFrontendId": "312",
+   "paidOnly": false,
+   "difficulty": "HARD",
+   "status": "SOLVED",
+   "acRate": 0.35,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    }
+   ]
+  },
+  {
+   "id": "1669",
+   "titleSlug": "minimum-cost-to-cut-a-stick",
+   "title": "Minimum Cost to Cut a Stick",
+   "questionFrontendId": "1547",
+   "paidOnly": false,
+   "difficulty": "HARD",
+   "status": "SOLVED",
+   "acRate": 0.387,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    },
+    {
+     "name": "Sorting",
+     "slug": "sorting"
+    }
+   ]
+  },
+  {
+   "id": "516",
+   "titleSlug": "longest-palindromic-subsequence",
+   "title": "Longest Palindromic Subsequence",
+   "questionFrontendId": "516",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.424,
+   "topicTags": [
+    {
+     "name": "String",
+     "slug": "string"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    }
+   ]
+  },
+  {
+   "id": "416",
+   "titleSlug": "partition-equal-subset-sum",
+   "title": "Partition Equal Subset Sum",
+   "questionFrontendId": "416",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.461,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    },
+    {
+     "name": "Knapsack Problem",
+     "slug": "knapsack-problem"
+    },
+    {
+     "name": "0-1 Knapsack",
+     "slug": "0-1-knapsack"
+    }
+   ]
+  },
+  {
+   "id": "494",
+   "titleSlug": "target-sum",
+   "title": "Target Sum",
+   "questionFrontendId": "494",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.498,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    },
+    {
+     "name": "Backtracking",
+     "slug": "backtracking"
+    },
+    {
+     "name": "Knapsack Problem",
+     "slug": "knapsack-problem"
+    },
+    {
+     "name": "0-1 Knapsack",
+     "slug": "0-1-knapsack"
+    }
+   ]
+  },
+  {
+   "id": "1049",
+   "titleSlug": "last-stone-weight-ii",
+   "title": "Last Stone Weight II",
+   "questionFrontendId": "1049",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.535,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    },
+    {
+     "name": "Knapsack Problem",
+     "slug": "knapsack-problem"
+    },
+    {
+     "name": "0-1 Knapsack",
+     "slug": "0-1-knapsack"
+    }
+   ]
+  },
+  {
+   "id": "743",
+   "titleSlug": "network-delay-time",
+   "title": "Network Delay Time",
+   "questionFrontendId": "743",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.572,
+   "topicTags": [
+    {
+     "name": "Depth-First Search",
+     "slug": "depth-first-search"
+    },
+    {
+     "name": "Breadth-First Search",
+     "slug": "breadth-first-search"
+    },
+    {
+     "name": "Graph",
+     "slug": "graph"
+    },
+    {
+     "name": "Heap (Priority Queue)",
+     "slug": "heap-priority-queue"
+    },
+    {
+     "name": "Shortest Path",
+     "slug": "shortest-path"
+    },
+    {
+     "name": "Dijkstra",
+     "slug": "dijkstra"
+    }
+   ]
+  },
+  {
+   "id": "1631",
+   "titleSlug": "path-with-minimum-effort",
+   "title": "Path With Minimum Effort",
+   "questionFrontendId": "1631",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.609,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Binary Search",
+     "slug": "binary-search"
+    },
+    {
+     "name": "Depth-First Search",
+     "slug": "depth-first-search"
+    },
+    {
+     "name": "Breadth-First Search",
+     "slug": "breadth-first-search"
+    },
+    {
+     "name": "Union Find",
+     "slug": "union-find"
+    },
+    {
+     "name": "Heap (Priority Queue)",
+     "slug": "heap-priority-queue"
+    },
+    {
+     "name": "Matrix",
+     "slug": "matrix"
+    },
+    {
+     "name": "Dijkstra",
+     "slug": "dijkstra"
+    }
+   ]
+  },
+  {
+   "id": "794",
+   "titleSlug": "swim-in-rising-water",
+   "title": "Swim in Rising Water",
+   "questionFrontendId": "778",
+   "paidOnly": false,
+   "difficulty": "HARD",
+   "status": "SOLVED",
+   "acRate": 0.646,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Binary Search",
+     "slug": "binary-search"
+    },
+    {
+     "name": "Depth-First Search",
+     "slug": "depth-first-search"
+    },
+    {
+     "name": "Breadth-First Search",
+     "slug": "breadth-first-search"
+    },
+    {
+     "name": "Union Find",
+     "slug": "union-find"
+    },
+    {
+     "name": "Minimax Algorithm",
+     "slug": "minimax-algorithm"
+    },
+    {
+     "name": "Heap (Priority Queue)",
+     "slug": "heap-priority-queue"
+    },
+    {
+     "name": "Matrix",
+     "slug": "matrix"
+    },
+    {
+     "name": "Dijkstra",
+     "slug": "dijkstra"
+    }
+   ]
+  },
+  {
+   "id": "207",
+   "titleSlug": "course-schedule",
+   "title": "Course Schedule",
+   "questionFrontendId": "207",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.683,
+   "topicTags": [
+    {
+     "name": "Depth-First Search",
+     "slug": "depth-first-search"
+    },
+    {
+     "name": "Breadth-First Search",
+     "slug": "breadth-first-search"
+    },
+    {
+     "name": "Graph",
+     "slug": "graph"
+    },
+    {
+     "name": "Topological Sort",
+     "slug": "topological-sort"
+    },
+    {
+     "name": "Directed Acyclic Graph",
+     "slug": "directed-acyclic-graph"
+    }
+   ]
+  },
+  {
+   "id": "210",
+   "titleSlug": "course-schedule-ii",
+   "title": "Course Schedule II",
+   "questionFrontendId": "210",
+   "paidOnly": false,
+   "difficulty": "MEDIUM",
+   "status": "SOLVED",
+   "acRate": 0.72,
+   "topicTags": [
+    {
+     "name": "Depth-First Search",
+     "slug": "depth-first-search"
+    },
+    {
+     "name": "Breadth-First Search",
+     "slug": "breadth-first-search"
+    },
+    {
+     "name": "Graph",
+     "slug": "graph"
+    },
+    {
+     "name": "Topological Sort",
+     "slug": "topological-sort"
+    }
+   ]
+  },
+  {
+   "id": "2176",
+   "titleSlug": "parallel-courses-iii",
+   "title": "Parallel Courses III",
+   "questionFrontendId": "2050",
+   "paidOnly": false,
+   "difficulty": "HARD",
+   "status": "SOLVED",
+   "acRate": 0.357,
+   "topicTags": [
+    {
+     "name": "Array",
+     "slug": "array"
+    },
+    {
+     "name": "Dynamic Programming",
+     "slug": "dynamic-programming"
+    },
+    {
+     "name": "Graph",
+     "slug": "graph"
+    },
+    {
+     "name": "Topological Sort",
+     "slug": "topological-sort"
+    },
+    {
+     "name": "Directed Acyclic Graph",
+     "slug": "directed-acyclic-graph"
+    }
+   ]
+  }
+ ]
+}

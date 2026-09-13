@@ -1,0 +1,1077 @@
+/* Anchor side panel layout. Tokens and base controls come from theme.css. */
+
+/* ---------------------------------------------------------------------------
+   MOTION TOKENS. theme.css owns colour; this owns time.
+   One distance, four durations, three curves, two loop periods. Nothing in
+   this panel animates with a number that is not declared here.
+   Only opacity and transform are animated, with two argued exceptions:
+   grid-template-rows on .slot-reveal (the only way to open a 0-height box
+   without a pop) and background-color on .conn-dot (pre-existing, 8px).
+   --------------------------------------------------------------------------- */
+:root {
+  --dur-1: 120ms;
+  --dur-2: 180ms;
+  --dur-3: 260ms;
+  --dur-4: 420ms;
+  --rise: 4px;
+  --rise-lg: 6px;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in: cubic-bezier(0.55, 0.06, 0.68, 0.19);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --pulse: 1.4s;
+  --pulse-slow: 2.6s;
+  --stagger: 520ms;
+}
+
+/* The panel is usually not visible. One class on <body> stops every keyframe
+   loop in the document, so the loops are deterministic rather than dependent
+   on browser throttling. */
+body.is-hidden *,
+body.is-hidden *::before,
+body.is-hidden *::after {
+  animation-play-state: paused !important;
+}
+
+html,
+body.sidepanel {
+  height: 100%;
+}
+
+body.sidepanel {
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 6px;
+  box-sizing: border-box;
+}
+
+/* ---- header ---- */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ---- banners ---- */
+.banners {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.banner.info {
+  border-left: 3px solid var(--accent);
+}
+
+.banner.warn {
+  border-left: 3px solid var(--warning);
+}
+
+.banner-text {
+  min-width: 0;
+}
+
+/* ---- main view (scrolls) ---- */
+.view {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: thin;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.view-card {
+  gap: 8px;
+  padding: 12px;
+}
+
+.view-card.center {
+  align-items: center;
+  text-align: center;
+}
+
+.view-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.view-text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.view-text.muted,
+.muted {
+  color: var(--muted);
+}
+
+.view-text.warn {
+  color: var(--warning);
+}
+
+.view-text.center {
+  text-align: center;
+  padding: 12px 4px;
+}
+
+.view-list {
+  margin: 4px 0 0;
+  padding-left: 16px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.view-list li + li {
+  margin-top: 3px;
+}
+
+.steps {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.row.between {
+  justify-content: space-between;
+}
+
+.row > input {
+  flex: 1;
+  min-width: 0;
+}
+
+.disclosure {
+  margin: 0;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--pill);
+  border: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.more summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.check input {
+  width: auto;
+  margin: 2px 0 0;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  animation: anchor-spin 0.9s linear infinite;
+}
+
+@keyframes anchor-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- sync progress ---- */
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--pill);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progress {
+  position: relative;
+}
+
+.progress-fill {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 600ms var(--ease-soft);
+}
+
+/* A hairline at the leading edge breathes while the sweep is actually running.
+   Paused at the same percentage, the motion stops: that is the whole signal. */
+.progress-fill.is-running::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--text);
+  animation: anchor-breathe var(--pulse) var(--ease-soft) infinite;
+}
+
+.progress-fill.is-paused::after {
+  animation-play-state: paused;
+}
+
+.sync-actions {
+  padding-top: 4px;
+}
+
+/* ---- pills ---- */
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--pill);
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.pill.running,
+.pill.finishing {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.pill.paused {
+  border-color: var(--warning);
+  color: var(--warning);
+}
+
+.pill.error {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* ---- problem view ---- */
+.problem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100%;
+}
+
+/* memory block: the first node of the thread, prose, no card chrome */
+.memory {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  text-align: left;
+}
+
+.memory:empty {
+  display: none;
+}
+
+.memory-claim {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.memory-line {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.memory-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.memory a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.memory a:hover {
+  text-decoration: underline;
+}
+
+.memory .btn {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* primer: the one instruction, until the first turn */
+.primer {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  padding: 10px 4px 2px;
+  border-top: 1px solid var(--border);
+}
+
+/* transcript */
+.transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 0 auto;
+  padding: 2px 0;
+}
+
+.bubble-row {
+  display: flex;
+}
+
+.bubble-row.user {
+  justify-content: flex-end;
+}
+
+.bubble-row.tutor {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 82%;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.bubble.user {
+  background: var(--accent);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  white-space: pre-wrap;
+  font-size: 12px;
+}
+
+/* tutor replies are full-width and un-bubbled: a 2px left rule plus text */
+.bubble.tutor {
+  max-width: 100%;
+  width: 100%;
+  padding: 0 0 0 8px;
+  border-radius: 0;
+  border-left: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bubble.tutor.degraded {
+  border-left-style: dashed;
+}
+
+/* a local, non-LLM line written into the thread (the AC moment) */
+.local-line {
+  width: 100%;
+  padding-left: 8px;
+  border-left: 2px solid var(--border);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* verdict divider: a machine event, never speech */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.bubble-row.pending .bubble {
+  color: var(--muted);
+}
+
+.bubble-body {
+  min-width: 0;
+}
+
+.bubble-body .md-pre {
+  max-width: 100%;
+}
+
+.bubble-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 16px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.depth-meter {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.dev-rung {
+  font-size: 10px;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.bubble-foot .missed {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.bubble-foot .missed:hover {
+  color: var(--accent);
+}
+
+/* habit footnote, above the foot, with its single 'not me' link */
+.habit-note {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.habit-note-text {
+  min-width: 0;
+}
+
+.habit-note .link {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.habit-note .link:hover {
+  color: var(--accent);
+}
+
+.missed-note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.missed-note textarea {
+  min-height: 40px;
+  font-size: 11px;
+}
+
+.refusal {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* composer */
+.composer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.composer textarea {
+  min-height: 56px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+/* affordance slot: 0px by default, exactly one occupant */
+.slot {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: none;
+}
+
+.slot:empty {
+  display: none;
+}
+
+.slot .link {
+  display: block;
+  width: 100%;
+  padding: 4px 0;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: left;
+}
+
+.slot .link:hover {
+  color: var(--accent);
+}
+
+.slot-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slot-text {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* rung-4 gate: a form with no button until GATE_MIN_CHARS */
+.gate {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.gate-claim {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gate-text {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.gate textarea {
+  min-height: 40px;
+  max-height: 80px;
+  font-size: 11px;
+}
+
+.gate .btn {
+  align-self: flex-end;
+}
+
+/* stance line: one muted line above the textarea */
+.stance {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stance:empty {
+  display: none;
+}
+
+.paste {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.paste-box {
+  font-family: var(--mono);
+  font-size: 11px;
+  min-height: 72px;
+  white-space: pre;
+}
+
+.code-note {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---- issue form + footer ---- */
+.issue-form {
+  flex: 0 0 auto;
+}
+
+.issue-form textarea {
+  min-height: 56px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: var(--muted);
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.foot-item {
+  white-space: nowrap;
+}
+
+.foot-sep {
+  opacity: 0.6;
+}
+
+.foot-spacer {
+  flex: 1;
+}
+
+.footer .link {
+  font-size: 10px;
+}
+
+.status {
+  flex: 0 0 auto;
+}
+
+/* visible to assistive technology only (the capture dot's text label) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.error {
+  padding: 12px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+/* ===========================================================================
+   MOTION
+   The panel never fakes progress it cannot observe. POST /api/lc/chat returns
+   one complete JSON reply, so there is no token stream to reveal; what the
+   wait shows instead is the set of inputs the hint is being built from, all
+   of which are known on the client before the request is even issued.
+   =========================================================================== */
+
+/* ---- pending bubble: the honest narration -------------------------------- */
+/* Built at full height with every line at opacity 0, so the whole wait is
+   opacity-only and never reflows or fights scrollTranscript(). */
+.think-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.think-line {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(var(--rise));
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+  transition-delay: calc(180ms + var(--i, 0) * var(--stagger));
+}
+
+.bubble-row.pending.is-running .think-line {
+  opacity: 1;
+  transform: none;
+}
+
+/* the last line is the current action, so it is not muted */
+.think-line.is-final {
+  color: var(--text);
+}
+
+/* the one line that swaps its text in place at 8s: dip, swap, return */
+.think-line.is-swapping {
+  opacity: 0.3;
+  transition: opacity var(--dur-1) var(--ease-soft);
+  transition-delay: 0ms;
+}
+
+/* leaving: pin every not-yet-revealed line invisible so none can flash in
+   under the parent fade when the reply arrives mid-stagger */
+.bubble-row.pending.is-out {
+  opacity: 0;
+  transition: opacity 140ms var(--ease-in);
+}
+
+.bubble-row.pending.is-out .think-line {
+  opacity: 0 !important;
+  transition-delay: 0ms;
+}
+
+/* The tutor bubble's own left rule becomes the indeterminate progress element:
+   a 28px accent segment travelling the height of the narration it narrates.
+   --rule-travel is written once from JS after a single offsetHeight read. */
+.bubble-row.pending .bubble.tutor {
+  position: relative;
+}
+
+.bubble-row.pending .bubble.tutor::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 2px;
+  height: 28px;
+  border-radius: 1px;
+  background: var(--accent);
+  transform-origin: top center;
+  animation: anchor-rule var(--pulse) var(--ease-soft) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes anchor-rule {
+  0% {
+    transform: translateY(0) scaleY(0.35);
+    opacity: 0.35;
+  }
+  45% {
+    transform: translateY(calc(var(--rule-travel, 60px) * 0.55)) scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--rule-travel, 60px)) scaleY(0.35);
+    opacity: 0.35;
+  }
+}
+
+/* past p95 the loop decelerates: the animation slowing down is the signal */
+.bubble-row.pending.is-long .bubble.tutor::before {
+  animation-duration: var(--pulse-slow);
+}
+
+/* the server is asleep: warning colour plus the slow loop */
+.bubble-row.pending.is-cold .bubble.tutor::before {
+  animation-duration: var(--pulse-slow);
+  background: var(--warning);
+}
+
+@keyframes anchor-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.is-waiting {
+  animation: anchor-breathe 1800ms var(--ease-soft) infinite;
+}
+
+/* ---- memory block: builds itself line by line ---------------------------- */
+.memory > * {
+  opacity: 0;
+  transform: translateY(var(--rise));
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.memory.is-in > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- busy buttons: the label never changes width ------------------------- */
+.btn.is-busy {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.65;
+}
+
+.btn.is-busy::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: currentColor;
+  animation: anchor-sweep 1.2s var(--ease-soft) infinite;
+}
+
+@keyframes anchor-sweep {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  50% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  50.01% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+}
+
+/* ---- slot / gate reveal: 0fr -> 1fr -------------------------------------- */
+.slot-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows var(--dur-3) var(--ease-out);
+}
+
+.slot-reveal > * {
+  min-height: 0;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out) 80ms;
+}
+
+.slot-reveal.is-open {
+  grid-template-rows: 1fr;
+}
+
+.slot-reveal.is-open > * {
+  opacity: 1;
+}
+
+/* the gate is a mode change and gets the long duration */
+.slot-reveal.is-gate {
+  transition-duration: var(--dur-4);
+}
+
+.slot-reveal.is-gate > * {
+  transition: opacity 240ms var(--ease-out) 120ms;
+}
+
+/* ---- new-content pill: unprompted content is offered, never scrolled to --- */
+.new-below {
+  position: sticky;
+  bottom: 4px;
+  align-self: center;
+  max-width: 90%;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- verdict divider: a rule being drawn into the record ----------------- */
+/* scaleX on the flex hairlines does not affect layout, so the text never moves. */
+.divider::before,
+.divider::after {
+  transition: transform 320ms var(--ease-out);
+}
+
+.divider::before {
+  transform-origin: right center;
+}
+
+.divider::after {
+  transform-origin: left center;
+}
+
+.divider.is-enter::before,
+.divider.is-enter::after {
+  transform: scaleX(0);
+}
+
+.divider > * {
+  transition: opacity var(--dur-2) var(--ease-out) 80ms;
+}
+
+.divider.is-enter > * {
+  opacity: 0;
+}
+
+/* ---- small text swaps ---------------------------------------------------- */
+.subtitle,
+.pill {
+  transition: opacity var(--dur-1) var(--ease-soft);
+}
+
+.subtitle.is-swapping,
+.pill.is-swapping {
+  opacity: 0;
+}
+
+/* ---- view swap: the incoming root fades, the outgoing never animates ----- */
+.view-swap {
+  animation: anchor-fade-in 200ms var(--ease-out);
+}
+
+@keyframes anchor-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- status line --------------------------------------------------------- */
+.status.is-in {
+  animation: anchor-status var(--dur-2) var(--ease-out);
+}
+
+@keyframes anchor-status {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===========================================================================
+   REDUCED MOTION. Zero the durations and the distance, switch the loops off
+   individually. The transition DELAYS survive, so the narration still arrives
+   in sequence; it simply does not fade or travel. That is why every duration
+   is a variable.
+   =========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0ms;
+    --dur-2: 0ms;
+    --dur-3: 0ms;
+    --dur-4: 0ms;
+    --rise: 0px;
+    --rise-lg: 0px;
+  }
+
+  .bubble-row.pending .bubble.tutor::before {
+    animation: none;
+    height: 100%;
+    opacity: 0.85;
+    transform: none;
+  }
+
+  .is-waiting {
+    animation: none;
+    opacity: 1;
+  }
+
+  .btn.is-busy::after {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+
+  .progress-fill.is-running::after {
+    animation: none;
+    opacity: 0.9;
+  }
+
+  .spinner {
+    animation: none;
+    border-top-color: var(--accent);
+    opacity: 0.55;
+  }
+
+  .divider::before,
+  .divider::after {
+    transition: none;
+  }
+
+  .view {
+    scroll-behavior: auto;
+  }
+}

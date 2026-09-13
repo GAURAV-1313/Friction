@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Anchor motion preview</title>
+<!-- Served, not opened as a file: the stylesheets are linked so this preview
+     can never drift from the real ones. node dev/serve-fixture.js, or any
+     static server rooted at extension-leetcode/. -->
+<link rel="stylesheet" href="../theme.css">
+<link rel="stylesheet" href="../sidepanel.css">
+<style>
+  body.sidepanel { width: 380px; margin: 0 auto; overflow: auto; }
+  .harness { padding: 12px; }
+  .harness h2 { font: 600 12px/1.4 system-ui; color: var(--muted); margin: 18px 0 6px; }
+  .controls { position: sticky; top: 0; background: var(--bg); padding: 8px 12px; z-index: 5; display: flex; gap: 6px; flex-wrap: wrap; }
+  .controls button { font: 500 11px/1 system-ui; padding: 6px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
+  .view { height: auto; }
+</style>
+</head>
+<body class="sidepanel theme-dark">
+<div class="controls">
+  <button id="replay">Replay wait</button>
+  <button id="long">Jump to 8s (long)</button>
+  <button id="cold">Jump to cold</button>
+  <button id="settle">Reply arrives</button>
+</div>
+<div class="harness">
+  <h2>Pending bubble — the hint wait</h2>
+  <div class="view" id="view"><div class="transcript" id="t"></div></div>
+</div>
+<script>
+const LINES = [
+  { text: 'Reading this thread — 4 turns so far.' },
+  { text: 'Your editor code is attached — 47 lines of C++.' },
+  { text: 'Your last run is on the record: Wrong Answer · off-by-one.' },
+  { text: 'Working from Longest Palindromic Subsequence.' },
+  { text: 'Writing.', final: true }
+];
+const t = document.getElementById('t');
+function el(tag, cls, text) { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+let pending = null;
+function build() {
+  t.textContent = '';
+  const user = el('div', 'bubble-row user');
+  user.appendChild(el('div', 'bubble user', 'I tried that and it still gives the wrong total on the sample'));
+  t.appendChild(user);
+  const wrap = el('div', 'bubble-row tutor pending');
+  const bubble = el('div', 'bubble tutor');
+  const list = el('div', 'think-list');
+  LINES.forEach((l, i) => { const n = el('div', 'think-line', l.text); if (l.final) n.classList.add('is-final'); n.style.setProperty('--i', String(i)); list.appendChild(n); });
+  bubble.appendChild(list);
+  wrap.appendChild(bubble);
+  t.appendChild(wrap);
+  const h = wrap.offsetHeight;
+  wrap.style.setProperty('--rule-travel', Math.max(0, h - 28) + 'px');
+  wrap.classList.add('is-running');
+  pending = wrap;
+}
+document.getElementById('replay').onclick = build;
+document.getElementById('long').onclick = () => {
+  if (!pending) return;
+  pending.classList.add('is-long');
+  const line = pending.querySelector('.think-list').lastElementChild;
+  line.classList.add('is-swapping');
+  setTimeout(() => { line.textContent = 'Still writing. It may be on a second draft.'; line.classList.remove('is-swapping'); }, 140);
+};
+document.getElementById('cold').onclick = () => {
+  if (!pending) return;
+  pending.classList.add('is-cold');
+  const list = pending.querySelector('.think-list');
+  list.textContent = '';
+  const a = el('div', 'think-line', 'The server was asleep. Waking it up.');
+  const b = el('div', 'think-line is-final', '12s');
+  [a, b].forEach((n, i) => { n.style.setProperty('--i', String(i)); n.style.opacity = '1'; n.style.transform = 'none'; list.appendChild(n); });
+};
+document.getElementById('settle').onclick = () => {
+  if (!pending) return;
+  pending.classList.add('is-out');
+  setTimeout(() => {
+    pending.remove();
+    const wrap = el('div', 'bubble-row tutor');
+    const bubble = el('div', 'bubble tutor');
+    bubble.appendChild(el('div', 'bubble-body', 'In Longest Palindromic Subsequence you fixed what one stored value meant before writing any transition. What does one entry stand for here?'));
+    const foot = el('div', 'bubble-foot');
+    foot.appendChild(el('span', 'depth-meter', '●● anchored'));
+    bubble.appendChild(foot);
+    wrap.appendChild(bubble);
+    t.appendChild(wrap);
+    wrap.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(0.22,0.61,0.36,1)', fill: 'backwards' });
+  }, 140);
+};
+build();
+</script>
+</body>
+</html>

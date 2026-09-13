@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anchor</title>
+    <link rel="icon" type="image/png" href="icons/icon128.png" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup-wrapper">
+      <div class="app">
+        <header class="header">
+          <div class="header-left">
+            <div class="title">Anchor</div>
+            <div id="subtitle" class="subtitle">for LeetCode</div>
+          </div>
+          <div class="header-actions">
+            <div id="connDot" class="conn-dot" title="Not connected"></div>
+            <button id="themeToggle" class="btn icon" type="button" title="Theme: System">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <section id="tokenSection" class="card compact">
+          <div class="section-hint">
+            Sign in to the Friction web app, click Connect to copy your token, then paste it here. The token works like a password: never share it.
+          </div>
+          <div class="row">
+            <input id="token" type="password" placeholder="Paste your token" autocomplete="off" spellcheck="false" />
+            <button id="saveToken" class="btn ghost" type="button">Save</button>
+          </div>
+          <button id="getToken" class="link" type="button">Open the web app to copy a token</button>
+        </section>
+
+        <button id="openPanel" class="btn primary wide" type="button">Open Anchor panel</button>
+        <div id="panelHint" class="hint hidden">Open a leetcode.com problem first.</div>
+
+        <section class="card compact">
+          <div class="row between">
+            <label class="label" for="consentToggle">Let Anchor read my LeetCode code</label>
+            <label class="toggle">
+              <input type="checkbox" id="consentToggle" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="section-hint">
+            Off by default. On: the code of your failed and first-accepted attempts is stored so hints can point at your own past solutions. Turning it off deletes the stored code.
+          </div>
+        </section>
+
+        <section class="card compact">
+          <div class="row between">
+            <span class="label">Hint language</span>
+            <div class="segmented" role="radiogroup" aria-label="Hint language">
+              <button id="langEnglish" class="seg" type="button" role="radio" aria-checked="false" data-lang="english">English</button>
+              <button id="langHinglish" class="seg" type="button" role="radio" aria-checked="false" data-lang="hinglish">Hinglish</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card compact settings">
+          <div class="row between">
+            <span class="label muted">Version</span>
+            <span id="rowVersion" class="value"></span>
+          </div>
+          <div class="row between">
+            <span class="label muted">Last sync</span>
+            <span id="rowSync" class="value">never</span>
+          </div>
+          <div class="row between">
+            <span class="label muted">Live capture</span>
+            <span id="rowCapture" class="value"></span>
+          </div>
+          <div class="row between">
+            <span class="label muted">Hints today</span>
+            <span id="rowHints" class="value"></span>
+          </div>
+        </section>
+
+        <section class="card compact">
+          <textarea id="issueText" placeholder="Report an issue (your code is never included)"></textarea>
+          <div class="row between">
+            <span class="section-hint">Goes to the Anchor developer.</span>
+            <button id="sendIssue" class="btn ghost" type="button">Send</button>
+          </div>
+        </section>
+
+        <div class="footer-row">
+          <button id="forgetToken" class="btn ghost" type="button">Forget token</button>
+          <button id="deleteData" class="btn ghost danger" type="button">Delete my data</button>
+        </div>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="anchor-setup.js"></script>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

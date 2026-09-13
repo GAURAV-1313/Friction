@@ -1,0 +1,407 @@
+/* Anchor shared theme: colour tokens, theme classes and base controls.
+   Linked by popup.html and sidepanel.html; layout lives in popup.css / sidepanel.css.
+   Palette copied from the Friction popup so both extensions look like one family.
+   No web-font import on purpose: the only network traffic from extension pages
+   is the Bearer-authenticated call to the Anchor API. */
+
+:root {
+  color-scheme: light dark;
+  --bg: #0a0d12;
+  --card: #10161f;
+  --text: #e6edf3;
+  --muted: #8b99a8;
+  --accent: #3b82f6;
+  --border: #1c2733;
+  --pill: #0f141b;
+  --input-bg: #ffffff;
+  --success: #34d399;
+  --danger: #f87171;
+  --warning: #f59f0b;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f0f1f3;
+    --card: #ffffff;
+    --text: #15120f;
+    --muted: #5b5a55;
+    --accent: #197fe6;
+    --border: #e0e1e3;
+    --pill: #f4f6f8;
+    --input-bg: #ffffff;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #b45309;
+  }
+}
+
+body.theme-light {
+  --bg: #f0f1f3;
+  --card: #ffffff;
+  --text: #15120f;
+  --muted: #5b5a55;
+  --accent: #197fe6;
+  --border: #e0e1e3;
+  --pill: #f4f6f8;
+  --input-bg: #ffffff;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #b45309;
+}
+
+body.theme-dark {
+  --bg: #181818;
+  --card: #222222;
+  --text: #ffffff;
+  --muted: #888888;
+  --accent: #3b82f6;
+  --border: #2a2a2a;
+  --pill: #222222;
+  --input-bg: #2f2f2f;
+  --success: #34d399;
+  --danger: #f87171;
+  --warning: #f59f0b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.conn-dot.connected {
+  background: var(--success);
+}
+
+.conn-dot.invalid {
+  background: var(--danger);
+}
+
+.conn-dot.waking {
+  background: var(--warning);
+}
+
+/* ---- controls ---- */
+input,
+textarea,
+select {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--pill);
+  color: var(--text);
+  padding: 6px 8px;
+  font-size: 11px;
+  font-family: var(--font);
+  outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+
+textarea {
+  min-height: 52px;
+  resize: vertical;
+  background: var(--input-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+.btn {
+  border-radius: 10px;
+  padding: 5px 8px;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  background: var(--pill);
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.btn:hover {
+  background: var(--card);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.btn.primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn.ghost {
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  flex-shrink: 0;
+}
+
+.btn.ghost:hover {
+  color: var(--text);
+  background: var(--pill);
+}
+
+.btn.danger {
+  color: var(--danger);
+}
+
+.btn.danger.armed {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.btn.icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.btn.icon:hover {
+  background: var(--pill);
+  border-color: var(--border);
+}
+
+.btn.tiny {
+  padding: 4px 6px;
+  font-size: 10px;
+}
+
+.btn.wide {
+  width: 100%;
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 12px;
+}
+
+.link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 11px;
+  font-family: var(--font);
+  cursor: pointer;
+  text-align: left;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--border);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.15s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: var(--accent);
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(14px);
+}
+
+.toggle input:focus-visible + .toggle-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* segmented control */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--pill);
+}
+
+.seg {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  padding: 3px 9px;
+  font-size: 10px;
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+.seg.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* chips */
+.chip {
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 10px;
+  border: 1px solid transparent;
+  background: var(--pill);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.chip.active {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+/* status line */
+.status {
+  font-size: 11px;
+  color: var(--muted);
+  min-height: 14px;
+}
+
+.status[data-tone="success"] {
+  color: var(--success);
+}
+
+.status[data-tone="error"] {
+  color: var(--danger);
+}
+
+/* rendered model text (markdown.js) */
+.md-para {
+  margin: 0 0 8px;
+}
+
+.md-para:last-child {
+  margin-bottom: 0;
+}
+
+.md-code {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--pill);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.md-pre {
+  margin: 6px 0;
+  padding: 8px;
+  background: var(--pill);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.md-pre .md-fence {
+  font-family: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+}
