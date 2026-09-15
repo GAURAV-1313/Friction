@@ -21,7 +21,6 @@
   ],
   "host_permissions": [
     "https://leetcode.com/*",
-    "http://localhost:4100/*",
     "https://anchor-production-1dea.up.railway.app/*"
   ],
   "side_panel": {
