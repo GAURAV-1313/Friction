@@ -1,8 +1,8 @@
-/* Anchor shared theme: colour tokens, theme classes and base controls.
+/* Recall shared theme: colour tokens, theme classes and base controls.
    Linked by popup.html and sidepanel.html; layout lives in popup.css / sidepanel.css.
    Palette copied from the Friction popup so both extensions look like one family.
    No web-font import on purpose: the only network traffic from extension pages
-   is the Bearer-authenticated call to the Anchor API. */
+   is the Bearer-authenticated call to the Recall API. */
 
 :root {
   color-scheme: light dark;

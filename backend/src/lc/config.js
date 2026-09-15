@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Anchor backend configuration (all env-driven; nothing here is read by Friction).
+ * Recall backend configuration (all env-driven; nothing here is read by Friction).
  *   LC_LLM_PROVIDER           gemini | anthropic          (default gemini)
  *   GEMINI_API_KEY, LC_GEMINI_MODEL (default gemini-2.5-flash)
  *   ANTHROPIC_API_KEY, LC_ANTHROPIC_MODEL (default claude-opus-5)

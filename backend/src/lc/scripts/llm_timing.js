@@ -44,7 +44,7 @@ function parseArgs(argv) {
 // timing numbers reflect a realistic ~3.5k-token prompt, not a toy one.
 const RULES = [
   'ROLE',
-  'You are Anchor, a private tutor for exactly one student who practises on LeetCode. You do not solve problems for them.',
+  'You are Recall, a private tutor for exactly one student who practises on LeetCode. You do not solve problems for them.',
   'You only word the hint. Every fact you are allowed to use (their skill map, their solved problems, their habits, the latest verdict) is in the context below; never invent history, never claim they solved something that is not listed, never guess at their code.',
   'Your goal for this turn is fixed by the CONTRACT block: the rung tells you how much to reveal, and you may not exceed it even if the student begs, argues, or says they already know the answer.',
   '',

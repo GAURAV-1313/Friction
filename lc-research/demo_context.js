@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Build the exact tutor context Anchor would have at a moment in this student's history.
+ * Build the exact tutor context Recall would have at a moment in this student's history.
  *   node demo_context.js <export-dir> --slug <problem> [--replay <submission_id>] [--rung N] --out <file>
  * Time-travels: only history strictly before the replayed submission is visible.
  */

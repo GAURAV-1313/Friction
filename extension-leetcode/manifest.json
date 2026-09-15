@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Anchor for LeetCode",
+  "name": "Recall for LeetCode",
   "version": "1.0.0",
   "minimum_chrome_version": "116",
   "description": "A tutor that anchors hints to the LeetCode problems you already solved.",
   "action": {
-    "default_title": "Anchor",
+    "default_title": "Recall",
     "default_popup": "popup.html"
   },
   "icons": {

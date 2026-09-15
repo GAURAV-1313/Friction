@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Anchor pilot report for one student (read-only).
+ * Recall pilot report for one student (read-only).
  *   railway run --service anchor -- node src/lc/scripts/pilot_report.js --user <user_id|email> [--days 14] [--last 20] [--out <file.md>] [--verify-deleted]
  *
  * Prints markdown to stdout (and writes it with --out). Never prints code, prompts, or tokens: no query selects a
@@ -293,7 +293,7 @@ function render(rows, opts = {}) {
   const L = [];
   const section = (title) => { if (L[L.length - 1] !== '') L.push(''); L.push(title, ''); };
 
-  L.push('# Anchor pilot report', '');
+  L.push('# Recall pilot report', '');
   L.push(`- user: \`${user.user_id || '–'}\` (${maskEmail(user.email)})`);
   L.push(`- window: last ${days} days (since ${iso(since)}) · generated ${iso(now)}`);
   L.push(`- hints in window: ${msgs.length}`);
@@ -381,7 +381,7 @@ function render(rows, opts = {}) {
     L.push(`- habits: ${t.habits.length ? t.habits.join(', ') : 'none'}`);
     L.push(`- feedback: ${t.feedback ? `${t.feedback.thumb}${t.feedback.reason ? ` / ${t.feedback.reason}` : ''}${t.feedback.note ? ` — ${oneLine(redactCode(t.feedback.note, 300))}` : ''}` : 'none'}`);
     L.push(`- guard: ${t.guard.violations} violation${t.guard.violations === 1 ? '' : 's'}${t.guard.action ? `, ${t.guard.action}` : ''}`, '');
-    L.push(quote('Student', t.student_text === null ? '(no student message found)' : t.student_text), '>', quote('Anchor', t.reply), '');
+    L.push(quote('Student', t.student_text === null ? '(no student message found)' : t.student_text), '>', quote('Recall', t.reply), '');
   });
 
   if (r.rowCounts) {

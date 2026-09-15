@@ -42,7 +42,7 @@
     <span class="badge">fake leetcode</span>
     <h1 id="problem-title">Loading…</h1>
     <span id="problem-difficulty" class="pill">?</span>
-    <span id="ext-status" class="status" title="whether the Anchor content scripts attached to this page">extension: checking…</span>
+    <span id="ext-status" class="status" title="whether the Recall content scripts attached to this page">extension: checking…</span>
     <nav>
       <a id="next-problem" href="#" title="history.pushState to the next fixture slug">Next problem →</a>
       <a id="problemset-link" href="/problemset/">Problem set</a>
@@ -101,14 +101,14 @@
         <button type="button" data-switch="fake_429" title="every 7th sync request 429 with Retry-After: 3">fake_429: off</button>
         <button type="button" data-switch="fake_cf" title="sync requests get a 200 HTML challenge page">fake_cf: off</button>
         <button type="button" data-switch="fake_drift" title="questionDetail rejects the acRate field until the query is pruned">fake_drift: off</button>
-        <button id="clear-pending" type="button" title="localStorage.removeItem('anchor_pending_events')">Clear pending events</button>
+        <button id="clear-pending" type="button" title="localStorage.removeItem('recall_pending_events')">Clear pending events</button>
       </div>
       <p class="status" id="cookie-status"></p>
     </section>
 
     <div class="logs">
       <section class="card">
-        <h2>Bridge traffic (window.postMessage with __anchor) · pending events: <span id="pending-count">0</span></h2>
+        <h2>Bridge traffic (window.postMessage with __recall) · pending events: <span id="pending-count">0</span></h2>
         <pre id="bridge-log" class="log"></pre>
       </section>
       <section class="card">

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Concurrency smoke test against a running Anchor deployment (plan check 5: Aiven connections under load).
+ * Concurrency smoke test against a running Recall deployment (plan check 5: Aiven connections under load).
  *   node src/lc/scripts/load_smoke.js --url https://<railway-domain> --token <jwt> [--concurrency 30] [--seconds 60] [--path /api/lc/me] [--timeout-ms 15000] [--no-db-probe]
  *   (--url / --token also read LC_SMOKE_URL / LC_SMOKE_TOKEN from the environment)
  *

@@ -1,4 +1,4 @@
-// Anchor API client (ES module; imported by popup.js and sidepanel.js).
+// Recall API client (ES module; imported by popup.js and sidepanel.js).
 //
 // Every function resolves to { ok, status, data, error } and never throws:
 //   ok      response.ok
@@ -7,11 +7,11 @@
 //   error   null on success; the server's {error} string, 'http_<status>',
 //           'network' (fetch failed), 'timeout' (our timeout fired),
 //           'aborted' (caller's signal), 'missing_token' (no token stored),
-//           or 'ext_unavailable' (anchor-setup.js not loaded)
-// Requires config.js and anchor-setup.js to have run first (classic scripts).
+//           or 'ext_unavailable' (recall-setup.js not loaded)
+// Requires config.js and recall-setup.js to have run first (classic scripts).
 
 function config() {
-  return globalThis.ANCHOR_CONFIG || {};
+  return globalThis.RECALL_CONFIG || {};
 }
 
 function encode(part) {
@@ -49,7 +49,7 @@ function classifyError(err, signal) {
  * @param {object} [options] { body, timeoutMs, signal, auth }
  */
 export async function apiRequest(method, path, options = {}) {
-  const ext = globalThis.AnchorExt;
+  const ext = globalThis.RecallExt;
   if (!ext || typeof ext.fetchWithAuth !== 'function') {
     return { ok: false, status: 0, data: null, error: 'ext_unavailable' };
   }

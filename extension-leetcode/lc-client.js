@@ -1,17 +1,17 @@
-// Anchor: same-origin LeetCode HTTP/GraphQL client (ISOLATED world, classic script).
+// Recall: same-origin LeetCode HTTP/GraphQL client (ISOLATED world, classic script).
 // Sends: HTTP requests to leetcode.com only (POST /graphql/, GET /api/submissions/); no chrome.* messages.
-// Receives: nothing; called by lc-sync.js and lc-content.js through globalThis.AnchorLC.
-// Hooks: AnchorLC.hooks.onDrift({operationName, fields}) fired when a GraphQL field is pruned;
+// Receives: nothing; called by lc-sync.js and lc-content.js through globalThis.RecallLC.
+// Hooks: RecallLC.hooks.onDrift({operationName, fields}) fired when a GraphQL field is pruned;
 //        per-call opts {signal, onBackoff({attempt, waitMs, status}), onHidden(), waitVisible}.
 
 (function () {
   'use strict';
 
-  if (globalThis.AnchorLC) return;
+  if (globalThis.RecallLC) return;
 
-  const Q = globalThis.AnchorQueries || {};
+  const Q = globalThis.RecallQueries || {};
 
-  function cfg() { return globalThis.ANCHOR_CONFIG || {}; }
+  function cfg() { return globalThis.RECALL_CONFIG || {}; }
   function rateMs() { const v = Number(cfg().LC_RATE_MS); return v > 0 ? v : 1000; }
 
   const MAX_ATTEMPTS = 6;          // consecutive retriable failures before giving up
@@ -314,7 +314,7 @@
       if (unknown.length) {
         for (const field of unknown) q = pruneField(q, field);
         try {
-          const h = globalThis.AnchorLC && globalThis.AnchorLC.hooks && globalThis.AnchorLC.hooks.onDrift;
+          const h = globalThis.RecallLC && globalThis.RecallLC.hooks && globalThis.RecallLC.hooks.onDrift;
           if (h) h({ operationName, fields: unknown });
         } catch (_) { /* ignore */ }
         continue;
@@ -483,7 +483,7 @@
     };
   }
 
-  globalThis.AnchorLC = {
+  globalThis.RecallLC = {
     LcError, isLcError, toPlain, STATUS_BY_DISPLAY,
     hooks: { onDrift: null },
     request, gql,

@@ -1,10 +1,10 @@
 'use strict';
 /**
- * versionGate(config): 426 update_required when the extension announces (X-Anchor-Version) a version
+ * versionGate(config): 426 update_required when the extension announces (X-Recall-Version) a version
  * lower than config.minExtensionVersion. Requests without the header (or with an unparseable one) pass:
  * the client-side gate on /health.min_extension_version still applies.
  */
-const HEADER = 'x-anchor-version';
+const HEADER = 'x-recall-version';
 
 function parseVersion(v) {
   if (typeof v !== 'string') return null;

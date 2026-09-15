@@ -300,13 +300,13 @@ describe('problems and anchors', () => {
     expect(p[9]).toBe('1 <= coins.length <= 12\n1 <= coins[i] <= 2^31 - 1\n0 <= amount <= 10^4');
   });
 
-  it('426 update_required only when X-Anchor-Version is below the minimum', async () => {
-    const low = await api('/api/lc/me', { headers: { 'x-anchor-version': '0.9.9' } });
+  it('426 update_required only when X-Recall-Version is below the minimum', async () => {
+    const low = await api('/api/lc/me', { headers: { 'x-recall-version': '0.9.9' } });
     expect(low.status).toBe(426);
     expect(await low.json()).toEqual({ error: 'update_required', min_extension_version: '1.0.0' });
-    expect((await api('/api/lc/me', { headers: { 'x-anchor-version': '1.0.0' } })).status).toBe(200);
-    expect((await api('/api/lc/me', { headers: { 'x-anchor-version': '1.2' } })).status).toBe(200);
-    expect((await api('/api/lc/me', { headers: { 'x-anchor-version': 'garbage' } })).status).toBe(200);
+    expect((await api('/api/lc/me', { headers: { 'x-recall-version': '1.0.0' } })).status).toBe(200);
+    expect((await api('/api/lc/me', { headers: { 'x-recall-version': '1.2' } })).status).toBe(200);
+    expect((await api('/api/lc/me', { headers: { 'x-recall-version': 'garbage' } })).status).toBe(200);
     expect((await api('/api/lc/me')).status).toBe(200);
   });
 

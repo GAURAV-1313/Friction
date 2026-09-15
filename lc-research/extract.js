@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * LeetCode account export (for the Anchor tutor calibration study).
+ * LeetCode account export (for the Recall tutor calibration study).
  *
  * Standalone: Node >= 18, no npm install needed. Run it ON THE ACCOUNT OWNER'S machine,
  * while they are logged in to leetcode.com in a browser.

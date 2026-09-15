@@ -1,11 +1,11 @@
-# Anchor for LeetCode (Chrome extension)
+# Recall for LeetCode (Chrome extension)
 
-Anchor is a tutor for leetcode.com. It builds a skill map from your own submission
+Recall is a tutor for leetcode.com. It builds a skill map from your own submission
 history, shows you the problems you already solved that are related to the one you
 are on, and gives hints anchored to them. Hints never contain code.
 
 The extension is Manifest V3, desktop Chrome 116+, active only on
-`https://leetcode.com/problems/*`. It talks to the Anchor backend
+`https://leetcode.com/problems/*`. It talks to the Recall backend
 (`backend/src/lc/` in this repo) and to nothing else.
 
 ## Files
@@ -13,8 +13,8 @@ The extension is Manifest V3, desktop Chrome 116+, active only on
 | file | role |
 |---|---|
 | `manifest.json` | MV3 manifest: side panel, background worker, two content-script groups (MAIN + ISOLATED) |
-| `config.js` | `ENV` switch → `globalThis.ANCHOR_CONFIG` (API base, web app URL, rate/chunk/timeout constants) |
-| `anchor-setup.js` | `globalThis.AnchorExt`: token / theme / consent / language storage + `fetchWithAuth` |
+| `config.js` | `ENV` switch → `globalThis.RECALL_CONFIG` (API base, web app URL, rate/chunk/timeout constants) |
+| `recall-setup.js` | `globalThis.RecallExt`: token / theme / consent / language storage + `fetchWithAuth` |
 | `api.js` | ES module, one function per `/api/lc/*` endpoint → `{ ok, status, data, error }` |
 | `markdown.js` | `renderModelText(text, { allowFence })` → DocumentFragment (bold, inline code, one fence at rung 4) |
 | `background.js` | service worker: message router, per-tab context, durable retry queue, badge, `/health` cache |
@@ -30,7 +30,7 @@ The extension is Manifest V3, desktop Chrome 116+, active only on
 1. Open `chrome://extensions`, turn on **Developer mode**.
 2. **Load unpacked** → pick this `extension-leetcode/` folder (or `dev/build/` for the
    offline fixture setup).
-3. Pin the Anchor icon.
+3. Pin the Recall icon.
 
 Updates: replace the folder contents (or unzip the new build over it), then click
 **Reload** on `chrome://extensions`. When the backend raises
@@ -47,39 +47,39 @@ Updates: replace the folder contents (or unzip the new build over it), then clic
 
 The packaging step flips it to `'production'` before zipping. Both API hosts are
 listed in `host_permissions`, so no manifest change is needed to switch.
-`ANCHOR_CONFIG.EXT_VERSION` is read from the manifest and is sent with every
+`RECALL_CONFIG.EXT_VERSION` is read from the manifest and is sent with every
 client event.
 
 Local backend: `cd backend && node src/lc/index.js` (or `node extension-leetcode/dev/mock-backend.js`).
 
 ## Signing in (paste a token)
 
-Anchor reuses the Friction login. No password is ever typed into the extension.
+Recall reuses the Friction login. No password is ever typed into the extension.
 
 1. Sign in at the web app (`WEB_APP_URL`).
 2. Click the **Connect** (link) button: it copies your token to the clipboard.
-3. Open the Anchor popup, paste the token into the field, click **Save**.
+3. Open the Recall popup, paste the token into the field, click **Save**.
 4. The dot in the popup header turns green and the subtitle shows
    `<username> · <n> solved` once your history is synced.
 
 The token expires every 7 days; the popup then says "Token expired, paste a new
 one" and shows the field again. The token is stored only in
-`chrome.storage.local` and sent only as `Authorization: Bearer …` to the Anchor
+`chrome.storage.local` and sent only as `Authorization: Bearer …` to the Recall
 API. Treat it like a password. **Forget token** removes it from this browser.
 
 ## First sync
 
 Open any problem on leetcode.com while signed in to LeetCode, open the panel
-(**Open Anchor panel** in the popup, or the side-panel icon), and click **Sync my
+(**Open Recall panel** in the popup, or the side-panel icon), and click **Sync my
 history**. Read the consent screen first. A ~1,300-submission account takes 6–8
 minutes; keep the tab open and visible. The cursor is durable: if you close the
 panel or reload the tab, re-open and click **Resume**.
 
 ## Code consent
 
-The popup toggle **Let Anchor read my LeetCode code** is **off by default**.
+The popup toggle **Let Recall read my LeetCode code** is **off by default**.
 
-- Off: Anchor stores only metadata (verdicts, timestamps, tags, judge output).
+- Off: Recall stores only metadata (verdicts, timestamps, tags, judge output).
   Hints still work; anchors cannot show your own past code.
 - On: the code of your failed and first-accepted attempts is stored so anchors can
   point at your own solutions, and the editor's current code is sent with a hint
@@ -95,7 +95,7 @@ to your profile, so it follows you across devices.
 ## Delete my data
 
 Popup → **Delete my data** → click again within 6 seconds to confirm. This calls
-`DELETE /api/lc/me`, which wipes every Anchor table for your user (profile,
+`DELETE /api/lc/me`, which wipes every Recall table for your user (profile,
 consent, solved list, submissions, habits, chats, client events) and then clears
 the local caches (`profileSummary`, `syncState`, `problemsSent`, `postQueue`,
 `captureStats`) and resets the consent toggle. Your token and theme stay so you
@@ -115,7 +115,7 @@ queued and sent later.
 `captureStats`.
 `chrome.storage.session`: `tab:<tabId>` (`{ slug, page, isContest, url, updatedAt,
 capture, judging, lastAttempt, needsReload }`), `serverHealth`.
-Page `localStorage` (leetcode.com): `anchor_pending_events`, `anchor_capture_errors`.
+Page `localStorage` (leetcode.com): `recall_pending_events`, `recall_capture_errors`.
 
 ## Background message protocol
 
@@ -155,7 +155,7 @@ event; 401 pauses the queue until a token is saved again; 20 attempts drop the i
 
 Nothing from leetcode.com other than your public profile, submission list, judge
 output and (with consent) your code is sent anywhere, and it goes only to the
-Anchor API with your Bearer token. No LeetCode cookies or passwords leave the
+Recall API with your Bearer token. No LeetCode cookies or passwords leave the
 browser. Hints are generated by Gemini or Anthropic under paid API terms. The
 Network tab of any extension page shows exactly one destination: `API_BASE`.
 Model text is rendered with `markdown.js` through `createElement` / `textContent`
@@ -164,11 +164,11 @@ DOM-injection grep in `dev/CHECKLIST.md` prints nothing.
 
 ## Development notes
 
-- Classic scripts (`config.js`, `anchor-setup.js`) share one global lexical scope
+- Classic scripts (`config.js`, `recall-setup.js`) share one global lexical scope
   in every page and in the ISOLATED content-script world: do not redeclare
   `ENV` / `CONFIG_BY_ENV` in `lc-*.js` or `background.js`.
 - `api.js` and `markdown.js` are ES modules; `popup.js` / `sidepanel.js` import them.
-- Syntax checks: `node --check background.js anchor-setup.js config.js`; for the
+- Syntax checks: `node --check background.js recall-setup.js config.js`; for the
   modules copy to `.mjs` first (`cp api.js /tmp/api.mjs && node --check /tmp/api.mjs`).
 - Offline testing: `node dev/serve-fixture.js` (fake leetcode on :4173) and
   `node dev/mock-backend.js` (:4100), load `dev/build/` unpacked. Real-site checks

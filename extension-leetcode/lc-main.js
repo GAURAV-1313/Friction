@@ -1,18 +1,18 @@
-// Anchor: MAIN-world interceptor + editor reader for leetcode.com (document_start; NO chrome.* APIs here).
+// Recall: MAIN-world interceptor + editor reader for leetcode.com (document_start; NO chrome.* APIs here).
 // Sends to ISOLATED (window.postMessage): ready{capture,version}, code{code,lang,source|reason} (reqId), submit_started,
 //   submission{eventId,submission_id,slug,question_id,lang,typed_code?,submitted_at,judged_at,verdict}, submit_timeout, capture_disabled.
 // Receives from ISOLATED: hello{consent_code,version}, config{consent_code}, get_code (reqId), ack{eventId}.
-// Envelope {__anchor:true, from:'main'|'iso', nonce, type, reqId?, payload}; nonce read lazily from <html data-anchor-nonce>.
+// Envelope {__recall:true, from:'main'|'iso', nonce, type, reqId?, payload}; nonce read lazily from <html data-recall-nonce>.
 
 (function () {
   'use strict';
 
-  if (window.__anchorMain) return;
-  window.__anchorMain = true;
+  if (window.__recallMain) return;
+  window.__recallMain = true;
 
   const MAIN_VERSION = '1.0.0'; // keep in step with manifest.json "version"
-  const PENDING_KEY = 'anchor_pending_events';
-  const ERRORS_KEY = 'anchor_capture_errors';
+  const PENDING_KEY = 'recall_pending_events';
+  const ERRORS_KEY = 'recall_capture_errors';
   const PENDING_CAP = 20;
   const SUBMIT_TIMEOUT_MS = 90000;
   const MAX_WRAPPER_ERRORS = 5;
@@ -61,7 +61,7 @@
   function readNonce() {
     try {
       const el = document.documentElement;
-      return (el && el.dataset && el.dataset.anchorNonce) || '';
+      return (el && el.dataset && el.dataset.recallNonce) || '';
     } catch (_) { return ''; }
   }
   function isContestPage() {
@@ -92,7 +92,7 @@
   // ---------- bridge ----------
   function send(type, payload, reqId) {
     try {
-      window.postMessage({ __anchor: true, from: 'main', nonce: readNonce(), type, reqId: reqId || null, payload: payload || {} }, location.origin);
+      window.postMessage({ __recall: true, from: 'main', nonce: readNonce(), type, reqId: reqId || null, payload: payload || {} }, location.origin);
     } catch (_) { /* never throw into the page */ }
   }
 
@@ -372,7 +372,7 @@
     try {
       if (ev.source !== window || ev.origin !== location.origin) return;
       const d = ev.data;
-      if (!d || d.__anchor !== true || d.from !== 'iso') return;
+      if (!d || d.__recall !== true || d.from !== 'iso') return;
       const nonce = readNonce();
       if (!nonce || d.nonce !== nonce) return;
       const payload = d.payload || {};

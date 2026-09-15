@@ -1,29 +1,29 @@
-// Anchor: ISOLATED-world entry for leetcode.com (document_start). Bridges MAIN <-> background/panel.
+// Recall: ISOLATED-world entry for leetcode.com (document_start). Bridges MAIN <-> background/panel.
 // Sends to MAIN (postMessage): hello{consent_code,version}, config{consent_code}, get_code (reqId), ack{eventId}.
 // Receives from MAIN: ready, code, submit_started, submission, submit_timeout, capture_disabled.
 // Sends to background: route:changed, capture:state, attempt:judging, attempt:captured, client:event.
-// Answers panel messages: lc:ping, editor:get_code, lc:whoami, lc:fetch_problem, lc:manual_capture; Port 'anchor-sync' -> AnchorSync.
+// Answers panel messages: lc:ping, editor:get_code, lc:whoami, lc:fetch_problem, lc:manual_capture; Port 'recall-sync' -> RecallSync.
 
 (function () {
   'use strict';
 
-  if (window.__anchorLoaded) return;
-  window.__anchorLoaded = true;
+  if (window.__recallLoaded) return;
+  window.__recallLoaded = true;
 
   const VERSION = (() => { try { return chrome.runtime.getManifest().version; } catch (_) { return '0.0.0'; } })();
-  const PENDING_KEY = 'anchor_pending_events';
+  const PENDING_KEY = 'recall_pending_events';
   const HELLO_INTERVAL_MS = 500;
   const HELLO_MAX_TRIES = 20;         // 10 s
   const CODE_TIMEOUT_MS = 1500;
   const ROUTE_POLL_MS = 2000;
   const DRAIN_DELAY_MS = 3000;
-  const BANNER_ID = 'anchor-reload-banner';
+  const BANNER_ID = 'recall-reload-banner';
 
   // ---------- nonce ----------
   const nonce = crypto.randomUUID();
   (function setNonce() {
     const el = document.documentElement;
-    if (el) { el.dataset.anchorNonce = nonce; return; }
+    if (el) { el.dataset.recallNonce = nonce; return; }
     setTimeout(setNonce, 10);
   })();
 
@@ -76,7 +76,7 @@
   // ---------- MAIN bridge ----------
   function postToMain(type, payload, reqId) {
     try {
-      window.postMessage({ __anchor: true, from: 'iso', nonce, type, reqId: reqId || null, payload: payload || {} }, location.origin);
+      window.postMessage({ __recall: true, from: 'iso', nonce, type, reqId: reqId || null, payload: payload || {} }, location.origin);
     } catch (_) { /* ignore */ }
   }
 
@@ -131,7 +131,7 @@
     try {
       if (event.source !== window || event.origin !== location.origin) return;
       const d = event.data;
-      if (!d || d.__anchor !== true || d.from !== 'main' || d.nonce !== nonce) return;
+      if (!d || d.__recall !== true || d.from !== 'main' || d.nonce !== nonce) return;
       const payload = d.payload || {};
       switch (d.type) {
         case 'ready':
@@ -193,7 +193,7 @@
       s.background = '#1f2937'; s.color = '#f9fafb'; s.font = '13px/1.4 system-ui, sans-serif';
       s.boxShadow = '0 6px 24px rgba(0,0,0,0.35)';
       const text = document.createElement('div');
-      text.textContent = 'Anchor was updated. Reload this tab to keep capturing your submissions.';
+      text.textContent = 'Recall was updated. Reload this tab to keep capturing your submissions.';
       const row = document.createElement('div');
       row.style.marginTop = '10px'; row.style.display = 'flex'; row.style.gap = '8px';
       const reload = document.createElement('button');
@@ -262,12 +262,12 @@
 
   // ---------- panel/background -> content ----------
   async function handleRuntimeMessage(msg) {
-    const LC = globalThis.AnchorLC;
+    const LC = globalThis.RecallLC;
     const quick = { waitVisible: false };
     switch (msg && msg.type) {
       case 'lc:ping': {
         const r = computeRoute(location.pathname, location.search);
-        return { ok: true, version: VERSION, capture, captureReason, mainVersion, nonceSet: !!(document.documentElement && document.documentElement.dataset.anchorNonce), consent, slug: r.slug, page: r.page, isContest: r.isContest, url: location.href };
+        return { ok: true, version: VERSION, capture, captureReason, mainVersion, nonceSet: !!(document.documentElement && document.documentElement.dataset.recallNonce), consent, slug: r.slug, page: r.page, isContest: r.isContest, url: location.href };
       }
       case 'editor:get_code': {
         if (!consent) return { ok: false, code: null, reason: 'no_consent' };
@@ -307,13 +307,13 @@
       handleRuntimeMessage(msg)
         .then((res) => sendResponse(res))
         .catch((err) => {
-          const LC = globalThis.AnchorLC;
+          const LC = globalThis.RecallLC;
           sendResponse({ ok: false, error: LC && LC.toPlain ? LC.toPlain(err) : { code: (err && err.code) || 'internal', message: String(err && err.message || err) } });
         });
       return true;
     });
     chrome.runtime.onConnect.addListener((port) => {
-      if (port && port.name === 'anchor-sync' && globalThis.AnchorSync) globalThis.AnchorSync.attachPort(port);
+      if (port && port.name === 'recall-sync' && globalThis.RecallSync) globalThis.RecallSync.attachPort(port);
     });
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== 'local' || !changes || !changes.consentCode) return;
@@ -326,7 +326,7 @@
   function boot() {
     window.addEventListener('message', onMainMessage);
     installRuntimeListeners();
-    if (globalThis.AnchorLC) globalThis.AnchorLC.hooks.onDrift = (info) => clientEvent('schema_drift', info);
+    if (globalThis.RecallLC) globalThis.RecallLC.hooks.onDrift = (info) => clientEvent('schema_drift', info);
     installRouteWatcher();
     setTimeout(drainPending, DRAIN_DELAY_MS);
   }

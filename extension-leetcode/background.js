@@ -1,24 +1,24 @@
 'use strict';
-// Anchor background service worker.
+// Recall background service worker.
 //
 // Responsibilities
 //   - message router for the ISOLATED content script and the extension pages
 //   - per-tab context in chrome.storage.session under 'tab:<tabId>'
 //       { slug, page, isContest, url, updatedAt, capture, judging, lastAttempt, needsReload }
 //   - durable POST/PUT queue in chrome.storage.local.postQueue, drained
-//     immediately on enqueue and by the 'anchor-queue' alarm every minute
+//     immediately on enqueue and by the 'recall-queue' alarm every minute
 //   - action badge with the last recorded verdict
 //   - cached /health probe in chrome.storage.session.serverHealth
 //
 // Every backend call originates here, in the popup, or in the side panel:
 // the page origin (leetcode.com) never talks to the API.
-importScripts('./config.js', './anchor-setup.js');
+importScripts('./config.js', './recall-setup.js');
 
-const CFG = globalThis.ANCHOR_CONFIG;
-const Ext = globalThis.AnchorExt;
+const CFG = globalThis.RECALL_CONFIG;
+const Ext = globalThis.RecallExt;
 
 const QUEUE_KEY = 'postQueue';
-const QUEUE_ALARM = 'anchor-queue';
+const QUEUE_ALARM = 'recall-queue';
 const QUEUE_TRY_TIMEOUT_MS = 20000;
 const QUEUE_MAX_ATTEMPTS = 20;
 const QUEUE_BASE_BACKOFF_MS = 60 * 1000;
@@ -34,7 +34,7 @@ const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const BADGE_BY_STATUS = { 10: 'AC', 11: 'WA', 12: 'MLE', 13: 'OLE', 14: 'TLE', 15: 'RE', 20: 'CE' };
 
 function log(...args) {
-  console.log('[Anchor BG]', ...args);
+  console.log('[Recall BG]', ...args);
 }
 
 // ---------------------------------------------------------------------------

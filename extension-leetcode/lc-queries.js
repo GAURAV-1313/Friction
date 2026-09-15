@@ -1,7 +1,7 @@
-// Anchor: LeetCode GraphQL query constants (ISOLATED world, classic script).
+// Recall: LeetCode GraphQL query constants (ISOLATED world, classic script).
 // Sends: nothing (pure constants; no messages).
 // Receives: nothing.
-// Consumed by lc-client.js via globalThis.AnchorQueries.
+// Consumed by lc-client.js via globalThis.RecallQueries.
 // Source: lc-research/extract.js, verbatim minus runtimeDisplay/memoryDisplay; Q_PROBLEM includes content.
 
 (function () {
@@ -46,7 +46,7 @@
   }
 }`;
 
-  globalThis.AnchorQueries = Object.freeze({
+  globalThis.RecallQueries = Object.freeze({
     Q_WHOAMI, Q_LIST_V2, Q_LIST_V1, Q_SKILLS, Q_PROGRESS, Q_SUBS_FOR_PROBLEM, Q_DETAILS, Q_PROBLEM
   });
 })();

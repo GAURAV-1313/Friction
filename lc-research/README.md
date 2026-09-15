@@ -1,6 +1,6 @@
 # lc-research
 
-Tooling for calibrating the Anchor tutor's habit-detection rules against a real LeetCode account.
+Tooling for calibrating the Recall tutor's habit-detection rules against a real LeetCode account.
 Nothing here touches the Friction product or its database.
 
 ## 1. Export an account (run on the account owner's machine)

@@ -1,4 +1,4 @@
-// Anchor popup (ES module). Requires config.js and anchor-setup.js (classic
+// Recall popup (ES module). Requires config.js and recall-setup.js (classic
 // scripts) to have run first. Every piece of text is set through textContent.
 import * as api from './api.js';
 
@@ -11,11 +11,11 @@ function fatal(message) {
   throw new Error(message);
 }
 
-if (!globalThis.AnchorExt) fatal('Extension failed to load. Reload it from chrome://extensions.');
-if (!globalThis.ANCHOR_CONFIG?.API_BASE) fatal('Config not available.');
+if (!globalThis.RecallExt) fatal('Extension failed to load. Reload it from chrome://extensions.');
+if (!globalThis.RECALL_CONFIG?.API_BASE) fatal('Config not available.');
 
-const Ext = globalThis.AnchorExt;
-const CFG = globalThis.ANCHOR_CONFIG;
+const Ext = globalThis.RecallExt;
+const CFG = globalThis.RECALL_CONFIG;
 const LC_ORIGIN = 'https://leetcode.com/';
 const STATUS_MS = 2000;
 const CONN_POLL_MS = 30000;
@@ -257,7 +257,7 @@ async function handleConnectionCheck() {
   }
   if (result.status === 426) {
     setDot('invalid', 'Update required');
-    setStatus('Update the extension to keep using Anchor.', 'error');
+    setStatus('Update the extension to keep using Recall.', 'error');
     return;
   }
   if (result.status === 0) {
@@ -408,7 +408,7 @@ async function onDeleteClick() {
     deleteArmedAt = now;
     els.deleteData.textContent = 'Click again to delete everything';
     els.deleteData.classList.add('armed');
-    setStatus('Removes your synced history, habits and chats from Anchor.', 'error');
+    setStatus('Removes your synced history, habits and chats from Recall.', 'error');
     clearTimeout(deleteTimer);
     deleteTimer = setTimeout(disarmDelete, DELETE_ARM_MS);
     return;

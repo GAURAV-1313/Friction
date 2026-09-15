@@ -1,4 +1,4 @@
-// Anchor extension configuration (classic script).
+// Recall extension configuration (classic script).
 // Loaded by: popup.html, sidepanel.html (script tag), background.js (importScripts),
 // and the ISOLATED-world content scripts (first entry in the manifest list).
 //
@@ -17,7 +17,7 @@ const CONFIG_BY_ENV = {
   }
 };
 
-globalThis.ANCHOR_CONFIG = {
+globalThis.RECALL_CONFIG = {
   ...(CONFIG_BY_ENV[ENV] || CONFIG_BY_ENV.production),
   ENV,
   // LeetCode request pacing (lc-client.js): one request per second.

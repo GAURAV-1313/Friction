@@ -1,4 +1,4 @@
-# Anchor extension: local dev harness
+# Recall extension: local dev harness
 
 Everything the extension touches, faked on localhost so every verdict type and every fault switch is
 reproducible offline. No npm install: the three scripts use only Node built-ins (Node 24).
@@ -6,7 +6,7 @@ reproducible offline. No npm install: the three scripts use only Node built-ins 
 | script | port | role |
 |---|---|---|
 | `serve-fixture.js` | 4173 | fake leetcode.com: problem pages, `/graphql/` by operationName, `/api/submissions/` paging, submit → `v2/check`, Run-Code noise, cookie fault switches |
-| `mock-backend.js` | 4100 | in-memory Anchor backend: every `/api/lc/*` route with the real response shapes, `/health`, `?slow=` cold start, env knobs |
+| `mock-backend.js` | 4100 | in-memory Recall backend: every `/api/lc/*` route with the real response shapes, `/health`, `?slow=` cold start, env knobs |
 | `build-dev.js` | – | copies the extension to `dev/build/` with `localhost:4173` added to the content-script matches and host permissions, `config.js` ENV set to `local` |
 
 ## Run it
@@ -25,7 +25,7 @@ node extension-leetcode/dev/build-dev.js
 Then in Chrome:
 
 1. `chrome://extensions` → **Developer mode** → **Load unpacked** → pick `extension-leetcode/dev/build/`
-   (the build is named "Anchor for LeetCode (dev)"; `dev/build/` is git-ignored).
+   (the build is named "Recall for LeetCode (dev)"; `dev/build/` is git-ignored).
 2. Open `http://localhost:4173/` (it redirects to a target problem).
 3. Popup → paste any token (e.g. `dev-token-1`) → Save. The mock accepts any Bearer token and keeps a
    separate in-memory user per token. The literal tokens `expired` and `bad` answer 401.
@@ -56,7 +56,7 @@ To point the dev build at the real local backend instead of the mock, run `cd ba
   **Contest mode** appends `?envType=contest`. **Problem set** goes to a non-problem page.
 - Fault switch buttons set cookies read by the server: `fake_logged_out`, `fake_429`, `fake_cf`, `fake_drift`.
 - Two log panes: the page's own actions, and the `window.postMessage` bridge traffic (`from -> type`, ids,
-  `typed_code:yes|no`; never code contents), plus the count of `localStorage.anchor_pending_events`.
+  `typed_code:yes|no`; never code contents), plus the count of `localStorage.recall_pending_events`.
 
 ## Fixture data (`fixture/data/`, synthetic)
 

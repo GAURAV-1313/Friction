@@ -1,4 +1,4 @@
-// Anchor: first-run/incremental sync engine over a chrome.runtime Port named 'anchor-sync' (ISOLATED world).
+// Recall: first-run/incremental sync engine over a chrome.runtime Port named 'recall-sync' (ISOLATED world).
 // Receives from the panel: start{sync_id, resume, consent_code, detailsCap, since_id?}, ack{phase, seq?, cursor?}, pause, stop.
 // Sends to the panel: status{phase,state,counts,until?}, header{seq,username,solved,tagCounts,progress,warning?},
 //   page{phase:'subs'|'details', seq, cursor, items}, paused{reason,message?}, error{code,message}, done{recentAc,subsCount,detailsDone,backlogCount}.
@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  if (globalThis.AnchorSync) return;
+  if (globalThis.RecallSync) return;
 
   const STORAGE_KEY = 'syncState';
   const HEARTBEAT_MS = 10000;
@@ -15,14 +15,14 @@
   const AC = 10;
   const OWNER_ID = (globalThis.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random();
 
-  function cfg() { return globalThis.ANCHOR_CONFIG || {}; }
+  function cfg() { return globalThis.RECALL_CONFIG || {}; }
   function num(v, def) { const n = Number(v); return Number.isFinite(n) && n > 0 ? n : def; }
   function lookaheadPages() { return num(cfg().SYNC_LOOKAHEAD_PAGES, 10); }
   function detailsPageSize() { return num(cfg().SYNC_DETAILS_PAGE, 20); }
   function detailsCapDefault() { return num(cfg().DETAILS_CAP_DEFAULT, 300); }
   function recentAcCap() { return num(cfg().SYNC_RECENT_AC, 100); }
 
-  function LC() { return globalThis.AnchorLC; }
+  function LC() { return globalThis.RecallLC; }
 
   // ---------- pure helpers ----------
   function freshState(sync_id, opts, nowMs) {
@@ -447,14 +447,14 @@
   }
 
   function attachPort(port) {
-    if (!port || port.name !== 'anchor-sync') return false;
+    if (!port || port.name !== 'recall-sync') return false;
     port.onMessage.addListener((msg) => { try { handleMessage(port, msg); } catch (_) { /* never throw into the port */ } });
     port.onDisconnect.addListener(() => { if (current && current.running && current.port === port) interrupt(current, 'disconnect'); });
     handleMessage(port, { type: 'status' });
     return true;
   }
 
-  globalThis.AnchorSync = {
+  globalThis.RecallSync = {
     attachPort,
     ownerId: OWNER_ID,
     _pure: { freshState, planDetails, stripCode, sameCursor, ownedElsewhere, applyAck }

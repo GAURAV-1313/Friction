@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Repository: every SQL statement for Anchor lives here. Every function takes `db` (a pool or a
+ * Repository: every SQL statement for Recall lives here. Every function takes `db` (a pool or a
  * transaction connection) first, so services can run inside withTransaction() or against a mock.
  * JSON columns are parsed defensively (mysql2 usually parses them already).
  */
@@ -178,7 +178,7 @@ const events = {
   async client(db, userId, type, payload, extVersion) { await db.query('INSERT INTO lc_client_events (user_id, type, payload, ext_version) VALUES (?, ?, ?, ?)', [userId, type, J(payload || null), extVersion || null]); }
 };
 
-// Deletes every Anchor row for a user; the users row and the shared problem cache are untouched.
+// Deletes every Recall row for a user; the users row and the shared problem cache are untouched.
 async function purgeUser(db, userId) {
   const counts = {};
   for (const t of ['lc_client_events', 'lc_chat_messages', 'lc_chat_sessions', 'lc_habits', 'lc_skill_events', 'lc_submissions', 'lc_solved', 'lc_consents', 'lc_profiles']) {

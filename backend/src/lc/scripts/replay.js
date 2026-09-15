@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-// Determinism replay for the Anchor domain layer.
+// Determinism replay for the Recall domain layer.
 //
 //   node src/lc/scripts/replay.js [--fixture] [--twice] [--seed N] [--now TS] [--input file.json] [--json]
 //

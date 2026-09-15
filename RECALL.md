@@ -1,8 +1,8 @@
-# Anchor
+# Recall
 
 **A LeetCode tutor that refuses to give you the answer.**
 
-Anchor reads your own LeetCode submission history once, builds a deterministic model of what
+Recall reads your own LeetCode submission history once, builds a deterministic model of what
 you know from it, and then — while you sit on a problem page — hands you hints anchored to
 problems *you personally already solved*.
 
@@ -10,7 +10,7 @@ It is a second, self-contained product inside the Friction repo. It shares Frict
 its auth, and its `node_modules`, and changes none of them. See
 [Separation from Friction](#separation-from-friction).
 
-> This document is the system-level guide: what Anchor is, how data moves through it, why it is
+> This document is the system-level guide: what Recall is, how data moves through it, why it is
 > built this way, and how to run it. Two narrower references already exist and are not repeated
 > here:
 > [`extension-leetcode/README.md`](extension-leetcode/README.md) (file-by-file inventory, load-unpacked steps)
@@ -46,7 +46,7 @@ Three things, and all three are structural rather than prompt-level.
 solved against the one in front of you and returns up to three, each with a `why`. So instead of
 "think about dynamic programming", you get *"In Longest Palindromic Subsequence you decided what
 one stored value stood for before writing any transition. What should one state mean here?"* —
-where you really did solve Longest Palindromic Subsequence, on a date Anchor can name.
+where you really did solve Longest Palindromic Subsequence, on a date Recall can name.
 
 **2. Depth is earned, not requested.** `decideRung` is a pure function of stored facts and never
 reads your message. Rung 1 until you state a plan; rung 2 until you have submitted; rung 3 after
@@ -107,7 +107,7 @@ Tests live in `backend/tests/lc/` — 23 suites, 684 tests, run with `npx jest t
 ```
 
 **The rule that shapes everything:** code running in a `leetcode.com` page never calls the
-Anchor backend, and extension pages never call `leetcode.com`. `anchor-setup.js` — which holds
+Recall backend, and extension pages never call `leetcode.com`. `recall-setup.js` — which holds
 the token and `fetchWithAuth` — is loaded only by `background.js`, `popup.html` and
 `sidepanel.html`, and is deliberately absent from the content-script list. The JWT therefore
 never enters a page the site controls.
@@ -121,7 +121,7 @@ POST /api/lc/chat
   → express.json({limit:'256kb'})      413 payload_too_large
   → requireAuth        (Friction's)    401 missing_token / invalid_token
   → pilot allowlist                    403 pilot_closed
-  → versionGate (X-Anchor-Version)     426 update_required
+  → versionGate (X-Recall-Version)     426 update_required
   → chat limiter (20/min per user)      429 chat_rate_limited
   → chatService.handleChat
       · incrementHintsAtomic            429 daily_cap      (before the LLM call)
@@ -139,7 +139,7 @@ POST /api/lc/chat
 ## Separation from Friction
 
 Friction (`backend/src/app.js`, `extension/`, `web/`) is a different product in the same repo.
-Anchor reuses exactly four things from it, all by `require`, all unmodified:
+Recall reuses exactly four things from it, all by `require`, all unmodified:
 
 | Friction module | Used for |
 |---|---|
@@ -149,19 +149,19 @@ Anchor reuses exactly four things from it, all by `require`, all unmodified:
 | `backend/package.json` | the version string in `/health` |
 
 **Auth is Friction's, entirely.** `requireAuth` verifies the same JWT the Friction web app
-already issues. Anchor has no login, no user table, and no `/auth` surface of its own: the
+already issues. Recall has no login, no user table, and no `/auth` surface of its own: the
 student signs into the Friction web app, clicks its existing Connect button to copy the token,
-and pastes it into the Anchor popup. `req.auth.user_id` is the only identity Anchor ever uses,
+and pastes it into the Recall popup. `req.auth.user_id` is the only identity Recall ever uses,
 and every `lc_` table foreign-keys to `users(user_id) ON DELETE CASCADE`.
 
-**What Anchor refuses to call is `createApp()`**, and the reason is concrete:
+**What Recall refuses to call is `createApp()`**, and the reason is concrete:
 `backend/src/app.js` calls `startDailySnapshotScheduler()`, which registers
 `cron.schedule('30 23 * * *', …)` — a nightly job that sweeps `buffer_moments` and runs
-Friction's snapshot pipeline for every user with pending rows. Booting Anchor through Friction's
-factory would mean every Anchor instance also runs Friction's nightly batch. So `createLcApp()`
+Friction's snapshot pipeline for every user with pending rows. Booting Recall through Friction's
+factory would mean every Recall instance also runs Friction's nightly batch. So `createLcApp()`
 builds its own bare `express()` and `src/lc/index.js` is its own entrypoint.
 
-The same discipline applies downward. Anchor builds **fresh** rate limiters rather than importing
+The same discipline applies downward. Recall builds **fresh** rate limiters rather than importing
 Friction's; it repeats the CORS origin rule so a rejected origin gets a clean `403` instead of
 Friction's `500`; and it mounts `express.json` per route instead of globally, so each route
 carries its own body cap.
@@ -173,7 +173,7 @@ The schema is additive only: eleven new `CREATE TABLE IF NOT EXISTS` statements,
 
 ## How a student's history becomes a hint
 
-LeetCode has no export. So Anchor reads the history from inside the student's own logged-in
+LeetCode has no export. So Recall reads the history from inside the student's own logged-in
 browser session, one paced request at a time, ships it to the backend, and turns it into a small
 model that is re-derived on every new verdict.
 
@@ -183,13 +183,13 @@ may touch:
 | Lane | Files | May talk to | May not |
 |---|---|---|---|
 | MAIN world | `lc-main.js` | the page (`window.fetch`, `XMLHttpRequest`, Monaco) | any `chrome.*` API |
-| ISOLATED world | `lc-queries.js`, `lc-client.js`, `lc-sync.js`, `lc-content.js` | leetcode.com GraphQL + REST, `chrome.runtime` | the Anchor backend |
-| Extension pages | `sidepanel.js`, `popup.js`, `background.js` | the Anchor backend | leetcode.com |
+| ISOLATED world | `lc-queries.js`, `lc-client.js`, `lc-sync.js`, `lc-content.js` | leetcode.com GraphQL + REST, `chrome.runtime` | the Recall backend |
+| Extension pages | `sidepanel.js`, `popup.js`, `background.js` | the Recall backend | leetcode.com |
 
 ### 1. First-run sync
 
 The sync **engine** is `lc-sync.js`, in the page's ISOLATED world. The sync **driver** is the
-side panel. They speak over a `chrome.runtime` Port named `anchor-sync`: the engine fetches from
+side panel. They speak over a `chrome.runtime` Port named `recall-sync`: the engine fetches from
 LeetCode and emits pages, the panel POSTs each page to `/api/lc/sync`, and only then sends back
 an `ack`. **The durable cursor in `chrome.storage.local.syncState` advances only on ack**, so a
 crash between fetch and store costs at most the unacked pages, never data.
@@ -246,7 +246,7 @@ sync; and for incremental re-syncs the panel reads `counts.max_lc_submission_id`
 
 ### 2. Live verdict capture
 
-Once synced, history stays current because Anchor watches submissions as they happen.
+Once synced, history stays current because Recall watches submissions as they happen.
 `lc-main.js` wraps `window.fetch`, `XMLHttpRequest.prototype.open` and `.send` at
 `document_start`.
 
@@ -269,7 +269,7 @@ Dedupe is layered, because each layer can lose the one above it:
 | Layer | Mechanism |
 |---|---|
 | page | an `emitted` Set of submission ids |
-| page, across reloads | `localStorage.anchor_pending_events`, cap 20, entry removed only on `ack` |
+| page, across reloads | `localStorage.recall_pending_events`, cap 20, entry removed only on `ack` |
 | content script | a `seenEvents` Set of `eventId` |
 | backend | fill-if-null upsert; the response carries `already_known` |
 
@@ -346,7 +346,7 @@ guard checks it.
 
 ## The student model
 
-Everything Anchor tells a student about themselves is computed by eight pure files in
+Everything Recall tells a student about themselves is computed by eight pure files in
 `backend/src/lc/domain/`. No LLM is involved in producing any of those numbers. Read the design
 as: **the deterministic layer decides what is true; the prompt layer decides how boldly it may be
 said; the guard layer decides whether the reply obeyed.**
@@ -643,7 +643,7 @@ why `purgeUser` deletes messages explicitly rather than relying on a session cas
 
 Nine of eleven tables declare exactly one foreign key — `user_id → users(user_id) ON DELETE
 CASCADE` — and that is the *entire* coupling to Friction's schema. The cascade runs one way:
-deleting a Friction `users` row removes every Anchor row automatically, while
+deleting a Friction `users` row removes every Recall row automatically, while
 `DELETE /api/lc/me` leaves the `users` row untouched.
 
 ### The collation preflight — read this before running the migration
@@ -727,16 +727,16 @@ must live in ISOLATED.
 ### The nonce-guarded bridge
 
 The worlds share only `window.postMessage`. Every message is
-`{ __anchor: true, from: 'main'|'iso', nonce, type, reqId, payload }`, posted with
+`{ __recall: true, from: 'main'|'iso', nonce, type, reqId, payload }`, posted with
 `targetOrigin = location.origin`.
 
-ISOLATED mints `crypto.randomUUID()` at load and publishes it on `<html data-anchor-nonce>`.
+ISOLATED mints `crypto.randomUUID()` at load and publishes it on `<html data-recall-nonce>`.
 MAIN never caches it — it re-reads the attribute on every send and receive, because at
 `document_start` MAIN may evaluate before ISOLATED has written it. Both receivers check
-`event.source === window`, `event.origin === location.origin`, `__anchor === true`, that `from`
+`event.source === window`, `event.origin === location.origin`, `__recall === true`, that `from`
 is the *other* side, and that the nonce matches.
 
-The nonce lives in a DOM attribute, so page scripts can read it. It disambiguates Anchor's
+The nonce lives in a DOM attribute, so page scripts can read it. It disambiguates Recall's
 traffic from other `postMessage` senders and from a stale pre-handshake state — **it is not a
 secret**.
 
@@ -796,7 +796,7 @@ through `markdown.js` into a `DocumentFragment` with `createElement`/`textConten
 **Storage keys.** `chrome.storage.local`: `authToken`, `theme`, `consentCode`, `language`,
 `detailsCap`, `profileSummary`, `syncState`, `problemsSent`, `postQueue`, `captureStats`.
 `chrome.storage.session`: `tab:<tabId>`, `serverHealth`. Page `localStorage`:
-`anchor_pending_events`, `anchor_capture_errors`.
+`recall_pending_events`, `recall_capture_errors`.
 
 ---
 
@@ -840,11 +840,11 @@ cd backend
 cp .env.example .env                  # fill DB_*, JWT_SECRET, GEMINI_API_KEY
 node src/lc/db/migrate.js --dry-run
 node src/lc/db/migrate.js
-node src/lc/index.js                  # Anchor on :4100
+node src/lc/index.js                  # Recall on :4100
 ```
 
 > **Do not use `npm start` or `npm run dev`** — both are `node src/index.js`, which boots
-> *Friction* on port 4000, not Anchor.
+> *Friction* on port 4000, not Recall.
 
 Boot is deliberately forgiving: `waitForDb()` is fired *after* `listen()` and retries 10× at 3s
 before continuing anyway, so the process stays up with a dead database. A missing `JWT_SECRET`
@@ -855,7 +855,7 @@ logs `lc.boot.warn` and then 401s every authenticated request. A missing LLM key
 ### Tests
 
 ```bash
-cd backend && npx jest tests/lc      # 23 suites, 684 tests — Anchor only
+cd backend && npx jest tests/lc      # 23 suites, 684 tests — Recall only
 ```
 
 `npm test` runs those *plus* Friction's suites.
@@ -881,7 +881,7 @@ only way to exercise the sync engine's error paths offline. The mock's knobs are
 
 ### Configuration
 
-Everything Anchor reads itself is in `backend/src/lc/config.js`, frozen at boot. `bool()` treats
+Everything Recall reads itself is in `backend/src/lc/config.js`, frozen at boot. `bool()` treats
 `1|true|yes|on` as true.
 
 | Variable | Effect | Default | Required |
@@ -906,7 +906,7 @@ Everything Anchor reads itself is in `backend/src/lc/config.js`, frozen at boot.
 | `WEB_APP_URL` | its origin is added to the CORS allowlist | `''` | no |
 | `RAILWAY_GIT_COMMIT_SHA` / `GIT_SHA` | first 7 chars become the `/health` version suffix | `dev` | no |
 
-Inherited from the Friction modules Anchor imports:
+Inherited from the Friction modules Recall imports:
 
 | Variable | Effect | Required |
 |---|---|---|
@@ -963,7 +963,7 @@ Four independent brakes, all per request:
 - **`LC_KILL_SYNC`** — every sync phase throws `503 sync_paused`.
 - **`LC_PILOT_USER_IDS`** — empty is open; otherwise an unlisted `user_id` gets
   `403 pilot_closed` on all of `/api/lc/*`. `/health` is unaffected.
-- **`LC_MIN_EXTENSION_VERSION`** — an `X-Anchor-Version` below the floor gets
+- **`LC_MIN_EXTENSION_VERSION`** — an `X-Recall-Version` below the floor gets
   `426 update_required`. A missing or unparseable header passes through by design; the
   client-side gate on `/health` is the backstop.
 
@@ -1026,8 +1026,8 @@ The number to watch is the **drift ratio**, `verdict_seen / submit_seen` from
 - **Consent is off by default** and is enforced at four layers (MAIN, ISOLATED, worker, server).
   With it off, no source code is stored anywhere.
 - **LeetCode credentials never leave the browser.** Content scripts talk only to leetcode.com
-  using the session cookie the browser already has; the Anchor backend never sees a LeetCode
-  cookie or password. Conversely the Anchor JWT never enters a leetcode.com page.
+  using the session cookie the browser already has; the Recall backend never sees a LeetCode
+  cookie or password. Conversely the Recall JWT never enters a leetcode.com page.
 - **A consent row is required before any sync** (`POST /api/lc/consent`).
 - **Revoking consent** nulls all stored code immediately and reports the row count.
 - **`DELETE /api/lc/me`** is transactional, returns per-table counts, and leaves the Friction
@@ -1051,7 +1051,7 @@ Honest list, as of this writing:
   fallback banner — but the product is not useful past the cap.
 - **The Anthropic provider has never made a live call.** It is built and unit-tested against a
   fake `fetch`; the request shape is asserted, the real API is unverified.
-- **The extension panel has no unit tests.** Adding them needs jsdom, and Anchor deliberately
+- **The extension panel has no unit tests.** Adding them needs jsdom, and Recall deliberately
   does not modify `backend/package.json`. `buildProgressLines()` carries the same hard invariant
   as the memory block — never name a problem absent from `anchors[]` — currently guaranteed by
   construction rather than by a test.

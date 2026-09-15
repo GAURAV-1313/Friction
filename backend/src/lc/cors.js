@@ -19,7 +19,7 @@ function lcCorsOptions(allowlist) {
   return {
     origin(origin, callback) { callback(null, isAllowedOrigin(origin, allowlist)); },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Anchor-Version']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Recall-Version']
   };
 }
 

@@ -1,7 +1,7 @@
 // page.js: behaviour of the fake problem page served by dev/serve-fixture.js (classic script, no modules).
 // Mimics what the extension observes on leetcode.com: submit -> v2/check polling (fetch or XHR), Run Code noise,
 // Monaco / Focus-mode editors, the language button + localStorage.global_lang, pushState navigation, contest URLs,
-// and the cookie fault switches. Nothing here talks to the Anchor backend.
+// and the cookie fault switches. Nothing here talks to the Recall backend.
 (function () {
   'use strict';
 
@@ -256,15 +256,15 @@
   }
   window.addEventListener('message', function (ev) {
     var d = ev.data;
-    if (!d || d.__anchor !== true || ev.source !== window) return;
+    if (!d || d.__recall !== true || ev.source !== window) return;
     logTo('#bridge-log', bridgeSummary(d));
   });
   function refreshPending() {
     var n = 0;
-    try { var raw = localStorage.getItem('anchor_pending_events'); var arr = raw ? JSON.parse(raw) : []; n = Array.isArray(arr) ? arr.length : 0; } catch (_) { n = 0; }
+    try { var raw = localStorage.getItem('recall_pending_events'); var arr = raw ? JSON.parse(raw) : []; n = Array.isArray(arr) ? arr.length : 0; } catch (_) { n = 0; }
     $('#pending-count').textContent = String(n);
-    var main = !!window.__anchorMain;
-    var iso = !!(document.documentElement.dataset && document.documentElement.dataset.anchorNonce);
+    var main = !!window.__recallMain;
+    var iso = !!(document.documentElement.dataset && document.documentElement.dataset.recallNonce);
     $('#ext-status').textContent = 'extension: MAIN ' + (main ? 'yes' : 'no') + ' · ISOLATED ' + (iso ? 'yes' : 'no');
     $('#ext-status').style.color = main && iso ? '#16a34a' : (main || iso ? '#d97706' : '#dc2626');
   }
@@ -313,7 +313,7 @@
         log('switch ' + name + ' -> ' + (getCookie(name) === '1' ? 'ON' : 'off'));
       });
     });
-    $('#clear-pending').addEventListener('click', function () { try { localStorage.removeItem('anchor_pending_events'); } catch (_) { /* ignore */ } refreshPending(); log('cleared anchor_pending_events'); });
+    $('#clear-pending').addEventListener('click', function () { try { localStorage.removeItem('recall_pending_events'); } catch (_) { /* ignore */ } refreshPending(); log('cleared recall_pending_events'); });
     window.addEventListener('popstate', function () { log('popstate'); render(); });
   }
 

@@ -1,4 +1,4 @@
-/* Anchor side panel layout. Tokens and base controls come from theme.css. */
+/* Recall side panel layout. Tokens and base controls come from theme.css. */
 
 /* ---------------------------------------------------------------------------
    MOTION TOKENS. theme.css owns colour; this owns time.
@@ -236,10 +236,10 @@ body.sidepanel {
   border-radius: 50%;
   border: 2px solid var(--border);
   border-top-color: var(--accent);
-  animation: anchor-spin 0.9s linear infinite;
+  animation: recall-spin 0.9s linear infinite;
 }
 
-@keyframes anchor-spin {
+@keyframes recall-spin {
   to {
     transform: rotate(360deg);
   }
@@ -278,7 +278,7 @@ body.sidepanel {
   bottom: 0;
   width: 1px;
   background: var(--text);
-  animation: anchor-breathe var(--pulse) var(--ease-soft) infinite;
+  animation: recall-breathe var(--pulse) var(--ease-soft) infinite;
 }
 
 .progress-fill.is-paused::after {
@@ -806,11 +806,11 @@ body.sidepanel {
   border-radius: 1px;
   background: var(--accent);
   transform-origin: top center;
-  animation: anchor-rule var(--pulse) var(--ease-soft) infinite;
+  animation: recall-rule var(--pulse) var(--ease-soft) infinite;
   will-change: transform, opacity;
 }
 
-@keyframes anchor-rule {
+@keyframes recall-rule {
   0% {
     transform: translateY(0) scaleY(0.35);
     opacity: 0.35;
@@ -836,7 +836,7 @@ body.sidepanel {
   background: var(--warning);
 }
 
-@keyframes anchor-breathe {
+@keyframes recall-breathe {
   0%,
   100% {
     opacity: 1;
@@ -847,7 +847,7 @@ body.sidepanel {
 }
 
 .is-waiting {
-  animation: anchor-breathe 1800ms var(--ease-soft) infinite;
+  animation: recall-breathe 1800ms var(--ease-soft) infinite;
 }
 
 /* ---- memory block: builds itself line by line ---------------------------- */
@@ -880,10 +880,10 @@ body.sidepanel {
   bottom: 0;
   height: 2px;
   background: currentColor;
-  animation: anchor-sweep 1.2s var(--ease-soft) infinite;
+  animation: recall-sweep 1.2s var(--ease-soft) infinite;
 }
 
-@keyframes anchor-sweep {
+@keyframes recall-sweep {
   0% {
     transform: scaleX(0);
     transform-origin: left center;
@@ -993,10 +993,10 @@ body.sidepanel {
 
 /* ---- view swap: the incoming root fades, the outgoing never animates ----- */
 .view-swap {
-  animation: anchor-fade-in 200ms var(--ease-out);
+  animation: recall-fade-in 200ms var(--ease-out);
 }
 
-@keyframes anchor-fade-in {
+@keyframes recall-fade-in {
   from {
     opacity: 0;
   }
@@ -1007,10 +1007,10 @@ body.sidepanel {
 
 /* ---- status line --------------------------------------------------------- */
 .status.is-in {
-  animation: anchor-status var(--dur-2) var(--ease-out);
+  animation: recall-status var(--dur-2) var(--ease-out);
 }
 
-@keyframes anchor-status {
+@keyframes recall-status {
   from {
     opacity: 0;
     transform: translateY(2px);

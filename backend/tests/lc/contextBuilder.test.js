@@ -30,10 +30,10 @@ const problemRow = () => ({ slug: SLUG, title: 'Target Problem', frontend_id: '1
 const session = (over = {}) => ({ id: 'sess-1', user_id: USER, slug: SLUG, plan_text: null, turn_count: 0, max_rung: 0, ...over });
 const SYNTH_CODE = Array.from({ length: 60 }, (_, i) => `line ${i + 1}`).join('\n');
 const anchorList = () => ({ slug: SLUG, family: 'dp', subpatterns: ['dp.interval'], omitted_reason: null, anchors: [
-  { slug: 'anchor-one', title: 'Anchor One', difficulty: 'medium', score: 5.2, why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, first_ac_submission_id: 111 },
-  { slug: 'anchor-two', title: 'Anchor Two', difficulty: 'easy', score: 3.5, why: 'shares LeetCode\'s memoization tag', solved_on: '2026-03-01', attempts_to_ac: 1, first_ac_submission_id: 222 },
-  { slug: 'anchor-three', title: 'Anchor Three', difficulty: 'hard', score: 3.1, why: 'same idea: Interval DP', solved_on: '2025-01-01', attempts_to_ac: 4, first_ac_submission_id: 333 },
-  { slug: 'anchor-four', title: 'Anchor Four', difficulty: 'hard', score: 3.0, why: 'same idea: Interval DP', solved_on: '2024-01-01', attempts_to_ac: 1, first_ac_submission_id: 444 }
+  { slug: 'anchor-one', title: 'Recall One', difficulty: 'medium', score: 5.2, why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, first_ac_submission_id: 111 },
+  { slug: 'anchor-two', title: 'Recall Two', difficulty: 'easy', score: 3.5, why: 'shares LeetCode\'s memoization tag', solved_on: '2026-03-01', attempts_to_ac: 1, first_ac_submission_id: 222 },
+  { slug: 'anchor-three', title: 'Recall Three', difficulty: 'hard', score: 3.1, why: 'same idea: Interval DP', solved_on: '2025-01-01', attempts_to_ac: 4, first_ac_submission_id: 333 },
+  { slug: 'anchor-four', title: 'Recall Four', difficulty: 'hard', score: 3.0, why: 'same idea: Interval DP', solved_on: '2024-01-01', attempts_to_ac: 1, first_ac_submission_id: 444 }
 ] });
 
 function spies({ problem = problemRow(), here = [], latest = null, habits = [], history = [], codes = new Map() } = {}) {
@@ -65,7 +65,7 @@ describe('buildChatContext: shape', () => {
     expect(ctx.student.dp.level).toBe('solid');
     expect(ctx.anchors).toHaveLength(3);
     expect(ctx.anchors.map((a) => a.slug)).toEqual(['anchor-one', 'anchor-two', 'anchor-three']);
-    expect(ctx.anchors[0]).toEqual(expect.objectContaining({ title: 'Anchor One', why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, code_excerpt: null }));
+    expect(ctx.anchors[0]).toEqual(expect.objectContaining({ title: 'Recall One', why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, code_excerpt: null }));
     expect(ctx.habits).toEqual([]);
     expect(ctx.verdict).toBeNull();
     expect(ctx.plan).toBeNull();

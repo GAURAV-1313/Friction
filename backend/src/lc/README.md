@@ -1,4 +1,4 @@
-# Anchor backend (`backend/src/lc/`)
+# Recall backend (`backend/src/lc/`)
 
 Separate Express app for the LeetCode tutor. Imports Friction's `db/pool.js`, `db/transaction.js`, `middleware/auth.js`
 unchanged; never calls Friction's `createApp()`. Entrypoint: `node src/lc/index.js` (Railway). Tests: `npx jest tests/lc`.
@@ -23,7 +23,7 @@ Module contracts (all pure unless noted):
 | `services/llm/schema.js` | `REPLY_JSON_SCHEMA`, `GEMINI_RESPONSE_SCHEMA`, `validateReply(obj)` |
 | `db/repo.js` | `profiles, consents, problems, solved, submissions, habits, sessions, messages, events, purgeUser, uuid, sha256` (every fn takes `db` first) |
 | `services/*.js` | take `(pool, ...)`; use `withTransaction(pool, fn)` for multi-statement writes |
-| `routes/*.js` | `makeRouter(deps)` → `express.Router()`; `deps = {pool, llm, config, seed, limiters}`; mounted under `/api/lc` behind `requireAuth` + pilot allowlist + `versionGate` (426 `update_required` when the `X-Anchor-Version` header is below `LC_MIN_EXTENSION_VERSION`; no header → pass) |
+| `routes/*.js` | `makeRouter(deps)` → `express.Router()`; `deps = {pool, llm, config, seed, limiters}`; mounted under `/api/lc` behind `requireAuth` + pilot allowlist + `versionGate` (426 `update_required` when the `X-Recall-Version` header is below `LC_MIN_EXTENSION_VERSION`; no header → pass) |
 
 Chat context (`ctx`) as built by `services/contextBuilder.js` and consumed by promptBuilder/guard (same shape as `tests/lc/fixtures/ctx.js`):
 `{ language, consent_code, problem:{title, frontend_id, difficulty, family, tags, statement, constraints, leetcode_hints}, student:{band, solved, counts, dp, graph, strengths:string[] ('tag (n)')},

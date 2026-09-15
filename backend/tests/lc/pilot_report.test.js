@@ -98,10 +98,10 @@ describe('pilot_report.render', () => {
   const md = render(fixture(), { now: NOW, days: 14, last: 2 });
 
   test('has every section heading', () => {
-    for (const h of ['# Anchor pilot report', '## Profile', '## Hints per day', '## Hints per rung', '## Feedback', '## Anchors', '## Habits', '## Verdicts', '## Drift (verdict_seen / submit_seen)', '## Sync', '## Provider', '## Guard', '## Client events', '## Issue reports', '## Last 2 transcripts']) {
+    for (const h of ['# Recall pilot report', '## Profile', '## Hints per day', '## Hints per rung', '## Feedback', '## Anchors', '## Habits', '## Verdicts', '## Drift (verdict_seen / submit_seen)', '## Sync', '## Provider', '## Guard', '## Client events', '## Issue reports', '## Last 2 transcripts']) {
       expect(md).toContain(`\n${h}\n`.replace(/^\n# /, '# '));
     }
-    expect(md.startsWith('# Anchor pilot report\n')).toBe(true);
+    expect(md.startsWith('# Recall pilot report\n')).toBe(true);
     expect(md).not.toContain('## Verify deleted');
   });
 
@@ -215,7 +215,7 @@ describe('pilot_report.render', () => {
     expect(t3).toContain('- habits: overflow, bucket:graph.bfs:wa_logic');
     expect(t3).toContain('- feedback: none');
     expect(t3).toContain('> **Student:** BFS gives wrong answer on the sample');
-    expect(t3).toContain('> **Anchor:** Before touching the queue');
+    expect(t3).toContain('> **Recall:** Before touching the queue');
     expect(t4).toContain('- verdict: re_overflow (Runtime Error, interceptor, 600 s before)');
     expect(t4).toContain('- anchors: climbing-stairs (cited), min-cost-climbing-stairs (cited)');
     expect(t4).toContain('- habits: id:1');
@@ -247,7 +247,7 @@ describe('pilot_report.render', () => {
     expect(out).toContain('| total | 0 | 0 | 0 | 0 | 0 | 0 | 0 |');
     expect(out).toContain('- last 24 h: submit_seen 0 · verdict_seen 0 · ratio – · ok');
     expect(out).toContain('## Last 0 transcripts');
-    expect(render(null, { now: NOW })).toContain('# Anchor pilot report');
+    expect(render(null, { now: NOW })).toContain('# Recall pilot report');
   });
 
   test('is deterministic for the same rows and now', () => {

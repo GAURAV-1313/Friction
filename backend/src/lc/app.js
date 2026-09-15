@@ -31,7 +31,7 @@ function createLcApp({ pool, llm, config, seed } = {}) {
   app.use(cors(lcCorsOptions(allowlist)));
   app.use(rejectDisallowedOrigin(allowlist));
   app.use(requestLogger);
-  app.get('/', (req, res) => res.json({ status: 'ok', service: 'anchor' }));
+  app.get('/', (req, res) => res.json({ status: 'ok', service: 'recall' }));
   mountLcRoutes(app, { pool: db, llm: llmClient, config: cfg, seed: seed || loadSeed(), limiters: makeLimiters() });
   app.use((req, res) => res.status(404).json({ error: 'not_found' }));
   app.use(errorHandler);

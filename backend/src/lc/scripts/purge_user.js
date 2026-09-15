@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Delete every Anchor (lc_) row for one user. The users row and the shared lc_problems cache are untouched.
+ * Delete every Recall (lc_) row for one user. The users row and the shared lc_problems cache are untouched.
  *   railway run --service anchor -- node src/lc/scripts/purge_user.js --user <user_id|email> --confirm PURGE
  *   railway run --service anchor -- node src/lc/scripts/purge_user.js --user <user_id|email> --dry-run     (counts only)
  *

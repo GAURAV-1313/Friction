@@ -13,7 +13,7 @@ function makeHealthRouter({ pool, config, llmProvider }) {
   router.get('/health', (req, res) => {
     probeDb().catch(() => {});
     res.json({
-      status: 'ok', service: 'anchor', version: `${pkg.version}+${config.commitSha || 'dev'}`, uptime_s: Math.round(process.uptime()),
+      status: 'ok', service: 'recall', version: `${pkg.version}+${config.commitSha || 'dev'}`, uptime_s: Math.round(process.uptime()),
       provider: llmProvider || config.provider, kill: { llm: config.killLlm, sync: config.killSync },
       min_extension_version: config.minExtensionVersion, db: probe.db, migration: '012_lc_init'
     });

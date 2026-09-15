@@ -1,5 +1,5 @@
 'use strict';
-// In-memory synthetic student history for the Anchor domain goldens (port of lc-research/make_fixture.js).
+// In-memory synthetic student history for the Recall domain goldens (port of lc-research/make_fixture.js).
 // Deterministic: a seeded LCG drives every varying quantity; timestamps are relative to FIXTURE_NOW, never Date.now().
 // No real student code or data: slugs come from the shipped seed/catalog, verdict details are synthesized,
 // and the only `code` fields are the hand-written snippets in ./snippets.js.

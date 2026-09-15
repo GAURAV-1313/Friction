@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * Run the Anchor habit-detection rule layer over a LeetCode export made by extract.js.
+ * Run the Recall habit-detection rule layer over a LeetCode export made by extract.js.
  *
  *   node analyze.js <export-dir> [--seed subpatterns.json] [--out <dir>]
  *
@@ -256,7 +256,7 @@ L.push(``, `## Sub-patterns (any membership)`, ``, `| sub-pattern | problems | s
 for (const [id, a] of Object.entries(subs).sort((x, y) => y[1].n_problems - x[1].n_problems)) L.push(`| ${id} | ${a.n_problems} | ${a.n_solved} | ${a.n_fails} (${a.n_fails_with_details}) | ${a.base_case_skew} | ${a.transition_skew} | ${a.tle_share} | ${a.mean_attempts_to_ac} | ${a.gap ? `${a.gap.vs_lifetime} / ${a.gap.vs_recent_90d} / ${a.gap.vs_difficulty_matched}` : '-'} |`);
 L.push(``, `## Habit candidates (design v0 thresholds)`, ``);
 if (!candidates.length) L.push(`None crossed the floors.`); else { L.push(`| category | sub-pattern | confidence | evidence |`, `|---|---|---|---|`); for (const c of candidates) L.push(`| ${c.category} | ${c.subpattern}${c.baseline ? ` (${c.baseline} x${c.ratio})` : ''} | ${c.confidence_rule} | ${JSON.stringify(c.evidence)} |`); }
-L.push(``, `## Anchor coverage (claim 8)`, ``, `| rule | share of solved DP/graph problems with >=1 personal anchor |`, `|---|---|`, `| problem is in the seed at all | ${coverage.rules.in_seed_share} |`, `| seed sub-pattern match | ${coverage.rules.has_seed_anchor} |`, `| LeetCode similarQuestions link | ${coverage.rules.has_similar_anchor} |`, `| >=2 shared tags incl. one specific | ${coverage.rules.has_tag_anchor} |`, `| shared fine-grained algorithm tag (LeetCode's own, e.g. dijkstra, 0-1-knapsack) | ${coverage.rules.has_fine_tag_anchor} (problem itself has a fine tag: ${coverage.rules.has_fine_tag}) |`, `| any rule | ${coverage.rules.has_any_anchor} |`, ``, `similarQuestions links that point OUTSIDE the seed sub-pattern: ${coverage.rules.similar_links_outside_seed_subpattern}`, ``);
+L.push(``, `## Recall coverage (claim 8)`, ``, `| rule | share of solved DP/graph problems with >=1 personal anchor |`, `|---|---|`, `| problem is in the seed at all | ${coverage.rules.in_seed_share} |`, `| seed sub-pattern match | ${coverage.rules.has_seed_anchor} |`, `| LeetCode similarQuestions link | ${coverage.rules.has_similar_anchor} |`, `| >=2 shared tags incl. one specific | ${coverage.rules.has_tag_anchor} |`, `| shared fine-grained algorithm tag (LeetCode's own, e.g. dijkstra, 0-1-knapsack) | ${coverage.rules.has_fine_tag_anchor} (problem itself has a fine tag: ${coverage.rules.has_fine_tag}) |`, `| any rule | ${coverage.rules.has_any_anchor} |`, ``, `similarQuestions links that point OUTSIDE the seed sub-pattern: ${coverage.rules.similar_links_outside_seed_subpattern}`, ``);
 L.push(`## Labeling sample`, ``, Object.entries(sample).map(([b, xs]) => `${b}: ${xs.length}`).join(', '), ``, `See labeling_sample.json: each failed submission with its code, judge output, and the next attempt, ready for bug-locus labeling.`);
 fs.writeFileSync(path.join(OUT, 'report.md'), L.join('\n'));
 console.log(L.join('\n'));

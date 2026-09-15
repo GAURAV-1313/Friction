@@ -43,8 +43,8 @@ const profile = (over = {}) => ({ user_id: USER, language: 'english', consent_co
 const problemRow = () => ({ slug: SLUG, title: 'Target Problem', frontend_id: '1234', difficulty: 'medium', topic_tags: ['dynamic-programming'], hints: [], statement_excerpt: 'Given...', constraints_text: '1 <= n <= 10^5' });
 const session = (over = {}) => ({ id: 'sess-1', user_id: USER, slug: SLUG, plan_text: null, turn_count: 2, max_rung: 1, ...over });
 const anchors = () => ({ anchors: [
-  { slug: 'anchor-one', title: 'Anchor One', difficulty: 'medium', score: 5, why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, first_ac_submission_id: 111 },
-  { slug: 'anchor-two', title: 'Anchor Two', difficulty: 'easy', score: 3.5, why: 'shares a tag', solved_on: '2026-03-01', attempts_to_ac: 1, first_ac_submission_id: 222 }
+  { slug: 'anchor-one', title: 'Recall One', difficulty: 'medium', score: 5, why: 'same idea: Interval DP', solved_on: '2026-05-01', attempts_to_ac: 2, first_ac_submission_id: 111 },
+  { slug: 'anchor-two', title: 'Recall Two', difficulty: 'easy', score: 3.5, why: 'shares a tag', solved_on: '2026-03-01', attempts_to_ac: 1, first_ac_submission_id: 222 }
 ], omitted_reason: null });
 const habitRows = () => [{ id: 7, habit_key: 'bucket:dp.interval:wa_edge_empty', category: 'bucket', subpattern: 'dp.interval', bucket: 'wa_edge_empty', tier: 'medium', live: 1, counts: { n: 4, of: 6, share: 0.67, recent_n: 3 }, evidence: {}, state: 'auto' }];
 
@@ -147,7 +147,7 @@ describe('handleChat: happy path', () => {
       message_id: 'msg-2',
       reply: parsed.reply,
       rung: 2,
-      anchors: [{ slug: 'anchor-one', title: 'Anchor One', why: 'same idea: Interval DP' }, { slug: 'anchor-two', title: 'Anchor Two', why: 'shares a tag' }],
+      anchors: [{ slug: 'anchor-one', title: 'Recall One', why: 'same idea: Interval DP' }, { slug: 'anchor-two', title: 'Recall Two', why: 'shares a tag' }],
       habits_shown: [{ id: 7, key: 'bucket:dp.interval:wa_edge_empty', statement: expect.stringMatching(/^On Interval DP problems, 4 of your 6 failures/) }],
       allowed_rung_next: 2,
       unlock_reason: 'submit_once',
@@ -174,8 +174,8 @@ describe('handleChat: happy path', () => {
     expect(rows.user.contract).toEqual(expect.objectContaining({ rung: 2 }));
     expect(rows.assistant).toEqual(expect.objectContaining({ role: 'assistant', content: parsed.reply, rung: 2, provider: 'gemini', model: 'gemini-2.5-flash', degraded: false }));
     expect(rows.assistant.anchors).toEqual([
-      { slug: 'anchor-one', title: 'Anchor One', why: 'same idea: Interval DP', solved_on: '2026-05-01', cited: true },
-      { slug: 'anchor-two', title: 'Anchor Two', why: 'shares a tag', solved_on: '2026-03-01', cited: false }
+      { slug: 'anchor-one', title: 'Recall One', why: 'same idea: Interval DP', solved_on: '2026-05-01', cited: true },
+      { slug: 'anchor-two', title: 'Recall Two', why: 'shares a tag', solved_on: '2026-03-01', cited: false }
     ]);
     expect(rows.assistant.habits).toEqual([expect.objectContaining({ id: 7, key: 'bucket:dp.interval:wa_edge_empty', tier: 'medium', used: true })]);
     expect(rows.assistant.contract).toEqual(expect.objectContaining({ rung: 2, max_rung: 2, unlock_reason: 'submit_once' }));

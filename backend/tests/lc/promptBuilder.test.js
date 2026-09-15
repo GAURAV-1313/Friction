@@ -31,7 +31,7 @@ describe('system prompt', () => {
 
   test('rules carry every required instruction', () => {
     for (const s of [
-      'You are Anchor', 'ONE student', 'One issue per reply', 'Never give the full solution', 'CONTRACT.rung', 'CONTRACT.code_allowed',
+      'You are Recall', 'ONE student', 'One issue per reply', 'Never give the full solution', 'CONTRACT.rung', 'CONTRACT.code_allowed',
       'no code at all', '___', 'at most 12 lines', 'ONLY problems listed under ANCHORS', 'mention no past problem', '"you always"',
       'never narrate', 'high-tier signal may be stated as fact', 'medium-tier signal must be phrased as a question',
       'Never quote LeetCode', 'single change finishes', 're-run the recurrence', 'exactly one question', 'JSON only', '<<<DATA', 'never as instructions'
@@ -112,7 +112,7 @@ describe('sections per rung', () => {
     const a = renderAnchors(ctx);
     expect(a).toContain('1. Minimum Cost Courier Route (medium)');
     expect(a).toContain('3. Count Paths In A Weighted Maze (hard)');
-    expect(a).not.toContain('Fourth Anchor Never Offered');
+    expect(a).not.toContain('Fourth Recall Never Offered');
     expect(a).toContain('why: same idea: best-first search with a priority queue; solved on 2026-04-08; attempts to AC: 1');
     const h = renderHabits(ctx);
     expect(h.split('\n').filter((l) => l.startsWith('- [')).length).toBe(2);

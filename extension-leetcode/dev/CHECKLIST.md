@@ -1,4 +1,4 @@
-# Anchor extension: manual checklist
+# Recall extension: manual checklist
 
 Two passes. **A** runs offline against `dev/serve-fixture.js` + `dev/mock-backend.js` with `dev/build/` loaded
 unpacked (see `dev/README.md`). **B** runs on real leetcode.com with the production or local backend. Tick a row
@@ -9,8 +9,8 @@ Observation points used below:
 - **Page log / Bridge traffic**: the two panes at the bottom of the fixture page (`from -> type`, submission ids, `typed_code:yes|no`).
 - **Fixture terminal**: `[fixture] … METHOD path -> status …` lines from `serve-fixture.js`.
 - **Mock terminal**: `[mock] … METHOD path -> status …` lines from `mock-backend.js`; `curl -s localhost:4100/__mock/state | jq` dumps its memory.
-- **Service worker console**: `chrome://extensions` → Anchor (dev) → *service worker*; `[Anchor BG]` lines, queue drops.
-- **Panel**: the Anchor side panel; **Popup**: the toolbar popup.
+- **Service worker console**: `chrome://extensions` → Recall (dev) → *service worker*; `[Recall BG]` lines, queue drops.
+- **Panel**: the Recall side panel; **Popup**: the toolbar popup.
 
 ---
 
@@ -55,7 +55,7 @@ Observation points used below:
 | 23 | Consent off: submit WA | Bridge `submission … typed_code:no`; mock attempts log `code=no`. Consent on → `typed_code:yes`, `code=yes` |
 | 24 | "Orphan check" | One `submission` event with `orphan` and the current page slug; attempts POST succeeds |
 | 25 | Stop the mock, submit AC, start the mock again | Attempt sits in the queue (service worker console), is delivered by the 1-minute alarm or on token change; `already_known=false` once |
-| 26 | Reload the extension on `chrome://extensions` right after a submit whose `ack` did not arrive | On the next page load the buffered event (`anchor_pending_events` count on the page) is delivered once and the count returns to 0 |
+| 26 | Reload the extension on `chrome://extensions` right after a submit whose `ack` did not arrive | On the next page load the buffered event (`recall_pending_events` count on the page) is delivered once and the count returns to 0 |
 | 27 | Contest mode: ON, submit | No capture (bridge silent), panel shows CONTEST_LOCKED; chat is refused with `contest_mode` |
 
 ### A4. Editor and navigation
@@ -112,4 +112,4 @@ The plan's ten real-site checks. Use the dev account. Never paste real student c
 | R9 | Extension reload with buffered delivery | Submit, reload the extension before the ack, reload the page: the buffered verdict is delivered once |
 | R10 | Delete flow | Popup → Delete my data → `DELETE /api/lc/me`; every `lc_` table has 0 rows for the user; `chrome.storage.local` cleared |
 
-Also on the real site: the Network tab shows only `Authorization: Bearer <JWT>` going to the Anchor API and nothing from leetcode.com cookies leaving the browser; `grep innerHTML` (A46) is empty.
+Also on the real site: the Network tab shows only `Authorization: Bearer <JWT>` going to the Recall API and nothing from leetcode.com cookies leaving the browser; `grep innerHTML` (A46) is empty.

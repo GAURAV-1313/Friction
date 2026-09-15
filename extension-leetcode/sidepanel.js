@@ -1,9 +1,9 @@
-// Anchor side panel (ES module). Requires config.js and anchor-setup.js (classic
+// Recall side panel (ES module). Requires config.js and recall-setup.js (classic
 // scripts) to have run first.
 //
 // Owns: the view state machine (NO_TOKEN -> SERVER_WAKING -> UPDATE_REQUIRED ->
 // NO_PROFILE -> SYNCING -> NOT_LC_TAB / NON_PROBLEM_PAGE / CONTEST_LOCKED ->
-// PROBLEM -> TUTOR_UNAVAILABLE), the first-run sync driver over the 'anchor-sync'
+// PROBLEM -> TUTOR_UNAVAILABLE), the first-run sync driver over the 'recall-sync'
 // Port, and the chat UI. Every backend call goes through api.js from this page;
 // the leetcode.com origin never talks to the API.
 //
@@ -21,11 +21,11 @@ function fatal(message) {
   throw new Error(message);
 }
 
-if (!globalThis.AnchorExt) fatal('Extension failed to load. Reload it from chrome://extensions.');
-if (!globalThis.ANCHOR_CONFIG?.API_BASE) fatal('Config not available.');
+if (!globalThis.RecallExt) fatal('Extension failed to load. Reload it from chrome://extensions.');
+if (!globalThis.RECALL_CONFIG?.API_BASE) fatal('Config not available.');
 
-const Ext = globalThis.AnchorExt;
-const CFG = globalThis.ANCHOR_CONFIG;
+const Ext = globalThis.RecallExt;
+const CFG = globalThis.RECALL_CONFIG;
 
 // ---------------------------------------------------------------------------
 // constants
@@ -67,7 +67,7 @@ const DEPTH_WORD = {
   hinglish: { 1: 'ishaara', 2: 'tumhari history se', 3: 'theek jagah', 4: 'shape' }
 };
 // Dev-only label, restored on every bubble when CFG.ENV !== 'production'.
-const DEV_DEPTH_LABEL = { 1: 'Nudge', 2: 'Anchor', 3: 'Pinpoint', 4: 'Show' };
+const DEV_DEPTH_LABEL = { 1: 'Nudge', 2: 'Recall', 3: 'Pinpoint', 4: 'Show' };
 // data.family is only ever 'dp' or 'graph' (domain/seed.js familiesOf). The anchor
 // `why` string is NEVER rendered here: it names the state formulation, which is the
 // answer to the rung-2 question. Coarse family line only.
@@ -162,7 +162,7 @@ const PAUSE_COPY = {
   challenge: 'LeetCode is showing a verification page. Pass the check in that tab, then click Resume.',
   rate_limited: 'LeetCode is rate-limiting requests. Wait a minute, then click Resume.',
   hidden: 'The sync waits while the LeetCode tab is hidden. Switch back to that tab.',
-  backend: "Anchor's server could not take the last chunk. Click Resume to retry.",
+  backend: "Recall's server could not take the last chunk. Click Resume to retry.",
   user: 'Sync paused. Click Resume to continue.',
   disconnected: 'Lost the connection to the LeetCode tab. Reload that tab (or open a problem page), then click Resume.',
   stopped: 'Sync cancelled.'
@@ -868,7 +868,7 @@ function renderBanners() {
   if (banners.challenge) push('challenge', makeBanner('warn', 'LeetCode is showing a verification page. Pass the check in that tab.'));
   if (banners.rate_limited) push('rate_limited', makeBanner('warn', 'LeetCode is rate-limiting requests. Wait a minute before syncing or capturing.'));
   if (banners.reload_tab) {
-    push('reload_tab', makeBanner('warn', 'Reload the LeetCode tab so Anchor can connect to it.', {
+    push('reload_tab', makeBanner('warn', 'Reload the LeetCode tab so Recall can connect to it.', {
       label: 'Reload',
       onClick: () => {
         if (problem.tabId !== null) chrome.tabs.reload(problem.tabId).catch(() => {});
@@ -1031,7 +1031,7 @@ async function runCompute() {
     const next = await computeView();
     await render(next);
   } catch (err) {
-    console.error('[Anchor panel] compute failed', err);
+    console.error('[Recall panel] compute failed', err);
     setStatus('Something went wrong. Close and reopen the panel.', 'error');
   } finally {
     computing = false;
@@ -1099,15 +1099,15 @@ async function render(next) {
       setSubtitle(sync.username || usernameOf(next.me) || 'syncing');
       break;
     case 'NOT_LC_TAB':
-      if (!same) renderSimple('Open LeetCode', 'Anchor works on leetcode.com problem pages. Switch to a LeetCode tab, or open one.', { label: 'Open leetcode.com', onClick: () => chrome.tabs.create({ url: `${LC_ORIGIN}problemset/` }) });
+      if (!same) renderSimple('Open LeetCode', 'Recall works on leetcode.com problem pages. Switch to a LeetCode tab, or open one.', { label: 'Open leetcode.com', onClick: () => chrome.tabs.create({ url: `${LC_ORIGIN}problemset/` }) });
       setSubtitle(profileSubtitle(next));
       break;
     case 'NON_PROBLEM_PAGE':
-      if (!same) renderSimple('Open a problem', 'Anchor wakes up on a problem page (leetcode.com/problems/...). Pick one and come back here.');
+      if (!same) renderSimple('Open a problem', 'Recall wakes up on a problem page (leetcode.com/problems/...). Pick one and come back here.');
       setSubtitle(profileSubtitle(next));
       break;
     case 'CONTEST_LOCKED':
-      if (!same) renderSimple('Locked during contests', 'Anchor stays quiet while you are in a contest. It will be back on regular problem pages.');
+      if (!same) renderSimple('Locked during contests', 'Recall stays quiet while you are in a contest. It will be back on regular problem pages.');
       setSubtitle('contest mode');
       break;
     case 'PROBLEM':
@@ -1115,7 +1115,7 @@ async function render(next) {
       else updateProblem(next);
       break;
     default:
-      renderSimple('Anchor', 'Unknown state.');
+      renderSimple('Recall', 'Unknown state.');
   }
   state.view = next.view;
   state.viewKey = key;
@@ -1189,8 +1189,8 @@ function renderUpdate(next) {
 function unavailableCopy(reason) {
   if (reason === 'pilot_closed') return 'This account is not in the pilot. Ask the developer to add you.';
   if (reason === 'forbidden') return 'Access denied. Check that you are signed in with the right account.';
-  if (reason === 'timeout' || reason === 'network') return "Anchor's server did not answer within 90 seconds. Check your connection and try again.";
-  return `Anchor's server answered with an error (${reason}). Try again in a minute.`;
+  if (reason === 'timeout' || reason === 'network') return "Recall's server did not answer within 90 seconds. Check your connection and try again.";
+  return `Recall's server answered with an error (${reason}). Try again in a minute.`;
 }
 
 function renderUnavailable(next) {
@@ -1294,7 +1294,7 @@ async function startIncrementalSync() {
 }
 
 // ---------------------------------------------------------------------------
-// SYNCING: driver over the 'anchor-sync' Port
+// SYNCING: driver over the 'recall-sync' Port
 // ---------------------------------------------------------------------------
 const sync = {
   gen: 0,
@@ -1362,7 +1362,7 @@ async function startSync({ tabId, resume, sinceId }) {
 
   let port;
   try {
-    port = chrome.tabs.connect(tabId, { name: 'anchor-sync' });
+    port = chrome.tabs.connect(tabId, { name: 'recall-sync' });
   } catch (err) {
     pauseLocally('disconnected', null);
     scheduleCompute(0);
@@ -1522,14 +1522,14 @@ function chunkFailureCopy(err) {
     case 'rejected': return `The server rejected a chunk (${err.error || 'bad request'}). Cancel and start again.`;
     case 'update': return 'Update the extension to keep syncing.';
     case 'kill': return 'Syncing is paused by the developer right now. Try again later.';
-    case 'exhausted': return "Anchor's server did not respond after 5 tries. Click Resume to retry.";
+    case 'exhausted': return "Recall's server did not respond after 5 tries. Click Resume to retry.";
     default: return `Sync stopped (${(err && err.message) || 'unknown error'}). Click Resume to retry.`;
   }
 }
 
 function onChunkFailure(err, gen) {
   if (sync.gen !== gen || (err && err.code === 'cancelled')) return;
-  console.error('[Anchor panel] sync chunk failed', err && err.code, err && err.message);
+  console.error('[Recall panel] sync chunk failed', err && err.code, err && err.message);
   api.clientEvent('sync_error', { sync_id: sync.syncId, source: 'backend', code: err && err.code, error: err && err.error, status: err && err.status, phase: sync.phase }).catch(() => {});
   pauseLocally('backend', chunkFailureCopy(err));
   if (sync.port) {
@@ -1556,7 +1556,7 @@ function ack(msg) {
 async function handleSyncHeader(msg, gen) {
   const rows = Array.isArray(msg.solved) ? msg.solved : [];
   const solved = rows.slice(0, SYNC_MAX_SOLVED).map(mapSolvedRow).filter((r) => r.slug);
-  if (rows.length > SYNC_MAX_SOLVED) console.warn('[Anchor panel] solved list truncated to', SYNC_MAX_SOLVED, 'of', rows.length);
+  if (rows.length > SYNC_MAX_SOLVED) console.warn('[Recall panel] solved list truncated to', SYNC_MAX_SOLVED, 'of', rows.length);
   await postChunk({
     sync_id: sync.syncId,
     phase: 'solved',
@@ -1720,7 +1720,7 @@ async function updateSyncing(next) {
   if (driving && sync.chunk) chunkText = sync.chunk.attempt > 1 ? `Sending ${sync.chunk.label} (retry ${sync.chunk.attempt} of ${SYNC_BACKOFF_MS.length})…` : `Sending ${sync.chunk.label}…`;
   else if (driving && sync.liveState === 'backoff' && sync.until) chunkText = `LeetCode asked us to slow down. Retrying in ${Math.max(1, Math.round((sync.until - Date.now()) / 1000))} s.`;
   else if (driving && sync.liveState === 'waiting_visible') chunkText = 'Waiting for the LeetCode tab to be visible.';
-  else if (driving && sync.waiting === 'ack') chunkText = 'Uploading pages to Anchor…';
+  else if (driving && sync.waiting === 'ack') chunkText = 'Uploading pages to Recall…';
   refs.chunk.textContent = chunkText;
 
   let pill = 'running';
@@ -1921,7 +1921,7 @@ function buildProblem(next) {
   renderComposer();
   renderCodeNote();
   applyCtx(next.ctx);
-  loadProblemData(gen).catch((err) => console.error('[Anchor panel] problem load failed', err));
+  loadProblemData(gen).catch((err) => console.error('[Recall panel] problem load failed', err));
 }
 
 function updateProblem(next) {
@@ -2059,7 +2059,7 @@ function memoryBlockNode(input) {
     const err = opts.error || {};
     const status = Number(err.status);
     const text = status === 404
-      ? "This problem is not in Anchor's catalogue yet. Reload the page once it has loaded fully."
+      ? "This problem is not in Recall's catalogue yet. Reload the page once it has loaded fully."
       : status === 401
         ? 'Token expired.'
         : 'Could not load anchors (network).';
@@ -2185,7 +2185,7 @@ function failedTestNumber(attempt) {
 // The ordered precedence table from the spec: first match wins.
 function stanceText() {
   if (problem.sending) return pick('Thinking…', 'Soch raha hoon…');
-  if (problem.ctx && problem.ctx.isContest) return pick('Anchor is off during contests.', 'Contest me Anchor band hai.');
+  if (problem.ctx && problem.ctx.isContest) return pick('Recall is off during contests.', 'Contest me Recall band hai.');
   const left = hintsLeft();
   if (problem.capHit || left === 0) return pick('Hint cap reached today. Resets at 00:00 UTC.', 'Aaj ke hints khatam. 00:00 UTC pe reset.');
   if (problem.belowGate) return 'Run it once more and I can go further.';
@@ -2332,7 +2332,7 @@ function captureNode() {
   if (capture.state !== 'off' && !(ctx && ctx.needsReload) && !stalledBlind) return null;
   const node = el('div', 'slot-row');
   node.dataset.slot = 'capture';
-  node.appendChild(el('div', 'slot-text', pick('Anchor did not see that submission.', 'Anchor ne wo submission nahi dekhi.')));
+  node.appendChild(el('div', 'slot-text', pick('Recall did not see that submission.', 'Recall ne wo submission nahi dekhi.')));
   node.appendChild(button('link', pick('Check my last run', 'Pichla run check karo'), (event) => {
     manualCapture(event.currentTarget);
   }));
@@ -3242,13 +3242,13 @@ function chatErrorCopy(result) {
   if (result.status === 429 && result.error === 'daily_cap') return 'Daily hint cap reached. It resets at 00:00 UTC.';
   if (result.status === 429) return 'Too many hints in a minute. Wait a little.';
   if (result.status === 409 && result.error === 'not_synced') return 'Sync your history first.';
-  if (result.status === 409 && result.error === 'problem_not_cached') return 'Reload the LeetCode tab so Anchor can read this problem, then try again.';
-  if (result.status === 403 && result.error === 'contest_mode') return 'Anchor is locked during contests.';
+  if (result.status === 409 && result.error === 'problem_not_cached') return 'Reload the LeetCode tab so Recall can read this problem, then try again.';
+  if (result.status === 403 && result.error === 'contest_mode') return 'Recall is locked during contests.';
   if (result.status === 403) return 'Access denied.';
   if (result.status === 503) return 'Hints are paused right now.';
   if (result.status === 401) return 'Token expired. Paste a new one.';
   if (result.error === 'timeout' || result.error === 'aborted') return 'The tutor took too long. Try again.';
-  if (result.status === 0) return "Could not reach Anchor's server.";
+  if (result.status === 0) return "Could not reach Recall's server.";
   return `Hint failed (${result.error || result.status}).`;
 }
 
@@ -3811,6 +3811,6 @@ async function init() {
 }
 
 init().catch((err) => {
-  console.error('[Anchor panel] init failed', err);
-  setStatus('Anchor could not start. Reopen the panel.', 'error');
+  console.error('[Recall panel] init failed', err);
+  setStatus('Recall could not start. Reopen the panel.', 'error');
 });

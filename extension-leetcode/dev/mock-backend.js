@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /**
- * mock-backend.js: in-memory stand-in for the Anchor backend (backend/src/lc) on http://localhost:4100.
+ * mock-backend.js: in-memory stand-in for the Recall backend (backend/src/lc) on http://localhost:4100.
  * No dependencies (http, url only). State lives per Bearer token and is lost on restart.
  *
  *   node extension-leetcode/dev/mock-backend.js
@@ -206,7 +206,7 @@ function now() { return new Date().toISOString().slice(11, 23); }
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
 function isAllowedOrigin(origin) { return !origin || origin.startsWith('chrome-extension://') || /^https?:\/\/localhost(?::\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(?::\d+)?$/.test(origin); }
 function corsHeaders(origin) {
-  const h = { 'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'access-control-allow-headers': 'Content-Type, Authorization, X-Anchor-Version, X-Anchor-Ext-Version', 'access-control-max-age': '600', vary: 'Origin' };
+  const h = { 'access-control-allow-methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS', 'access-control-allow-headers': 'Content-Type, Authorization, X-Recall-Version, X-Recall-Ext-Version', 'access-control-max-age': '600', vary: 'Origin' };
   if (origin) h['access-control-allow-origin'] = origin;
   return h;
 }
@@ -227,7 +227,7 @@ const isSlug = (s) => typeof s === 'string' && s.length <= 191 && SLUG_RE.test(s
 
 // ---------- handlers ----------
 function health() {
-  return { status: 'ok', service: 'anchor', version: '0.0.0+mock', uptime_s: Math.round((Date.now() - startedAt) / 1000), provider: 'mock', model: 'mock-1', kill: { llm: KILL_LLM, sync: false }, min_extension_version: MIN_EXT_VERSION, db: 'ok', migration: '012_lc_init', mock: true };
+  return { status: 'ok', service: 'recall', version: '0.0.0+mock', uptime_s: Math.round((Date.now() - startedAt) / 1000), provider: 'mock', model: 'mock-1', kill: { llm: KILL_LLM, sync: false }, min_extension_version: MIN_EXT_VERSION, db: 'ok', migration: '012_lc_init', mock: true };
 }
 
 function getMe(u) {

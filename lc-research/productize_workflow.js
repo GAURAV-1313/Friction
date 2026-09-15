@@ -1,6 +1,6 @@
 export const meta = {
   name: 'anchor-productize-plan',
-  description: 'Turn the calibrated Anchor tutor design into an efficient, deterministic, production-ready build plan shaped as a product',
+  description: 'Turn the calibrated Recall tutor design into an efficient, deterministic, production-ready build plan shaped as a product',
   phases: [
     { title: 'Plan', detail: 'three planners: determinism, ops/cost, product' },
     { title: 'Judge', detail: 'three judges score the plans' },
@@ -21,7 +21,7 @@ const READ = `READ THESE FILES FIRST (Read tool; read-only, never modify anythin
 5. The Friction repo (existing product that must NOT be modified; the tutor reuses its auth/db/Gemini infra): ${D.repo} — skim backend/src/app.js, backend/src/db/pool.js, backend/src/middleware/auth.js, backend/src/services/llm.js, extension/manifest.json only.
 Also available: ${D.seed} (30 structural sub-patterns, 535 verified problems) and ${D.catalog} (full LeetCode catalogue, 4047 problems, 175 tags incl. fine-grained algorithm tags).`
 
-const CONTEXT = `PRODUCT: "Anchor", a Chrome extension tutor for leetcode.com that builds a model of a student's level and habits from their real submission history and gives Hinglish/English hints anchored to problems they already solved. Separate extension directory + separate backend module under the existing Friction repo; nothing in the existing Friction extension, routes, web app or tables may be modified. Test cohort: students with hundreds to thousands of solved problems. No Gemini key is needed for offline calibration (Claude agents label), but the production hint path uses gemini-2.5-flash with thinkingBudget:0.
+const CONTEXT = `PRODUCT: "Recall", a Chrome extension tutor for leetcode.com that builds a model of a student's level and habits from their real submission history and gives Hinglish/English hints anchored to problems they already solved. Separate extension directory + separate backend module under the existing Friction repo; nothing in the existing Friction extension, routes, web app or tables may be modified. Test cohort: students with hundreds to thousands of solved problems. No Gemini key is needed for offline calibration (Claude agents label), but the production hint path uses gemini-2.5-flash with thinkingBudget:0.
 
 WHAT THE CALIBRATION CHANGED (must be reflected in any plan):
 - Runtime percentile is NOT a brute-force signal; the flat 0.3x fragile-AC discount keyed on it is dead. Only "AC minutes after a TLE with near-identical code" survives, plus a later code-based approach check.

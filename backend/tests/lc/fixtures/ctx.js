@@ -77,7 +77,7 @@ const ANCHORS = [
   { slug: 'minimum-cost-courier-route', title: 'Minimum Cost Courier Route', difficulty: 'medium', why: 'same idea: best-first search with a priority queue', solved_on: '2026-04-08', attempts_to_ac: 1, code_excerpt: ANCHOR_CODE },
   { slug: 'water-flow-through-pipes', title: 'Water Flow Through Pipes', difficulty: 'medium', why: 'same idea: expand the cheapest frontier node', solved_on: '2026-03-12', attempts_to_ac: 2, code_excerpt: ANCHOR_CODE },
   { slug: 'count-paths-in-a-weighted-maze', title: 'Count Paths In A Weighted Maze', difficulty: 'hard', why: 'shared fine tag: shortest-path', solved_on: '2026-01-30', attempts_to_ac: 3, code_excerpt: null },
-  { slug: 'fourth-anchor-never-offered', title: 'Fourth Anchor Never Offered', difficulty: 'easy', why: 'over the limit of three', solved_on: '2025-12-01', attempts_to_ac: 1, code_excerpt: null }
+  { slug: 'fourth-anchor-never-offered', title: 'Fourth Recall Never Offered', difficulty: 'easy', why: 'over the limit of three', solved_on: '2025-12-01', attempts_to_ac: 1, code_excerpt: null }
 ];
 
 const HABITS = [

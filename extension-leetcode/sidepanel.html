@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Anchor</title>
+    <title>Recall</title>
     <link rel="icon" type="image/png" href="icons/icon128.png" />
     <link rel="stylesheet" href="theme.css" />
     <link rel="stylesheet" href="sidepanel.css" />
@@ -12,7 +12,7 @@
     <div class="app">
       <header class="header">
         <div class="header-left">
-          <div class="title">Anchor</div>
+          <div class="title">Recall</div>
           <div id="subtitle" class="subtitle">for LeetCode</div>
         </div>
         <div class="header-actions">
@@ -30,7 +30,7 @@
       <section id="issueForm" class="card issue-form hidden">
         <textarea id="issueText" placeholder="What went wrong? Your code is never included."></textarea>
         <div class="row between">
-          <span class="view-text muted">Goes to the Anchor developer.</span>
+          <span class="view-text muted">Goes to the Recall developer.</span>
           <div class="row">
             <button id="issueCancel" class="btn ghost" type="button">Cancel</button>
             <button id="issueSend" class="btn primary" type="button">Send</button>
@@ -51,7 +51,7 @@
 
     <template id="tpl-no-token">
       <section class="card view-card">
-        <div class="view-title">Connect Anchor</div>
+        <div class="view-title">Connect Recall</div>
         <p class="view-text warn hidden" data-role="expired">Your token expired. Paste a new one.</p>
         <ol class="steps">
           <li>Sign in to the Friction web app.</li>
@@ -70,7 +70,7 @@
       <section class="card view-card center">
         <div class="spinner" aria-hidden="true"></div>
         <div class="view-title">Waking the server</div>
-        <p class="view-text">Anchor's server sleeps when idle. This can take up to a minute.</p>
+        <p class="view-text">Recall's server sleeps when idle. This can take up to a minute.</p>
         <p class="view-text muted" data-role="elapsed"></p>
       </section>
     </template>
@@ -98,11 +98,11 @@
       <section class="card view-card">
         <div class="view-title">Build your map</div>
         <p class="view-text">
-          Anchor reads your LeetCode history once (6 to 8 minutes for a large account) to find the
+          Recall reads your LeetCode history once (6 to 8 minutes for a large account) to find the
           problems you already solved that relate to the one you are on.
         </p>
         <p class="disclosure">
-          Anchor reads your public profile, your submission list and judge output (your code only
+          Recall reads your public profile, your submission list and judge output (your code only
           while the popup toggle is on), stores them in the developer's database, and uses Gemini or
           Anthropic under paid API terms to word hints. No LeetCode cookies or passwords leave the
           browser. "Delete my data" in the popup wipes everything instantly. Your token is a password.
@@ -122,7 +122,7 @@
             <li>60 hints per day. Hints never contain code. Desktop Chrome only.</li>
           </ul>
           <p class="view-text muted">
-            Hinglish: Anchor aapki public profile, submissions aur judge output padhta hai (code sirf
+            Hinglish: Recall aapki public profile, submissions aur judge output padhta hai (code sirf
             toggle on hone par), developer ke database mein rakhta hai, aur hints Gemini ya Anthropic
             se banata hai. "Delete my data" sab kuch turant mita deta hai.
           </p>
@@ -183,7 +183,7 @@
           <div class="stance" data-role="stance" aria-live="polite"></div>
           <textarea data-role="input" placeholder="Where are you stuck? (Enter to send)"></textarea>
           <div class="paste hidden" data-role="pasteWrap">
-            <div class="view-text muted">Anchor could not read the editor. Paste your code here (optional).</div>
+            <div class="view-text muted">Recall could not read the editor. Paste your code here (optional).</div>
             <textarea class="paste-box" data-role="paste" placeholder="Your current code" spellcheck="false"></textarea>
           </div>
           <div class="row between">
@@ -195,7 +195,7 @@
     </template>
 
     <script src="config.js"></script>
-    <script src="anchor-setup.js"></script>
+    <script src="recall-setup.js"></script>
     <script type="module" src="sidepanel.js"></script>
   </body>
 </html>
