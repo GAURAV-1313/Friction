@@ -8,7 +8,29 @@ const crypto = require('crypto');
 const { parseJson } = require('../middleware/validate');
 
 const J = (v) => (v === undefined || v === null ? null : JSON.stringify(v));
-const uuid = () => crypto.randomUUID();
+// UUIDv7: still CHAR(36) and still a valid UUID, but the leading 48 bits are the
+// millisecond timestamp, so ids sort in creation order.
+//
+// This matters because lc_chat_messages.created_at is a one-second TIMESTAMP and
+// chatService writes a turn's user row and assistant row inside the same second.
+// The history query orders by (created_at, id); with random v4 ids that tiebreak
+// was a coin flip, so roughly half of all turns rendered the reply ABOVE the
+// question the student had just asked. A 12-bit per-millisecond counter keeps ids
+// ordered even when several rows are written in the same millisecond.
+let lastMs = 0;
+let seq = 0;
+const uuid = () => {
+  const now = Date.now();
+  if (now === lastMs) seq = (seq + 1) & 0xfff;
+  else { lastMs = now; seq = 0; }
+  const b = crypto.randomBytes(16);
+  b.writeUIntBE(lastMs, 0, 6);            // 48-bit big-endian timestamp
+  b[6] = 0x70 | ((seq >> 8) & 0x0f);      // version 7 + high nibble of the counter
+  b[7] = seq & 0xff;                      // low byte of the counter
+  b[8] = (b[8] & 0x3f) | 0x80;            // RFC 4122 variant
+  const h = b.toString('hex');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+};
 const sha256 = (s) => crypto.createHash('sha256').update(String(s)).digest('hex');
 function rowJson(row, keys) { if (!row) return row; for (const k of keys) if (k in row) row[k] = parseJson(row[k], null); return row; }
 
