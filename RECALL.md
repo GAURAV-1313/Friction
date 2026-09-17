@@ -434,25 +434,48 @@ they have a DP gap is noise, not a diagnosis.
 
 ### Anchors
 
-Eligibility comes first and is strict: a candidate must share a **verified sub-pattern** or a
-**fine-grained LeetCode tag** with the target, or it is skipped entirely. Unsolved problems, the
-target itself, and anything solved after `asOf` are excluded.
+Eligibility runs in **three tiers, strongest first**. A candidate qualifies on the first one it
+meets; unsolved problems, the target itself, and anything solved after `asOf` are excluded.
+
+| Tier | Qualifies when | Reads as |
+|---|---|---|
+| `subpattern` | shares a verified seed sub-pattern | "same idea: interval DP" |
+| `technique` | shares a technique tag | "shares LeetCode's monotonic-stack tag" |
+| `topic` | shares two topic tags — or its only tag, for single-tag problems | "another array + hash-table problem you solved" |
+
+The third tier exists so that **every** problem can be anchored. With only the first two, and
+with the technique set holding nothing but DP and graph algorithm names, **84% of the catalogue
+was structurally unanchorable**: a problem tagged `['array','hash-table']` could never match
+anything, whatever the student had solved — and the panel then wrongly told them none of their
+solved problems was related. `TECHNIQUE_TAGS` now spans every family (sliding window, binary
+search, monotonic stack, prefix sum, trie, backtracking, segment tree, design, and the rest).
 
 Then the score:
 
 ```
   3.0   shares at least one sub-pattern
 + 1.0   the shared sub-pattern is `primary` for BOTH problems
-+ 2.0   shares at least one fine-grained algorithm tag
++ 2.0   shares at least one technique tag
++ 2.5   topic tier only, when neither of the above matched
 + 0.5   per shared non-umbrella tag
 + 0.5   solved within the last 180 days
 + 0.2   solved first try
 - 0.5   difficulty gap of 2 (easy vs hard)
 ```
 
-Top 3 by score, ties broken by recency then slug. **Anything below `ANCHOR_MIN_SCORE = 3`
-is dropped** and the response explains itself with `omitted_reason`
-(`no_eligible` | `below_threshold`) rather than offering a weak anchor.
+Sub-pattern and technique are **additive** — a candidate sharing both is strictly the better
+analogy. **Tier outranks score in the ordering**, so a topic match can never displace a real
+analogy by accumulating recency and tag overlap; score only orders within a tier. Top 3, ties
+broken by recency then slug.
+
+**Anything below `ANCHOR_MIN_SCORE = 3` is dropped**, so a topic anchor still has to earn its
+last half point from recency or a shared specific tag. The response explains itself with
+`omitted_reason` (`no_eligible` | `below_threshold`) rather than offering a weak anchor.
+
+Measured on the real catalogue against a simulated history: **81% of all 4,047 problems anchor
+for a student with 84 solved**, 91% at 300 solved. Because tier outranks score, raising or
+lowering the topic base moves only the topic count — the sub-pattern and technique counts are
+identical at every value tested.
 
 **LeetCode's own `similarQuestions` never gates anchor selection.** It is stored but not used as
 an eligibility signal, because calibration found its links cross sub-patterns often enough that

@@ -2,8 +2,46 @@
 // Tag vocabularies (LeetCode slugs). Fine-grained tags were observed live on 2026-09-11.
 const DP_TAGS = new Set(['dynamic-programming', 'memoization', 'bitmask', 'game-theory', 'knapsack-problem', 'complete-knapsack', 'dp-on-trees', 'longest-increasing-subsequence', 'longest-common-subsequence', '0-1-knapsack', 'multiple-knapsack', 'mixed-knapsack', 'minimax-algorithm', 'zero-sum-game', 'impartial-game', 'sprague-grundy-theorem', 'combinatorics']);
 const GRAPH_TAGS = new Set(['graph', 'breadth-first-search', 'depth-first-search', 'topological-sort', 'shortest-path', 'union-find', 'minimum-spanning-tree', 'strongly-connected-component', 'biconnected-component', 'eulerian-circuit', 'dijkstra', 'directed-acyclic-graph', 'bipartite-graph', 'graph-coloring', 'kosarajus-algorithm', 'tarjans-scc-algorithm', 'bellman-ford-algorithm', 'floyd-warshall-algorithm', 'prims-algorithm', 'kruskals-algorithm', 'boruvkas-algorithm', '0-1-bfs', 'bidirectional-search', 'a-search', 'heuristic-search', 'eulerian-path', 'eulerian-graph', 'semi-eulerian-graph', 'hamiltonian-path', 'articulation-point', 'bridge-graph', 'matching-graph', 'maximum-matching', 'flow-network', 'maximum-flow', 'k-shortest-path', 'lowest-common-ancestor', 'binary-lifting']);
-// Structural algorithm tags: sharing one of these is an anchor-eligibility rule on its own.
-const FINE_ALGO = new Set(['knapsack-problem', 'complete-knapsack', '0-1-knapsack', 'multiple-knapsack', 'mixed-knapsack', 'dp-on-trees', 'longest-increasing-subsequence', 'longest-common-subsequence', 'minimax-algorithm', 'zero-sum-game', 'bitmask', 'game-theory', 'memoization', 'dijkstra', 'topological-sort', 'directed-acyclic-graph', 'union-find', 'bipartite-graph', 'graph-coloring', 'kosarajus-algorithm', 'tarjans-scc-algorithm', 'strongly-connected-component', 'bellman-ford-algorithm', 'floyd-warshall-algorithm', 'shortest-path', 'minimum-spanning-tree', 'prims-algorithm', 'kruskals-algorithm', '0-1-bfs', 'bidirectional-search', 'eulerian-path', 'eulerian-circuit', 'hamiltonian-path', 'articulation-point', 'bridge-graph', 'biconnected-component']);
+// Technique tags: naming a way of solving rather than a topic. Sharing one is an
+// anchor-eligibility rule on its own, because "we both used a monotonic stack" is a
+// real analogy in a way that "we are both about arrays" is not.
+//
+// This deliberately spans EVERY family, not just DP and graphs. When it held only the
+// 36 DP/graph algorithm names, 84% of the catalogue could never produce an anchor at
+// all -- a sliding-window or binary-search problem was structurally unanchorable no
+// matter what the student had solved.
+const TECHNIQUE_TAGS = new Set([
+  // dp
+  'knapsack-problem', 'complete-knapsack', '0-1-knapsack', 'multiple-knapsack', 'mixed-knapsack',
+  'dp-on-trees', 'longest-increasing-subsequence', 'longest-common-subsequence', 'minimax-algorithm',
+  'zero-sum-game', 'bitmask', 'game-theory', 'memoization', 'probability-and-statistics',
+  // graph
+  'dijkstra', 'topological-sort', 'directed-acyclic-graph', 'union-find', 'bipartite-graph',
+  'graph-coloring', 'kosarajus-algorithm', 'tarjans-scc-algorithm', 'strongly-connected-component',
+  'bellman-ford-algorithm', 'floyd-warshall-algorithm', 'shortest-path', 'minimum-spanning-tree',
+  'prims-algorithm', 'kruskals-algorithm', '0-1-bfs', 'bidirectional-search', 'eulerian-path',
+  'eulerian-circuit', 'hamiltonian-path', 'articulation-point', 'bridge-graph',
+  'biconnected-component', 'lowest-common-ancestor', 'binary-lifting', 'minimum-cost-flow',
+  'maximum-flow', 'flow-network', 'matching-graph',
+  // scanning and pointers
+  'sliding-window', 'two-pointers', 'prefix-sum', 'line-sweep', 'binary-search', 'quickselect',
+  'divide-and-conquer',
+  // stacks, queues, heaps
+  'monotonic-stack', 'monotonic-queue', 'stack', 'queue', 'heap-priority-queue', 'ordered-set',
+  'doubly-linked-list', 'linked-list',
+  // trees and indexed structures
+  'segment-tree', 'binary-indexed-tree', 'trie', 'binary-search-tree', 'suffix-array',
+  // search and enumeration
+  'backtracking', 'recursion', 'randomized', 'reservoir-sampling', 'rejection-sampling',
+  // strings
+  'string-matching', 'rolling-hash', 'hash-function',
+  // numbers
+  'bit-manipulation', 'number-theory', 'combinatorics', 'geometry',
+  // sorting variants
+  'counting-sort', 'radix-sort', 'bucket-sort', 'merge-sort',
+  // systems-shaped
+  'design', 'data-stream', 'iterator', 'concurrency', 'database', 'interactive', 'shell'
+]);
 // Umbrella tags never count as "specific" overlap.
 const UMBRELLA = new Set(['array', 'string', 'hash-table', 'math', 'sorting', 'dynamic-programming', 'graph', 'depth-first-search', 'breadth-first-search', 'matrix', 'tree', 'binary-tree', 'greedy', 'simulation', 'two-pointers', 'memoization']);
 
@@ -25,4 +63,4 @@ const MAX_RUNG = 4;
 const DIFFICULTY_RANK = { easy: 0, medium: 1, hard: 2 };
 const FAMILY_LABEL = { dp: 'dynamic programming', graph: 'graphs' };
 
-module.exports = { DP_TAGS, GRAPH_TAGS, FINE_ALGO, UMBRELLA, STATUS_BY_DISPLAY, BASE_CASE_SHAPED, TRANSITION_SHAPED, OVERFLOW_SHAPED, BUCKET_TIERS, WINDOW_S, RECENT_N, ANCHOR_MIN_SCORE, MODEL_VERSION, WORD_CAPS, MAX_RUNG, DIFFICULTY_RANK, FAMILY_LABEL };
+module.exports = { DP_TAGS, GRAPH_TAGS, TECHNIQUE_TAGS, UMBRELLA, STATUS_BY_DISPLAY, BASE_CASE_SHAPED, TRANSITION_SHAPED, OVERFLOW_SHAPED, BUCKET_TIERS, WINDOW_S, RECENT_N, ANCHOR_MIN_SCORE, MODEL_VERSION, WORD_CAPS, MAX_RUNG, DIFFICULTY_RANK, FAMILY_LABEL };

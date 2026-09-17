@@ -37,7 +37,10 @@ describe('score terms', () => {
   });
   test('+0.5 per shared specific tag; umbrella tags do not count', () => {
     const seed = fakeSeed({ t: ['x'], c: ['x'] });
-    const tags = ['array', 'dynamic-programming', 'prefix-sum', 'monotonic-stack'];
+    // counting/enumeration are specific but NOT technique tags, so this isolates the
+    // per-specific-tag term from the +2 technique term. array and dynamic-programming
+    // are umbrella and must contribute nothing.
+    const tags = ['array', 'dynamic-programming', 'counting', 'enumeration'];
     expect(score(scoreAnchors({ target: target({ tags }), solvedAttempts: [att({ slug: 'c', tags })], asOf: NOW, seed }))).toEqual([5]);
   });
   test('+0.5 recency inside the 180-day window (strict)', () => {
@@ -72,10 +75,59 @@ describe('score terms', () => {
 });
 
 describe('eligibility gate', () => {
-  test('no seed overlap and no fine tag -> no_eligible even with specific-tag overlap and similar_slugs', () => {
+  test('a multi-tag target sharing only one tag is not eligible; similar_slugs never gates', () => {
     const seed = fakeSeed({ t: ['x'], c: ['y'] });
-    const res = scoreAnchors({ target: target({ tags: ['array', 'prefix-sum'], similar_slugs: ['c'] }), solvedAttempts: [att({ slug: 'c', tags: ['array', 'prefix-sum'] })], asOf: NOW, seed });
+    const res = scoreAnchors({ target: target({ tags: ['array', 'string'], similar_slugs: ['c'] }), solvedAttempts: [att({ slug: 'c', tags: ['array'] })], asOf: NOW, seed });
     expect(res).toEqual({ anchors: [], omitted_reason: 'no_eligible' });
+  });
+  test('a single-tag target is eligible on that one tag', () => {
+    const seed = fakeSeed({ t: ['x'], c: ['y'] });
+    // Otherwise a problem tagged only ['math'] could never be anchored, and a student
+    // with twenty solved math problems would be told none of them overlaps.
+    const res = scoreAnchors({ target: target({ tags: ['math'] }), solvedAttempts: [att({ slug: 'c', tags: ['math'], first_ac_ts: RECENT })], asOf: NOW, seed });
+    expect(score(res)).toEqual([3]);
+    expect(res.anchors[0]).toMatchObject({ tier: 'topic', why: 'another math problem you solved' });
+  });
+  test('a target with no tags at all is never eligible on the topic tier', () => {
+    const seed = fakeSeed({ t: ['x'], c: ['y'] });
+    const res = scoreAnchors({ target: target({ tags: [] }), solvedAttempts: [att({ slug: 'c', tags: [] })], asOf: NOW, seed });
+    expect(res).toEqual({ anchors: [], omitted_reason: 'no_eligible' });
+  });
+  test('two shared topic tags make it eligible, but topic tier alone stays under the bar', () => {
+    const seed = fakeSeed({ t: ['x'], c: ['y'] });
+    const tags = ['array', 'hash-table'];
+    const res = scoreAnchors({ target: target({ tags }), solvedAttempts: [att({ slug: 'c', tags })], asOf: NOW, seed });
+    // 2.5 topic base, no specific overlap (both umbrella), solved outside the recency
+    // window -> 2.5, below ANCHOR_MIN_SCORE. Eligible, but deliberately not shown.
+    expect(res).toEqual({ anchors: [], omitted_reason: 'below_threshold' });
+  });
+  test('a recent topic-tier match clears the bar and is labelled as a topic anchor', () => {
+    const seed = fakeSeed({ t: ['x'], c: ['y'] });
+    const tags = ['array', 'hash-table'];
+    // 2.5 topic base + 0.5 recency = 3.0. Shown only because nothing better exists;
+    // the tier sort guarantees it can never displace a sub-pattern or technique match.
+    const res = scoreAnchors({ target: target({ tags }), solvedAttempts: [att({ slug: 'c', tags, first_ac_ts: RECENT })], asOf: NOW, seed });
+    expect(score(res)).toEqual([3]);
+    expect(res.anchors[0]).toMatchObject({ tier: 'topic', subpattern: null, fine_tag: null, why: 'another array + hash-table problem you solved' });
+  });
+  test('a topic match never outranks a technique match', () => {
+    const seed = fakeSeed({});
+    const res = scoreAnchors({
+      target: target({ tags: ['array', 'hash-table', 'sliding-window', 'counting', 'enumeration'] }),
+      solvedAttempts: [
+        att({ slug: 'topicish', tags: ['array', 'hash-table', 'counting', 'enumeration'], first_ac_ts: RECENT, attempts_to_ac: 1 }),
+        att({ slug: 'techy', tags: ['sliding-window'] })
+      ],
+      asOf: NOW, seed, minScore: 0
+    });
+    expect(res.anchors[0]).toMatchObject({ slug: 'techy', tier: 'technique' });
+  });
+  test('a shared technique tag alone is eligible without any sub-pattern', () => {
+    const seed = fakeSeed({ t: ['x'], c: ['y'] });
+    const tags = ['array', 'monotonic-stack'];
+    const res = scoreAnchors({ target: target({ tags }), solvedAttempts: [att({ slug: 'c', tags })], asOf: NOW, seed, minScore: 0 });
+    expect(score(res)).toEqual([2.5]);   // 2 technique + 0.5 for the specific tag
+    expect(res.anchors[0]).toMatchObject({ tier: 'technique', fine_tag: 'monotonic-stack' });
   });
   test('the target itself is never an anchor', () => {
     const seed = fakeSeed({ t: ['x'] });
@@ -145,7 +197,7 @@ describe('anchor record shape', () => {
   test('fields, ISO solved_on and rounded score', () => {
     const seed = fakeSeed({ t: ['x'], c: [{ id: 'x', primary: false }] }, { x: 'Label' });
     const res = scoreAnchors({ target: target({ tags: ['prefix-sum', 'dijkstra'] }), solvedAttempts: [att({ slug: 'c', title: 'C title', difficulty: 'hard', tags: ['prefix-sum', 'dijkstra'], first_ac_ts: 1767225600, attempts_to_ac: 3, first_ac_id: 987 })], asOf: NOW, seed });
-    expect(res.anchors[0]).toEqual({ slug: 'c', title: 'C title', difficulty: 'hard', score: 6, why: 'same idea: Label', subpattern: 'x', fine_tag: 'dijkstra', solved_on: '2026-01-01', attempts_to_ac: 3, first_ac_submission_id: 987 });
+    expect(res.anchors[0]).toEqual({ slug: 'c', title: 'C title', difficulty: 'hard', score: 6, why: 'same idea: Label', tier: 'subpattern', subpattern: 'x', fine_tag: 'prefix-sum', solved_on: '2026-01-01', attempts_to_ac: 3, first_ac_submission_id: 987 });
   });
   test('scores are rounded to two decimals', () => {
     const seed = fakeSeed({ t: ['x'], c: ['x'] });
@@ -181,7 +233,7 @@ describe('fixture goldens (real seed)', () => {
   test('Dijkstra target: seed + fine tag + three specific tags + recency + first try = 8.2', () => {
     const res = run('path-with-maximum-probability');
     expect(res.anchors.map((a) => [a.slug, a.score])).toEqual([['minimum-obstacle-removal-to-reach-corner', 8.2], ['reachable-nodes-in-subdivided-graph', 8.2], ['the-maze-ii', 8.2]]);
-    expect(res.anchors[0]).toMatchObject({ subpattern: 'graph.dijkstra', fine_tag: 'shortest-path', attempts_to_ac: 1, difficulty: 'hard' });
+    expect(res.anchors[0]).toMatchObject({ subpattern: 'graph.dijkstra', tier: 'subpattern', fine_tag: 'heap-priority-queue', attempts_to_ac: 1, difficulty: 'hard' });
   });
   test('an unrelated target has no eligible anchors', () => {
     expect(run('two-sum')).toEqual({ anchors: [], omitted_reason: 'no_eligible' });

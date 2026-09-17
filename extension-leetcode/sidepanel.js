@@ -1974,17 +1974,17 @@ function omittedCopy(reason, solved) {
     ? (hinglish ? 'Tumhare solve kiye problems' : 'your solved problems')
     : (hinglish ? `Tumhare ${formatCount(solved)} solve kiye problems` : `your ${formatCount(solved)} solved problems`);
   switch (reason) {
+    // Anchors cover every family, so there is no "we do not do this topic" case any
+    // more. Eligibility needs a shared sub-pattern, a shared technique tag, or two
+    // shared topic tags -- so the honest statement is about overlap, not coverage.
     case 'no_eligible': // backend domain/anchors.js
     case 'no_candidates':
     case 'none':
-      return hinglish
-        ? `${many} me se koi is se sub-pattern ya tag share nahi karta.`
-        : `None of ${many} shares a sub-pattern or tag with this one.`;
-    case 'no_dp_or_graph_family':
+    case 'no_dp_or_graph_family': // legacy reason; older backends may still send it
     case 'no_family':
       return hinglish
-        ? 'Anchors sirf DP aur graph problems cover karte hain; ye dono nahi hai.'
-        : 'Anchors cover DP and graph problems; this one is neither.';
+        ? `${many} me se kisi ka bhi is problem se abhi overlap nahi hai.`
+        : `Nothing in ${many} overlaps with this one yet.`;
     case 'below_threshold': // backend domain/anchors.js
     case 'below_min_score':
     default:
@@ -2080,6 +2080,11 @@ function memoryBlockNode(input) {
     node.appendChild(el('div', 'memory-line', line));
   }
 
+  // "New ground for you" is only true if they have NOT solved this very problem.
+  // Saying it under "You solved this one already" is a flat contradiction, and it
+  // is the line a student is most likely to catch us out on.
+  const solvedHere = data.solved_here === true;
+
   if (anchors.length) {
     node.appendChild(el('div', 'memory-claim', hinglish ? 'Ye shape tumne pehle solve ki hai.' : 'You have solved this shape before.'));
     // A third anchor is dropped, not collapsed behind a disclosure.
@@ -2095,8 +2100,13 @@ function memoryBlockNode(input) {
     const familyLine = family ? (FAMILY_LINE[language] || FAMILY_LINE.english)[family] : null;
     if (familyLine) node.appendChild(el('div', 'memory-note', familyLine));
   } else {
-    node.appendChild(el('div', 'memory-claim', hinglish ? 'Ye tumhare liye naya ilaaka hai.' : 'New ground for you.'));
-    node.appendChild(el('div', 'memory-line', omittedCopy(data.omitted_reason, solved)));
+    // Only claim new ground when they have NOT solved this exact problem. Saying
+    // "New ground for you" directly under "You solved this one already" is a flat
+    // contradiction, and it is the line a student is quickest to catch us out on.
+    if (!solvedHere) {
+      node.appendChild(el('div', 'memory-claim', hinglish ? 'Ye tumhare liye naya ilaaka hai.' : 'New ground for you.'));
+      node.appendChild(el('div', 'memory-line', omittedCopy(data.omitted_reason, solved)));
+    }
     if (opts.habit && (opts.habit.statement || opts.habit.key)) {
       const line = el('div', 'memory-note');
       line.appendChild(document.createTextNode(hinglish ? 'Ek pattern tumhara zaroor hai: ' : 'One pattern of yours, though: '));
