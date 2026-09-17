@@ -20,10 +20,11 @@ items must be done outside this repo or the submission will be rejected.
 
 ## Blockers: fix these before submitting
 
-| # | Blocker | Why it blocks |
+| # | Blocker | Status |
 |---|---|---|
-| 1 | **Host the privacy policy at a public URL.** Text is in [Privacy policy](#privacy-policy-host-this). | The dashboard requires a privacy policy URL for any extension that handles user data. Recall reads submission history, so this is mandatory, not optional. Suggested home: `https://nofriction.netlify.app/privacy` |
-| 2 | **Create a reviewer test account** and put real credentials in [Notes for the reviewer](#notes-for-the-reviewer). | Recall is unusable without a pasted token *and* a signed-in LeetCode account with solved problems. A reviewer who cannot get past the popup will reject it as broken. This is the single most likely rejection cause. |
+| 1 | Privacy policy hosted at a public URL | **DONE** — live at `https://nofriction.netlify.app/privacy/` (source: `web/public/privacy/index.html`). Paste that URL into the dashboard's Privacy policy URL field. |
+| 2 | **Take 1–5 screenshots** at 1280×800. See [Graphic assets](#graphic-assets). | **Outstanding.** The store requires at least one. The listing cannot be submitted without it, and none exist in the repo yet. |
+| 3 | **Create a reviewer test account** and put real credentials in [Notes for the reviewer](#notes-for-the-reviewer). | **Outstanding.** Recall is unusable without a pasted token *and* a signed-in LeetCode account with solved problems. A reviewer who cannot get past the popup will reject it as broken. This is the single most likely rejection cause. |
 
 Already handled in this repo: `http://localhost:4100/*` has been removed from
 `host_permissions` (it was a dev artifact; `dev/build-dev.js` adds it back for local work),
@@ -266,7 +267,16 @@ All three are true of Recall as built.
 
 ## Privacy policy (host this)
 
-Put this at a public URL and paste that URL into the dashboard. Fill the two bracketed fields.
+**Already hosted.** Paste this into the dashboard's Privacy policy URL field:
+
+```
+https://nofriction.netlify.app/privacy/
+```
+
+The page lives at `web/public/privacy/index.html` and deploys with the rest of the site. The
+contact address on it is `gauravgives@gmail.com` — change it there if you would rather publish
+a role address. The source text is kept below so the policy can be reviewed and edited in one
+place.
 
 ```markdown
 # Privacy Policy — Recall for LeetCode
@@ -429,7 +439,8 @@ updated and the extension re-packaged and re-submitted.
 
 ## Final checklist
 
-- [ ] Privacy policy hosted, URL pasted into the dashboard
+- [x] Privacy policy hosted — `https://nofriction.netlify.app/privacy/`
+- [ ] Privacy policy URL pasted into the dashboard
 - [ ] Reviewer test accounts created and real credentials in the notes
 - [ ] Test LeetCode account has solved DP problems, so anchors actually show
 - [ ] 1–5 screenshots at 1280×800, no token or email visible
