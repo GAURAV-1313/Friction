@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — Recall for LeetCode</title>
+    <meta
+      name="description"
+      content="What the Recall for LeetCode Chrome extension reads, what it stores, and what it never touches."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Space+Grotesk:wght@400;500;600&display=swap");
+
+      :root {
+        color-scheme: light;
+        --bg: #f9f5ef;
+        --bg-2: #f2e8dd;
+        --ink: #12100e;
+        --muted: #5b544b;
+        --line: #e2d4c5;
+        --accent: #161616;
+        --pill: #efe3d7;
+        --shadow: 0 18px 50px rgba(13, 10, 8, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at top, #ffffff 0%, var(--bg) 45%, var(--bg-2) 100%);
+        background-attachment: fixed;
+        color: var(--ink);
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 56px 24px 96px;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        background: var(--pill);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin-bottom: 22px;
+        text-decoration: none;
+      }
+
+      a.eyebrow:hover {
+        color: var(--ink);
+      }
+
+      h1 {
+        font-family: Fraunces, Georgia, serif;
+        font-weight: 700;
+        font-size: clamp(30px, 5vw, 42px);
+        line-height: 1.15;
+        margin: 0 0 10px;
+        letter-spacing: -0.01em;
+      }
+
+      .updated {
+        font-size: 13px;
+        color: var(--muted);
+        margin: 0 0 14px;
+      }
+
+      .lede {
+        font-size: 17px;
+        color: var(--muted);
+        margin: 0 0 40px;
+      }
+
+      h2 {
+        font-family: Fraunces, Georgia, serif;
+        font-weight: 600;
+        font-size: 22px;
+        margin: 44px 0 12px;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        margin: 0 0 14px;
+      }
+
+      ul {
+        margin: 0 0 14px;
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 9px;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px 24px 8px;
+        margin: 22px 0 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .card h2 {
+        margin-top: 4px;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9em;
+        background: var(--pill);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 1px 6px;
+      }
+
+      a {
+        color: var(--accent);
+        text-underline-offset: 3px;
+      }
+
+      footer {
+        margin-top: 56px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <a class="eyebrow" href="/">← Friction</a>
+
+      <h1>Privacy Policy</h1>
+      <p class="updated">Recall for LeetCode · Last updated 17 September 2026</p>
+      <p class="lede">
+        Recall is a tutoring extension for leetcode.com. This policy explains exactly what it
+        reads, what it stores, and what it never touches.
+      </p>
+
+      <h2>What Recall reads</h2>
+      <p>Only from leetcode.com, and only for the account you are signed into:</p>
+      <ul>
+        <li>Your public LeetCode username.</li>
+        <li>Your list of solved problems, with difficulty and topic tags.</li>
+        <li>
+          Your submission history: the verdict (Accepted, Wrong Answer, Time Limit Exceeded and
+          so on), the timestamp, the language, and for failed submissions the failing test case
+          and error message.
+        </li>
+        <li>The text of the problem currently open, so hints can refer to it.</li>
+        <li>
+          <strong>Only if you turn on the code sharing setting, which is off by default:</strong>
+          the source code of your failed and first-accepted submissions, and the code in your
+          editor at the moment you ask for a hint.
+        </li>
+        <li>The messages you type into the tutor.</li>
+      </ul>
+
+      <div class="card">
+        <h2>What Recall never reads</h2>
+        <ul>
+          <li>
+            <strong>Your LeetCode password.</strong> It is never seen, never stored, never
+            transmitted.
+          </li>
+          <li>
+            <strong>Your LeetCode session cookies.</strong> They stay in your browser. Recall
+            calls LeetCode from inside your own browser session, and the extension's server never
+            receives them.
+          </li>
+          <li>
+            <strong>Any other website.</strong> Content scripts run only on
+            <code>https://leetcode.com/problems/*</code>.
+          </li>
+          <li>
+            <strong>Your browsing history</strong>, bookmarks, downloads, or anything outside
+            LeetCode.
+          </li>
+        </ul>
+      </div>
+
+      <h2>Where it is stored</h2>
+      <p>
+        On a private server operated by the developer, in a database only the developer can
+        access. Your rows are keyed to your account and are never combined with another user's.
+      </p>
+      <p>
+        Your sign-in token, your preferences and the sync progress are stored locally in your
+        browser and are not readable by any website.
+      </p>
+
+      <h2>How hints are generated</h2>
+      <p>
+        When you ask for a hint, the relevant context — the problem, the related problems from
+        your own history, your latest verdict, and your message — is sent to a large language
+        model API (Google Gemini, or Anthropic) under a paid commercial agreement. Under those
+        agreements your data is not used to train models. No other third party receives any of
+        your data.
+      </p>
+
+      <h2>What is never done</h2>
+      <ul>
+        <li>Your data is never sold.</li>
+        <li>
+          Your data is never transferred to a third party, except the language model API above,
+          which is required to produce a hint.
+        </li>
+        <li>Your data is never used to assess creditworthiness or for lending.</li>
+        <li>Your data is never used for advertising.</li>
+        <li>Your data is never used for any purpose other than tutoring you.</li>
+      </ul>
+
+      <div class="card">
+        <h2>Your control</h2>
+        <ul>
+          <li>
+            <strong>Code sharing is off by default.</strong> Recall works without it. Turning it
+            off later erases every piece of source code already stored, immediately.
+          </li>
+          <li>
+            <strong>Delete everything.</strong> "Delete my data" in the extension popup removes
+            every record Recall holds about you — history, skill model, and hint conversations —
+            in one action. It cannot be undone.
+          </li>
+          <li>
+            <strong>Stop at any time.</strong> Uninstalling the extension stops all collection.
+            Use the delete button first if you also want the stored data gone.
+          </li>
+        </ul>
+      </div>
+
+      <h2>Children</h2>
+      <p>
+        Recall is not directed at children under 13 and is not knowingly used by them.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        Material changes to this policy will be published at this URL with an updated date.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy, or a request to delete your data:
+        <a href="mailto:gauravgives@gmail.com">gauravgives@gmail.com</a>
+      </p>
+
+      <footer>
+        Recall is an independent project and is not affiliated with, endorsed by, or sponsored by
+        LeetCode.
+      </footer>
+    </main>
+  </body>
+</html>
