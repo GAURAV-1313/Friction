@@ -361,11 +361,25 @@ Three data files ship inside the backend, loaded once and memoised:
 | File | Size | Shape |
 |---|---|---|
 | `data/catalog.json` | ~1.1 MB | LeetCode's public catalogue: 4,047 problems × `{slug,title,frontendId,difficulty,paid,acRate,tags[]}` + 175 tags. Metadata only — no statements, no per-user status. |
-| `data/subpatterns.json` | ~437 KB | 30 hand-verified sub-patterns (16 `dp.*`, 14 `graph.*`), 836 membership rows, 535 marked `primary` |
+| `data/subpatterns.json` | ~891 KB | 116 sub-patterns across 20 families, 1,897 membership rows, 1,540 marked `primary`, covering 1,338 distinct problems |
 | `data/forbidden_terms.json` | ~1.7 KB | 69 English + 28 Hinglish technique names, for the rung-1 check |
 
-Family assignment is purely tag-driven: a problem is `dp` if any LeetCode tag is in `DP_TAGS`,
-`graph` if any is in `GRAPH_TAGS`. A problem can be both.
+Family assignment for the *problem* is purely tag-driven: it is `dp` if any LeetCode tag is in
+`DP_TAGS`, `graph` if any is in `GRAPH_TAGS`, and it can be both. Sub-pattern families are a
+separate, wider vocabulary — the original 16 `dp.*` and 14 `graph.*` plus 86 more across sliding
+window, two pointers, binary search, prefix sums, stacks, heaps, greedy, backtracking, tries,
+bit manipulation, math, trees, linked lists, matrices, design, hashing, range queries and
+sorting.
+
+The original 30 were verified live against leetcode.com. The 86 added later were drafted one
+family per agent from the bundled catalogue and then re-read by an independent adversary
+instructed to drop any membership whose solution does not actually use the stated mechanism —
+it removed 102 of 1,178 (8.7%), including a `longest-common-prefix` filed under a prefix trie
+("no trie is ever built") and a frequency-tally entry that was really set cardinality. So
+`verified` on those rows means catalogue-consistent and adversary-reviewed, not live-checked.
+
+A problem may be `primary` in two different families — `jump-game` is the main idea of both
+`dp.1d_linear` and `greedy.reach_frontier` — but never twice within one family.
 
 ### Verdict buckets and precision tiers
 
