@@ -34,11 +34,18 @@ there is no remote code, no `eval`, and no `innerHTML`.
 ## Package the zip
 
 ```bash
-cd /Users/gaurav/Friction && rm -f recall-extension-v1.0.0.zip && zip -rq recall-extension-v1.0.0.zip extension-leetcode -x '*.DS_Store' -x 'extension-leetcode/dev/*' -x 'extension-leetcode/STORE_SUBMISSION.md' && shasum -a 256 recall-extension-v1.0.0.zip
+cd /Users/gaurav/Friction/extension-leetcode && rm -f ../recall-extension-v1.0.0.zip && zip -rq ../recall-extension-v1.0.0.zip . -x 'dev/*' -x '*.DS_Store' -x 'STORE_SUBMISSION.md' && cd .. && unzip -l recall-extension-v1.0.0.zip | grep -c 'manifest.json' && shasum -a 256 recall-extension-v1.0.0.zip
 ```
 
-Upload `recall-extension-v1.0.0.zip`. `dev/` is excluded deliberately — it contains a fake
-LeetCode server and a mock backend that would confuse review.
+Upload `recall-extension-v1.0.0.zip`.
+
+**Zip from inside `extension-leetcode/`, not from the repo root.** The Chrome Web Store needs
+`manifest.json` at the top level of the archive. Zipping the folder itself nests everything one
+level down and the upload is rejected with "Manifest file is missing or unreadable." The
+`grep -c` above prints `1` when the manifest is where it needs to be.
+
+`dev/` is excluded deliberately — it contains a fake LeetCode server and a mock backend that
+would confuse review.
 
 ---
 
