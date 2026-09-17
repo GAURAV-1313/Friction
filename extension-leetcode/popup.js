@@ -144,7 +144,12 @@ function looksLikeJwt(token) {
 }
 
 async function saveToken() {
-  const token = els.token.value.trim();
+  // Strip ALL whitespace, not just the ends. A token is ~300 characters of
+  // base64url with no legal spaces in it, and copying one out of a terminal, an
+  // email or a chat window routinely carries a line break through the middle --
+  // which then failed looksLikeJwt and told the student their good token was not
+  // a token. Nothing valid is lost by removing whitespace here.
+  const token = els.token.value.replace(/\s+/g, '');
   if (!token) {
     setStatus('Token required.', 'error');
     return;
