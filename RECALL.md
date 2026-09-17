@@ -72,7 +72,7 @@ vending machine.
 | Backend | `backend/src/lc/` | A standalone Express app, 52 JS files, entrypoint `node src/lc/index.js`, default port 4100. |
 | Schema | `db/012_lc_init.sql` | One additive migration: 11 `lc_`-prefixed tables in the database Friction already uses. |
 
-Tests live in `backend/tests/lc/` — 23 suites, 684 tests, run with `npx jest tests/lc`.
+Tests live in `backend/tests/lc/` — 24 suites, 701 tests, run with `npx jest tests/lc`.
 
 ---
 
@@ -360,7 +360,7 @@ Three data files ship inside the backend, loaded once and memoised:
 
 | File | Size | Shape |
 |---|---|---|
-| `data/catalog.json` | ~1.1 MB | LeetCode's public catalogue: 4,047 problems × `{slug,title,frontendId,difficulty,paid,acRate,tags[]}` + 175 tags. Metadata only — no statements, no per-user status. |
+| `data/catalog.json` | ~1.1 MB | LeetCode's public catalogue: 4,055 problems × `{slug,title,frontendId,difficulty,paid,acRate,tags[]}` + 175 tags. Metadata only — no statements, no per-user status. |
 | `data/subpatterns.json` | ~891 KB | 116 sub-patterns across 20 families, 1,897 membership rows, 1,540 marked `primary`, covering 1,338 distinct problems |
 | `data/forbidden_terms.json` | ~1.7 KB | 69 English + 28 Hinglish technique names, for the rung-1 check |
 
@@ -375,8 +375,11 @@ The original 30 were verified live against leetcode.com. The 86 added later were
 family per agent from the bundled catalogue and then re-read by an independent adversary
 instructed to drop any membership whose solution does not actually use the stated mechanism —
 it removed 102 of 1,178 (8.7%), including a `longest-common-prefix` filed under a prefix trie
-("no trie is ever built") and a frequency-tally entry that was really set cardinality. So
-`verified` on those rows means catalogue-consistent and adversary-reviewed, not live-checked.
+("no trie is ever built") and a frequency-tally entry that was really set cardinality.
+
+All 1,897 memberships — original and new — were then re-checked live against leetcode.com via
+the public anonymous catalogue query: every slug still exists, and not one difficulty, tag set
+or paid flag had drifted. The bundled catalogue snapshot was refreshed at the same time.
 
 A problem may be `primary` in two different families — `jump-game` is the main idea of both
 `dp.1d_linear` and `greedy.reach_frontier` — but never twice within one family.
@@ -486,7 +489,7 @@ broken by recency then slug.
 last half point from recency or a shared specific tag. The response explains itself with
 `omitted_reason` (`no_eligible` | `below_threshold`) rather than offering a weak anchor.
 
-Measured on the real catalogue against a simulated history: **81% of all 4,047 problems anchor
+Measured on the real catalogue against a simulated history: **83% of all 4,055 problems anchor
 for a student with 84 solved**, 91% at 300 solved. Because tier outranks score, raising or
 lowering the topic base moves only the topic count — the sub-pattern and technique counts are
 identical at every value tested.
@@ -892,8 +895,12 @@ logs `lc.boot.warn` and then 401s every authenticated request. A missing LLM key
 ### Tests
 
 ```bash
-cd backend && npx jest tests/lc      # 23 suites, 684 tests — Recall only
+cd backend && npx jest tests/lc      # 24 suites, 701 tests — Recall only
 ```
+
+That includes `tests/lc/extensionPanel.test.js`, which covers the two side-panel surfaces that
+make claims about the student's own history. It loads the real `sidepanel.js` into a `vm` with a
+small DOM stub rather than adding jsdom, so `backend/package.json` stays untouched.
 
 `npm test` runs those *plus* Friction's suites.
 
@@ -1088,10 +1095,6 @@ Honest list, as of this writing:
   fallback banner — but the product is not useful past the cap.
 - **The Anthropic provider has never made a live call.** It is built and unit-tested against a
   fake `fetch`; the request shape is asserted, the real API is unverified.
-- **The extension panel has no unit tests.** Adding them needs jsdom, and Recall deliberately
-  does not modify `backend/package.json`. `buildProgressLines()` carries the same hard invariant
-  as the memory block — never name a problem absent from `anchors[]` — currently guaranteed by
-  construction rather than by a test.
 - **Tier phrasing is instructed, not enforced.** See the caveat under
   [Verdict buckets](#verdict-buckets-and-precision-tiers).
 - **Buckets are C++-tuned.** The runtime-error regexes match UBSan/ASan messages; Python and

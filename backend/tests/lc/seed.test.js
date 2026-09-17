@@ -9,12 +9,12 @@ const catalog = require('../../src/lc/data/catalog.json');
 describe('shipped seed data', () => {
   const seed = loadSeed();
 
-  test('116 sub-patterns, 1338 verified problems, catalog of 4047', () => {
+  test('116 sub-patterns, 1338 verified problems, catalog of 4055', () => {
     expect(raw.subpatterns).toHaveLength(116);
     expect(seed.subLabel.size).toBe(116);
     expect(seed.membership.size).toBe(1338);
-    expect(seed.catalogBySlug.size).toBe(4047);
-    expect(catalog.problems).toHaveLength(4047);
+    expect(seed.catalogBySlug.size).toBe(4055);
+    expect(catalog.problems).toHaveLength(4055);
     expect(catalog.tags).toHaveLength(175);
     expect(seed.version).toBe(raw.version || 'v0');
   });
