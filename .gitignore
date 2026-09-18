@@ -28,3 +28,5 @@ yarn-error.log*
 
 # extension build artifact: rebuilt from extension-leetcode/ on demand
 recall-extension-*.zip
+
+# store screenshots are build output of the demo, kept locally

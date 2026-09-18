@@ -22,9 +22,9 @@ items must be done outside this repo or the submission will be rejected.
 
 | # | Blocker | Status |
 |---|---|---|
-| 1 | Privacy policy hosted at a public URL | **DONE** — live at `https://nofriction.netlify.app/privacy/` (source: `web/public/privacy/index.html`). Paste that URL into the dashboard's Privacy policy URL field. |
-| 2 | **Take 1–5 screenshots** at 1280×800. See [Graphic assets](#graphic-assets). | **Outstanding.** The store requires at least one. The listing cannot be submitted without it, and none exist in the repo yet. |
-| 3 | **Create a reviewer test account** and put real credentials in [Notes for the reviewer](#notes-for-the-reviewer). | **Outstanding.** Recall is unusable without a pasted token *and* a signed-in LeetCode account with solved problems. A reviewer who cannot get past the popup will reject it as broken. This is the single most likely rejection cause. |
+| 1 | Privacy policy hosted at a public URL | **DONE** — live at `https://nofriction.netlify.app/privacy/` (source: `web/public/privacy/index.html`). |
+| 2 | Reviewer must be able to sign in | **DONE** — solved differently, see below. Friction authenticates with Google OAuth only, so there is no email/password to hand a reviewer. The extension's own onboarding is "paste a token", so a pre-authorised token for a dedicated demo account *is* the credential. It is in [Notes for the reviewer](#notes-for-the-reviewer) and valid for 120 days. The reviewer needs no Google account and no LeetCode account. |
+| 3 | 1–5 screenshots at 1280×800 | **1 of 5 done.** The hero shot exists and is store-spec. See [Graphic assets](#graphic-assets) for what is still missing and one caveat on the current one. |
 
 Already handled in this repo: `http://localhost:4100/*` has been removed from
 `host_permissions` (it was a dev artifact; `dev/build-dev.js` adds it back for local work),
@@ -133,7 +133,7 @@ REQUIREMENTS
 
 HONEST LIMITATIONS
 
-- Anchors are strongest for dynamic programming and graph problems. Other topics work, but with fewer useful connections.
+- Anchors are strongest where Recall knows the underlying idea: it ships a hand-checked map of 116 solving patterns across dynamic programming, graphs, sliding window, two pointers, binary search, prefix sums, stacks, heaps, greedy, backtracking, tries, bit manipulation, maths, trees, linked lists, grids, design, hashing, range queries and sorting. Outside those it falls back to shared topics, which is a weaker connection.
 - Mistake diagnosis is tuned for C++ runtime errors. Python and Java verdicts are recognised but less specific.
 - Recall turns itself off during contests.
 - There is a daily limit on hints.
@@ -164,7 +164,7 @@ English
 | Asset | Spec | Status |
 |---|---|---|
 | Store icon | 128×128 PNG | **Have it** — `icons/icon128.png` |
-| Screenshots | 1280×800 or 640×400, PNG or JPEG, 1–5 required | **Need to make** |
+| Screenshots | 1280×800 or 640×400, PNG or JPEG, 1–5 required | **1 done** (hero, Burst Balloons), 4 to go — see below |
 | Small promo tile | 440×280 PNG | **Need to make** (optional, but listings without it look unfinished) |
 | Marquee promo tile | 1400×560 PNG | Optional — only used if featured |
 
@@ -360,52 +360,59 @@ Material changes to this policy will be published at this URL with an updated da
 
 ## Notes for the reviewer
 
-Paste into the private "Notes to reviewer" field. **Replace the bracketed values with a real
-working account before submitting** — this is blocker #2.
+Paste into the private "Notes to reviewer" field. **No placeholders left — this is ready to send.**
 
 ```
-Thank you for reviewing. Recall needs two sign-ins to be testable, so here is a working setup.
+Thank you for reviewing. Recall needs a signed-in account to show anything, so here is a
+pre-authorised demo account. You do not need to create any account, and you do not need a
+LeetCode login.
 
-WHY A SIGN-IN IS NEEDED
-Recall tutors a specific user based on that user's own LeetCode submission history. With no
-account and no history there is nothing for it to anchor a hint to, so the interface will
-correctly report that it has nothing to work from.
+WHY A TOKEN RATHER THAN A USERNAME AND PASSWORD
+Recall signs in through the Friction web app, which uses Google OAuth exclusively -- there is
+no password we could give you. The extension's own onboarding is to paste an access token, so
+the token below IS the credential. It belongs to a demonstration account containing synthetic
+practice history, not a real person's data.
 
-TEST ACCOUNT FOR THE EXTENSION
-  1. Go to https://nofriction.netlify.app
-  2. Sign in with: [TEST EMAIL] / [TEST PASSWORD]
-  3. Click the "Connect to ext" button. It copies a token to the clipboard.
-  4. Open the Recall popup and paste the token into the token field, then Save.
+STEPS
+  1. Install the extension and click its toolbar icon.
+  2. Paste this into "Paste your token", then press Save:
 
-LEETCODE ACCOUNT
-  Sign in to https://leetcode.com with: [TEST LEETCODE USER] / [TEST LEETCODE PASSWORD]
-  This account already has solved problems, so the sync has real data to read.
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2Y1ZTAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMGUwMGUwIiwiZW1haWwiOiJzdG9yZS1yZXZpZXdAcmVjYWxsLmRlbW8iLCJuYW1lIjoiU3RvcmUgUmV2aWV3ZXIiLCJpYXQiOjE3ODk3MzY2OTEsImV4cCI6MTgwMDEwNDY5MSwiYXVkIjoiZnJpY3Rpb24td2ViIiwiaXNzIjoiZnJpY3Rpb24ifQ.Vyqpp2KvYWMJ-OyvfxVw5PmwTL_4lnn4p5rqcT87NZk
 
-STEPS TO SEE IT WORK
-  1. With both signed in, open any LeetCode problem, for example
-     https://leetcode.com/problems/coin-change/
-  2. Open the Recall side panel from the toolbar icon.
-  3. Click "Sync my history" and wait. It reads the account's history at one request per
-     second. For this test account it takes about [N] minutes. It is resumable — closing the
-     panel and reopening it continues where it left off.
-  4. When the sync finishes, the panel shows related problems from that account's own history.
-  5. Type a sentence about your approach and send it. The first hint comes back at level 1;
-     stating a plan raises it to level 2, which cites a problem the account already solved.
+  3. Open https://leetcode.com/problems/burst-balloons/ -- a public page, no LeetCode login
+     required.
+  4. Open the Recall side panel from the toolbar icon.
 
-NOTES
-  - Code sharing is OFF by default. The extension works without it. You can turn it on in the
-    popup to see the consent flow.
-  - "Delete my data" in the popup wipes the account's stored data. Please feel free to use it.
-  - The extension contacts exactly two hosts: leetcode.com (in your own session) and its own
-    backend at anchor-production-1dea.up.railway.app. The backend hostname still carries the
-    project's former name, "anchor"; the extension was renamed to Recall and the server was
-    left in place so existing installs keep working.
-  - Hints are produced by a language model through a paid API. No third party other than that
-    API provider receives any data.
-  - There is no remote code: every script is in the package, and there is no eval.
+WHAT YOU SHOULD SEE, IMMEDIATELY AND WITH NOTHING TO TYPE
+  - "You have solved this shape before", naming two problems from the demo account's history
+    with the dates they were solved and how many attempts each took.
+  - A two-message conversation already in place. The second reply names one of those problems
+    and asks what dp[i][j] would mean here. It never gives the solution -- that is the point of
+    the product.
+  - A line reading "Your pattern: Interval DP over [i..j] ...", computed from the account's
+    stored attempt counts.
+
+The account is already synced, so there is no waiting. If you want to watch a sync run, a
+fresh account takes several minutes; it reads only that user's own LeetCode history, one
+request per second, from inside their own browser session.
+
+THINGS THAT MIGHT LOOK LIKE FAULTS BUT ARE NOT
+  - The backend hostname is anchor-production-1dea.up.railway.app. "Anchor" was this project's
+    former name; the extension was renamed to Recall and the server was left in place so
+    existing installs keep working. It is our own server and the only one the extension
+    contacts.
+  - "Last sync: never" in the popup refers to a local browser-side record. The server already
+    holds the account's full history, which is why the panel has data immediately.
+  - Hints are produced by a language model under a paid API and are rate limited. If you ask
+    for many hints in quick succession you may see a banner reading "Hints are in fallback
+    mode right now (templated, no AI)". That is the extension degrading honestly rather than
+    failing; the pre-loaded conversation above shows normal output.
+  - Code sharing is OFF by default and the extension works without it. You can turn it on in
+    the popup to see the consent flow. "Delete my data" wipes the account -- please feel free
+    to use it, the account can be recreated.
+
+There is no remote code: every script is in the package and there is no eval.
 ```
-
----
 
 ## Rejection risks, honestly
 
