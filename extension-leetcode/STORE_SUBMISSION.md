@@ -133,7 +133,7 @@ REQUIREMENTS
 
 HONEST LIMITATIONS
 
-- Anchors are strongest where Recall knows the underlying idea: it ships a hand-checked map of 116 solving patterns across dynamic programming, graphs, sliding window, two pointers, binary search, prefix sums, stacks, heaps, greedy, backtracking, tries, bit manipulation, maths, trees, linked lists, grids, design, hashing, range queries and sorting. Outside those it falls back to shared topics, which is a weaker connection.
+- Anchors are strongest where Recall recognises the underlying idea. It ships a hand-checked map of 116 solving patterns covering the main families of interview problems; outside those it falls back to a shared-topic match, which is a weaker connection.
 - Mistake diagnosis is tuned for C++ runtime errors. Python and Java verdicts are recognised but less specific.
 - Recall turns itself off during contests.
 - There is a daily limit on hints.
