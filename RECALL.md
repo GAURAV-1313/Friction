@@ -72,7 +72,7 @@ vending machine.
 | Backend | `backend/src/lc/` | A standalone Express app, 52 JS files, entrypoint `node src/lc/index.js`, default port 4100. |
 | Schema | `db/012_lc_init.sql` | One additive migration: 11 `lc_`-prefixed tables in the database Friction already uses. |
 
-Tests live in `backend/tests/lc/` — 24 suites, 701 tests, run with `npx jest tests/lc`.
+Tests live in `backend/tests/lc/` — 25 suites, 708 tests, run with `npx jest tests/lc`.
 
 ---
 
@@ -662,6 +662,15 @@ per-call budget, emitting a `hint_timeout` client event.
 One additive migration, `db/012_lc_init.sql`, creating eleven `lc_`-prefixed tables in the
 **same MySQL database Friction already uses**. No second database, no second pool.
 
+**Row ids are time-ordered (UUIDv7), and that is load-bearing.** `lc_chat_messages.created_at`
+is a one-second `TIMESTAMP`, and `chatService` writes a turn's user row and assistant row inside
+the same second. The history query orders by `(created_at, id)`, so `id` is the only thing
+separating them — and while ids were random UUIDv4 that tiebreak was a coin flip, which meant
+roughly half of all turns rendered the tutor's reply *above* the question the student had just
+asked. `repo.uuid()` now returns a UUIDv7 whose leading 48 bits are the millisecond timestamp,
+with a 12-bit per-millisecond counter. Still `CHAR(36)`, still a valid UUID, so no migration was
+needed — 012 is checksum-locked and already applied to production.
+
 | Table | Purpose | Primary key |
 |---|---|---|
 | `lc_schema_migrations` | migration ledger, one row per applied migration | `name` |
@@ -895,7 +904,7 @@ logs `lc.boot.warn` and then 401s every authenticated request. A missing LLM key
 ### Tests
 
 ```bash
-cd backend && npx jest tests/lc      # 24 suites, 701 tests — Recall only
+cd backend && npx jest tests/lc      # 25 suites, 708 tests — Recall only
 ```
 
 That includes `tests/lc/extensionPanel.test.js`, which covers the two side-panel surfaces that
@@ -1102,5 +1111,8 @@ Honest list, as of this writing:
 - **Calibration is one account.** The bucket tiers come from 86 double-rated failures on a
   single C++ solver's history. They are the best evidence available, not a population statistic.
 - **`LC_PILOT_USER_IDS` unset means open to every Friction user.**
+- **The store listing was rejected once** for keyword spam — a twenty-item list of topic names
+  in the description. Fixed in `d4b7732`; the lesson is that enumerating topics reads as
+  stuffing however true the enumeration is.
 - **`LC_DETAILS_CAP` is read into config but never consumed.**
 - **The stale comment at `routes/sync.js:6`** says 30/min; the real limit is 120/min.
